@@ -8,18 +8,21 @@
     <body>
         <div id="config">
             <form action="/Space_Trader" onsubmit="return validatePoints()" method="post">
-                <input type="text" name="charname" required></input>
+                
+                <p>Name:</p><input type="text" name="charname" required></input>
                 <br>
+                <p>Select Difficulty:</p>
                 <select name="difficulty" id="difficulty">
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
                     <option value="hard">Hard</option>
                 </select>
                 <br>
-                <input type="text" id="Pilot" name="pilot"></input>
-                <input type="text" id="Fighter" name="fighter"></input>
-                <input type="text" id="Merchant" name="merchant"></input>
-                <input type="text" id="Engineer" name="engineer"></input>
+                <p> Allocate your points. Easy: 16 points, Medium: 12 points, Hard: 8 points</p>
+                <p>Pilot</p><input type="text" id="Pilot" name="pilot"></input>
+                <p>Fighter</p><input type="text" id="Fighter" name="fighter"></input>
+                <p>Merchant</p><input type="text" id="Merchant" name="merchant"></input>
+                <p>Engineer</p><input type="text" id="Engineer" name="engineer"></input>
                 <br>
                 <p><input type="submit" value="submit"></p>
             </form>
