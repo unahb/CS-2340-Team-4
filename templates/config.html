@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Config</title>
+        <script type="text/javascript" src="{{ url_for('static', filename='config.js') }}"></script>
+    </head>
+
+    <body>
+        <div id="config">
+            <form action="/Space_Trader" onsubmit="return validatePoints()" method="post">
+                <input type="text" name="charname" required></input>
+                <br>
+                <select name="difficulty" id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <br>
+                <input type="text" id="Pilot" name="pilot"></input>
+                <input type="text" id="Fighter" name="fighter"></input>
+                <input type="text" id="Merchant" name="merchant"></input>
+                <input type="text" id="Engineer" name="engineer"></input>
+                <br>
+                <p><input type="submit" value="submit"></p>
+            </form>
+        </div>
+    </body>
+</html>
