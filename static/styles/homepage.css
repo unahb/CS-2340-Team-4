@@ -1,3 +1,17 @@
 body {
-    background-color: white;
+    background: #070707 url('/static/img/space.png') repeat-x 50% 0%;
+    animation: WallpaperScroll 15s linear infinite;
+}
+
+@keyframes WallpaperScroll {
+    0% {
+        background-position: 0px 0px;
+    }
+    100% {
+        background-position: -400px 0px;
+    }
+}
+
+p {
+    color: white;
 }
