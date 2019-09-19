@@ -1,16 +1,22 @@
-.App {
+#Welcome {
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+#stars {
+  animation: starsMove infinite 25s linear;
+  background-image: url(./stars.png);
+  background-size: 200vw;
+  height: 100vh;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#spaceship {
+  animation: moveUpDown infinite 5s ease-in-out;
+  height: 40vmin;
+}
+
+#Welcome-header {
+  font-family: 'Press Start 2P', cursive;
+  min-height: 30vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,15 +25,36 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+#startButton {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8vh;
+  position: relative;
+  top: 50vh;
+  right: 20vh;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes moveUpDown {
+  0% {
+    transform: translateY(0px);
+  } 50% {
+    transform: translateY(-50px);
+  } 100% {
+    transform: translateY(0px)
   }
-  to {
-    transform: rotate(360deg);
+}
+
+@keyframes starsMove {
+  0% {
+    background-position: 100vw 0;
+  } 100% {
+    background-position: -100vw 0;
+  }
+}
+
+@keyframes nextScreen {
+  0% {
+    transform: translateX(0vw);
+  } 100% {
+    transform: translateX(100vw);
   }
 }

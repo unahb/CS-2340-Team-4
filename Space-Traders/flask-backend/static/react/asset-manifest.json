@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/react/css/main.e98a6248.chunk.css",
+    "main.js": "/static/react/js/main.8a0eaa06.chunk.js",
+    "main.js.map": "/static/react/js/main.8a0eaa06.chunk.js.map",
+    "runtime~main.js": "/static/react/js/runtime~main.2a22b46e.js",
+    "runtime~main.js.map": "/static/react/js/runtime~main.2a22b46e.js.map",
+    "js/2.8c1e770a.chunk.js": "/static/react/js/2.8c1e770a.chunk.js",
+    "js/2.8c1e770a.chunk.js.map": "/static/react/js/2.8c1e770a.chunk.js.map",
+    "../../templates/index.html": "/static/react/../../templates/index.html",
+    "css/main.e98a6248.chunk.css.map": "/static/react/css/main.e98a6248.chunk.css.map",
+    "media/spaceship.png": "/static/react/media/spaceship.4d290229.png",
+    "media/App.css": "/static/react/media/stars.ac008d5c.png",
+    "precache-manifest.bda5cf61febb65e6a1e7539fbb3deddd.js": "/static/react/precache-manifest.bda5cf61febb65e6a1e7539fbb3deddd.js",
+    "service-worker.js": "/static/react/service-worker.js"
+  }
+}
