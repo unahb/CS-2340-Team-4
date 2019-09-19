@@ -1,18 +1,17 @@
 {
   "files": {
-    "main.css": "/static/react/css/main.dd2c5864.chunk.css",
-    "main.js": "/static/react/js/main.27fdd559.chunk.js",
-    "main.js.map": "/static/react/js/main.27fdd559.chunk.js.map",
+    "main.css": "/static/react/css/main.e5c6a3aa.chunk.css",
+    "main.js": "/static/react/js/main.ea8b3cdf.chunk.js",
+    "main.js.map": "/static/react/js/main.ea8b3cdf.chunk.js.map",
     "runtime~main.js": "/static/react/js/runtime~main.2a22b46e.js",
     "runtime~main.js.map": "/static/react/js/runtime~main.2a22b46e.js.map",
-    "js/2.ec78ebfe.chunk.js": "/static/react/js/2.ec78ebfe.chunk.js",
-    "js/2.ec78ebfe.chunk.js.map": "/static/react/js/2.ec78ebfe.chunk.js.map",
+    "js/2.29088ba1.chunk.js": "/static/react/js/2.29088ba1.chunk.js",
+    "js/2.29088ba1.chunk.js.map": "/static/react/js/2.29088ba1.chunk.js.map",
     "../../templates/index.html": "/static/react/../../templates/index.html",
-    "css/main.dd2c5864.chunk.css.map": "/static/react/css/main.dd2c5864.chunk.css.map",
+    "css/main.e5c6a3aa.chunk.css.map": "/static/react/css/main.e5c6a3aa.chunk.css.map",
     "media/spaceship.png": "/static/react/media/spaceship.4d290229.png",
-    "media/spiderman.png": "/static/react/media/spiderman.e7998d18.png",
     "media/App.css": "/static/react/media/stars.ac008d5c.png",
-    "precache-manifest.2a881b201ef2a084e195d2ba06700394.js": "/static/react/precache-manifest.2a881b201ef2a084e195d2ba06700394.js",
+    "precache-manifest.2b9c88ebfa2a15c66ac50c96cf76a1ac.js": "/static/react/precache-manifest.2b9c88ebfa2a15c66ac50c96cf76a1ac.js",
     "service-worker.js": "/static/react/service-worker.js"
   }
 }

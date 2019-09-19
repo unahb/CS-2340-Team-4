@@ -1,5 +1,6 @@
 #Welcome {
   text-align: center;
+  background-color: #000000;
 }
 
 #stars {
@@ -31,6 +32,30 @@
   position: relative;
   top: 50vh;
   right: 20vh;
+}
+
+#Attribute-Table {
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  width: 80vw;
+  height: 60vh;
+  align-self: center;
+  border-collapse: collapse;
+  border: 1px solid white;
+}
+
+tr, th, td {
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  width: 9vw;
+  height: 12vh;
+  align-self: center;
+  border-collapse: collapse;
+  border: 1px solid white;
+}
+
+#pskill, #fskill, #mskill, #eskill {
+  width: 0.7vw;
 }
 
 @keyframes moveUpDown {
