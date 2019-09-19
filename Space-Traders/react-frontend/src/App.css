@@ -4,7 +4,7 @@
 
 #stars {
   animation: starsMove infinite 25s linear;
-  background-image: url(./stars.png);
+  background-image: url(./resources/stars.png);
   background-size: 200vw;
   height: 100vh;
 }
