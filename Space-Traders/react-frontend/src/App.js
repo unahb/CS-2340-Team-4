@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import Welcome from './Welcome';
 import PlayerSetup from './PlayerSetup';
+import PlayerStats from './PlayerStats';
 
 class App extends Component {
   render() {
@@ -20,6 +21,7 @@ class App extends Component {
           <Switch>
               <Route exact path='/' component={Welcome} />
               <Route path='/PlayerSetup' component={PlayerSetup} />
+              <Route path='/PlayerStats' component={PlayerStats} />
           </Switch>
         </div>
       </Router>

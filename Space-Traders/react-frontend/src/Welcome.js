@@ -13,7 +13,7 @@ function Welcome() {
         <div>
           <img src={spaceship} id="spaceship" align="left"/>
         </div>
-        <button onClick={() => toNext()} type="button" id="startButton">
+        <button type="button" id="startButton">
           <Link to={'/PlayerSetup'} className="nav-link">START</Link>
         </button>
         {/* <script type="text/javascript">
@@ -25,10 +25,6 @@ function Welcome() {
       </div>
     </div>
   );
-}
-
-function toNext() {
-  console.log('next screen')
 }
 
 export default Welcome;
