@@ -8,7 +8,7 @@ function PlayerSetup() {
   const points = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
   let totalPoints = 16
-  let player = {name: null, difficulty: null, pPoints: 1, fPoints: 1, mPoints: 1, ePoints: 1, total: 4}
+  let player = {name: null, difficulty: null, pPoints: 1, fPoints: 1, mPoints: 1, ePoints: 1, total: 4, credits: 0}
   const table = types.map((row) => 
     <tr>
       <th>{row.name}</th>
@@ -73,7 +73,7 @@ function PlayerSetup() {
             }
           }
           player.total = player.pPoints + player.fPoints + player.mPoints + player.ePoints
-          console.log("total points: " + totalPoints);
+          document.getElementById("totalPoints").innerText = totalPoints - player.total;
         }}></input>
       </td>
     </tr>
@@ -95,28 +95,39 @@ function PlayerSetup() {
         <div>
           <button type="button" id="easyButton" onClick={(event) => {
               player.difficulty = "Easy"
-              totalPoints = 16;
-              reset(player);
+              player.credits = 1000
+              totalPoints = 16
+              reset(player)
+              document.getElementById("totalPoints").innerText = totalPoints - player.total
             }}>
             Easy
           </button>
           <br></br>
           <button type="button" id="mediumButton" onClick={(event) => {
               player.difficulty = "Medium"
-              totalPoints = 12;
-              reset(player);
+              player.credits = 500
+              totalPoints = 12
+              reset(player)
+              document.getElementById("totalPoints").innerText = totalPoints - player.total
             }}> 
             Medium
           </button>
           <br></br>
           <button type="button" id="hardButton" onClick={(event) => {
-              player.difficulty = "Easy"
-              totalPoints = 8;
-              reset(player);
+              player.difficulty = "Hard"
+              player.credits = 100
+              totalPoints = 8
+              reset(player)
+              document.getElementById("totalPoints").innerText = totalPoints - player.total
             }}>
             Hard
           </button>
+          <br></br>
+          <label id="totalPoints">
+            {totalPoints - player.total}
+          </label>
         </div>
+        
         <table id="Attribute-Table" align="right">
           <tr>
             <th>Skill</th>

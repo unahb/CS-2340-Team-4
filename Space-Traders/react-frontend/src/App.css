@@ -64,11 +64,22 @@
   margin: 1vh;
 }
 
+#totalPoints {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8vh;
+  position: relative;
+  right: 25vw;
+  margin: 3vh;
+  top: 5vh;
+  color: white;
+}
+
 #submitButton {
   font-family: 'Press Start 2P', cursive;
   font-size: 8vh;
   position: relative;
-  top: 20vh;
+  top: 10vh;
+  left: 15vh;
 }
 
 #Attribute-Table {
@@ -78,7 +89,8 @@
   height: 40vh;
   align-self: center;
   position: relative;
-  bottom: 30vh;
+  bottom: 40vh;
+  right: 5vh;
   border-collapse: collapse;
   border: 1px solid white;
 }
