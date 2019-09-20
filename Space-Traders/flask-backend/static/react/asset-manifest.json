@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/static/react/css/main.2a904c84.chunk.css",
-    "main.js": "/static/react/js/main.9395d196.chunk.js",
-    "main.js.map": "/static/react/js/main.9395d196.chunk.js.map",
+    "main.js": "/static/react/js/main.7700c13b.chunk.js",
+    "main.js.map": "/static/react/js/main.7700c13b.chunk.js.map",
     "runtime~main.js": "/static/react/js/runtime~main.dacdcd41.js",
     "runtime~main.js.map": "/static/react/js/runtime~main.dacdcd41.js.map",
-    "js/2.5632a863.chunk.js": "/static/react/js/2.5632a863.chunk.js",
-    "js/2.5632a863.chunk.js.map": "/static/react/js/2.5632a863.chunk.js.map",
+    "js/2.9181aadb.chunk.js": "/static/react/js/2.9181aadb.chunk.js",
+    "js/2.9181aadb.chunk.js.map": "/static/react/js/2.9181aadb.chunk.js.map",
     "../../templates/index.html": "/static/react/../../templates/index.html",
     "css/main.2a904c84.chunk.css.map": "/static/react/css/main.2a904c84.chunk.css.map",
     "media/spaceship.png": "/static/react/media/spaceship.4d290229.png",
     "media/App.css": "/static/react/media/stars.ac008d5c.png",
-    "precache-manifest.1cb22d86dff4f0aba4bd16d5c0cbcbe8.js": "/static/react/precache-manifest.1cb22d86dff4f0aba4bd16d5c0cbcbe8.js",
+    "precache-manifest.f08457456d549ac5d2205e7849676337.js": "/static/react/precache-manifest.f08457456d549ac5d2205e7849676337.js",
     "service-worker.js": "/static/react/service-worker.js"
   }
 }

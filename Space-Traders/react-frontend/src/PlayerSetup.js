@@ -141,7 +141,13 @@ function PlayerSetup() {
           {table}
         </table>
         <button type="submit" id="submitButton">
-          <Link to={'/PlayerStats'} className="nav-link">SUBMIT</Link>
+          <Link 
+            to={{ 
+              pathname: '/PlayerStats',
+              player
+            }}
+            className="nav-link" 
+            player={player}>SUBMIT</Link>
         </button>
       </div>
     </div>
