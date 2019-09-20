@@ -5,7 +5,7 @@ import './App.css';
 
 function PlayerStats() {
   return (
-    <div id="Welcome">
+    <div id="Main">
       <div id="stars">
         <header id="Welcome-header">
           <h1>Your Player</h1>

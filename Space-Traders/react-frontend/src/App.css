@@ -1,6 +1,8 @@
-#Welcome {
+#Main {
   text-align: center;
   background-color: #000000;
+  overflow: hidden;
+  height: 100vh;
 }
 
 #stars {
@@ -12,7 +14,7 @@
 
 #spaceship {
   animation: moveUpDown infinite 5s ease-in-out;
-  height: 40vmin;
+  height: 40vh;
 }
 
 #Welcome-header {
@@ -26,20 +28,57 @@
   color: white;
 }
 
+#Attributes-header {
+  font-family: 'Press Start 2P', cursive;
+  min-height: 25vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
 #startButton {
   font-family: 'Press Start 2P', cursive;
   font-size: 8vh;
   position: relative;
   top: 50vh;
-  right: 20vh;
+  left: 20vw;
+}
+
+#name {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 5vh;
+  width: 60vw;
+  left: 5vw;
+  position: relative;
+  bottom: 3vh;
+}
+
+#easyButton, #mediumButton, #hardButton {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8vh;
+  position: relative;
+  right: 25vw;
+  margin: 1vh;
+}
+
+#submitButton {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8vh;
+  position: relative;
+  top: 20vh;
 }
 
 #Attribute-Table {
   font-family: 'Press Start 2P', cursive;
   color: white;
-  width: 80vw;
-  height: 60vh;
+  width: 50vw;
+  height: 40vh;
   align-self: center;
+  position: relative;
+  bottom: 30vh;
   border-collapse: collapse;
   border: 1px solid white;
 }
@@ -52,10 +91,15 @@ tr, th, td {
   align-self: center;
   border-collapse: collapse;
   border: 1px solid white;
+  margin: 10px;
 }
 
 #pskill, #fskill, #mskill, #eskill {
-  width: 0.7vw;
+  width: 3vw;
+}
+
+#p1, #f1, #m1, #e1 {
+  background-color: #00ff00;
 }
 
 @keyframes moveUpDown {

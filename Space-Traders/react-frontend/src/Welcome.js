@@ -16,12 +16,6 @@ function Welcome() {
         <button type="button" id="startButton">
           <Link to={'/PlayerSetup'} className="nav-link">START</Link>
         </button>
-        {/* <script type="text/javascript">
-          document.querySelector("startButton").addEventListner("click",
-            function() {
-              document.getElementById("spaceship").style.animation = "nextScreen 1 25s ease-in-out";
-            })
-        </script> */}
       </div>
     </div>
   );
