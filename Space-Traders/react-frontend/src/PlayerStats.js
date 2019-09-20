@@ -10,7 +10,7 @@ function PlayerStats(props) {
     <div id="Main">
       <div id="stars">
         <header id="Welcome-header">
-          <h1>Your Player</h1>
+          <h1>Hi {player.name}!</h1>
         </header>
         <div>
           <img src={spaceship} id="spaceship" align="left"/>
