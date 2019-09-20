@@ -10,5 +10,3 @@ Matt
 Bhanu
 
 Zehao
-
-Cole
