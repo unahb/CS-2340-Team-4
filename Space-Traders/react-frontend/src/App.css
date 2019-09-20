@@ -64,6 +64,10 @@
   margin: 1vh;
 }
 
+#easyButton:focus-visible, #mediumButton:focus-visible, #hardButton:focus-visible {
+  background-color: #b8b8b8;
+}
+
 #totalPoints {
   font-family: 'Press Start 2P', cursive;
   font-size: 8vh;
@@ -106,12 +110,17 @@ tr, th, td {
   margin: 10px;
 }
 
+
 #pskill, #fskill, #mskill, #eskill {
   width: 5vw;
 }
 
 #p1, #f1, #m1, #e1 {
   background-color: #00ff00;
+}
+
+#finalName {
+  color: white;
 }
 
 @keyframes moveUpDown {
