@@ -14,9 +14,13 @@ function PlayerSetup() {
       <th>{row.name}</th>
       {points.map(i => <td id={row.id + i}></td>)}
       <td>
-        <input type="number" id={row.id + 'skill'} min={1} max={9} defaultValue={1} onChange={(event) => {
+        <input type="range" id={row.id + 'skill'} min={1} max={9} defaultValue={1} onChange={(event) => {
+          if (event.type == "onkeypress") {
+            console.log("key pressed")
+          }
+          console.log(event.type)
           if (row.id == 'p') {
-            if (player.total == totalPoints && event.target.value - player.pPoints > 0) {
+            if (player.total >= totalPoints && event.target.value - player.pPoints > 0) {
               event.target.value = player.pPoints
               return;
             }
@@ -30,7 +34,7 @@ function PlayerSetup() {
               }
             }
           } else if (row.id == 'f') {
-            if (player.total == totalPoints && event.target.value - player.fPoints > 0) {
+            if (player.total >= totalPoints && event.target.value - player.fPoints > 0) {
               event.target.value = player.fPoints
               return;
             }
@@ -44,7 +48,7 @@ function PlayerSetup() {
               }
             }
           } else if (row.id == 'm') {
-            if (player.total == totalPoints && event.target.value - player.mPoints > 0) {
+            if (player.total >= totalPoints && event.target.value - player.mPoints > 0) {
               event.target.value = player.mPoints
               return;
             }
@@ -58,7 +62,7 @@ function PlayerSetup() {
               }
             }
           } else if (row.id == 'e') {
-            if (player.total == totalPoints && event.target.value - player.ePoints > 0) {
+            if (player.total >= totalPoints && event.target.value - player.ePoints > 0) {
               event.target.value = player.ePoints
               return;
             }
