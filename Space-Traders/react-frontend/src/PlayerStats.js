@@ -16,7 +16,17 @@ function PlayerStats(props) {
           <img src={spaceship} id="spaceship" align="left"/>
         </div>
         <div>
-          <text id="finalName"></text>
+          <text id="statsDifficulty">Difficulty: {player.difficulty}</text>
+          <br></br>
+          <text id="pLevel">Pilot Level: {player.pPoints}</text>
+          <br></br>
+          <text id="fLevel">Fighter Level: {player.fPoints}</text>
+          <br></br>
+          <text id="mLevel">Merchant Level: {player.mPoints}</text>
+          <br></br>
+          <text id="eLevel">Engineer Level: {player.ePoints}</text>
+          <br></br>
+          <text id="credits">Credits: {player.credits}</text>
         </div>
       </div>
     </div>

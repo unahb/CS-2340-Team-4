@@ -8,19 +8,15 @@ function PlayerSetup() {
   const points = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
   let totalPoints = 16
-  let player = { name: null, pPoints: 1, fPoints: 1, mPoints: 1, ePoints: 1, total: 4, credits: 1000 }
+  let player = { name: null, pPoints: 0, fPoints: 0, mPoints: 0, ePoints: 0, total: 0, credits: 1000, difficulty: "Easy"}
   const table = types.map((row) => 
     <tr>
       <th>{row.name}</th>
       {points.map(i => <td id={row.id + i}></td>)}
       <td>
-        <input type="range" id={row.id + 'skill'} min={1} max={9} defaultValue={1} onChange={(event) => {
-          if (event.type == "onkeypress") {
-            console.log("key pressed")
-          }
-          console.log(event.type)
+        <input type="range" id={row.id + 'skill'} min={0} max={9} defaultValue={0} onChange={(event) => {
           if (row.id == 'p') {
-            if (player.total >= totalPoints && event.target.value - player.pPoints > 0) {
+            if (player.total - player.pPoints + parseInt(document.getElementById("pskill").value) > totalPoints) {
               event.target.value = player.pPoints
               return;
             }
@@ -34,7 +30,7 @@ function PlayerSetup() {
               }
             }
           } else if (row.id == 'f') {
-            if (player.total >= totalPoints && event.target.value - player.fPoints > 0) {
+            if (player.total - player.fPoints + parseInt(document.getElementById("fskill").value) > totalPoints) {
               event.target.value = player.fPoints
               return;
             }
@@ -48,7 +44,7 @@ function PlayerSetup() {
               }
             }
           } else if (row.id == 'm') {
-            if (player.total >= totalPoints && event.target.value - player.mPoints > 0) {
+            if (player.total - player.mPoints + parseInt(document.getElementById("mskill").value) > totalPoints) {
               event.target.value = player.mPoints
               return;
             }
@@ -62,7 +58,7 @@ function PlayerSetup() {
               }
             }
           } else if (row.id == 'e') {
-            if (player.total >= totalPoints && event.target.value - player.ePoints > 0) {
+            if (player.total - player.ePoints + parseInt(document.getElementById("eskill").value) > totalPoints) {
               event.target.value = player.ePoints
               return;
             }
@@ -78,6 +74,11 @@ function PlayerSetup() {
           }
           player.total = player.pPoints + player.fPoints + player.mPoints + player.ePoints
           document.getElementById("totalPoints").innerText = totalPoints - player.total;
+          if (document.getElementById("name").value != "" && player.total == totalPoints) {
+            document.getElementById("submitButton").disabled = false;
+          } else {
+            document.getElementById("submitButton").disabled = true;
+          }
         }}></input>
       </td>
     </tr>
@@ -95,12 +96,17 @@ function PlayerSetup() {
           <form id="nameForm">
             <input type="text" id="name" placeholder="Please enter your name!" onChange={(event) => {
               player.name = event.target.value
+              if (document.getElementById("name").value != "" && player.total == totalPoints) {
+                document.getElementById("submitButton").disabled = false;
+              } else {
+                document.getElementById("submitButton").disabled = true;
+              }
             }}></input>
           </form>
         </div>
         <div>
           <button type="button" id="easyButton" onClick={(event) => {
-              player.difficulty = "easy"
+              player.difficulty = "Easy"
               player.credits = 1000
               totalPoints = 16
               reset(player)
@@ -110,7 +116,7 @@ function PlayerSetup() {
           </button>
           <br></br>
           <button type="button" id="mediumButton" onClick={(event) => {
-              player.difficulty = "medium"
+              player.difficulty = "Medium"
               player.credits = 500
               totalPoints = 12
               reset(player)
@@ -120,7 +126,7 @@ function PlayerSetup() {
           </button>
           <br></br>
           <button type="button" id="hardButton" onClick={(event) => {
-              player.difficulty = "hard"
+              player.difficulty = "Hard"
               player.credits = 100
               totalPoints = 8
               reset(player)
@@ -142,46 +148,37 @@ function PlayerSetup() {
           </tr>
           {table}
         </table>
-        <button type="submit" id="submitButton">
-          <Link 
+        <Link 
             to={{ 
               pathname: '/PlayerStats',
               player
             }}
             className="nav-link" 
-            player={player}>SUBMIT</Link>
+            player={player}>
+        <button type="submit" id="submitButton" disabled={true}>
+          SUBMIT
         </button>
+        </Link>
       </div>
     </div>
   );
 }
 
 function reset(player) {
-  player.pPoints = 1;
-  player.fPoints = 1;
-  player.mPoints = 1;
-  player.ePoints = 1;
-  player.total = 4;
-  document.getElementById("pskill").value = 1;
-  document.getElementById("fskill").value = 1;
-  document.getElementById("mskill").value = 1;
-  document.getElementById("eskill").value = 1;
+  player.pPoints = 0;
+  player.fPoints = 0;
+  player.mPoints = 0;
+  player.ePoints = 0;
+  player.total = 0;
+  document.getElementById("pskill").value = 0;
+  document.getElementById("fskill").value = 0;
+  document.getElementById("mskill").value = 0;
+  document.getElementById("eskill").value = 0;
   for (var i = 1; i <= 9; i++) {
-    if (i <= 1) {
-      document.getElementById("p" + i).style.opacity = "1.0";
-      document.getElementById("p" + i).style.backgroundColor = "#00ff00";
-      document.getElementById("f" + i).style.opacity = "1.0";
-      document.getElementById("f" + i).style.backgroundColor = "#00ff00";
-      document.getElementById("m" + i).style.opacity = "1.0";
-      document.getElementById("m" + i).style.backgroundColor = "#00ff00";
-      document.getElementById("e" + i).style.opacity = "1.0";
-      document.getElementById("e" + i).style.backgroundColor = "#00ff00";
-    } else {
-      document.getElementById("p" + i).style.opacity = "0.0";
-      document.getElementById("f" + i).style.opacity = "0.0";
-      document.getElementById("m" + i).style.opacity = "0.0";
-      document.getElementById("e" + i).style.opacity = "0.0";
-    }
+    document.getElementById("p" + i).style.opacity = "0.0";
+    document.getElementById("f" + i).style.opacity = "0.0";
+    document.getElementById("m" + i).style.opacity = "0.0";
+    document.getElementById("e" + i).style.opacity = "0.0";
   }
 }
 
