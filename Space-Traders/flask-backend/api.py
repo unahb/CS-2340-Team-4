@@ -11,43 +11,40 @@ class Game:
         TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
                        'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
 
-        self.game_regions = {}
-
-        for name in NAMES:  # add regions to game_regions
-            x = random.randint(-200, 200)
-            y = random.randint(-200, 200)
-            tech = random.randint(1, len(TECH_LEVELS))
-            game_regions[name] = Region((x, y), tech, name)
-
-    #
+        self.universe = Universe(NAMES, TECH_LEVELS)
 
 
 class Region:
-    def __init__(self, coordinates, ech_level, name):
+    def __init__(self, coordinates, tech_level, name):
         self.coordinates = coordinates
-     self.tech_level = tech_level
+        self.tech_level = tech_level
         self.name = name
 
 
 class Player:
-    def __init__(attributes):  # Pilot, Fighter, Merchant, Engineer
-        self. attributes = attributes
-
-        # getterregion(self):
-        return self._region
+    def __init__(self, attributes, region):  # Pilot, Fighter, Merchant, Engineer
+        self.attributes = attributes
+        self.region = region
 
     def get_credits(self):
-        get_credits(self):
-        return self._credits
+        return self.credits
 
     def set_region(self, x):
-
-        self._region = x
+        self.region = x
 
     def set_credits(self, x):
-        self._credits = x
+        self.credits = x
 
-def Universe
+class Universe:
+    def __init__(self, names, tech_names):
+        self.game_regions = {}
+
+        for name in names:  # add regions to game_regions
+            x = random.randint(-200, 200)
+            y = random.randint(-200, 200)
+            tech = random.randint(1, len(tech_names))
+            game_regions[name] = Region((x, y), tech_names[tech], name)
+
 app = Flask(__name__)
 api = Api(app)
 
