@@ -56,7 +56,9 @@
   bottom: 3vh;
 }
 
-#easyButton, #mediumButton, #hardButton {
+#easyButton,
+#mediumButton,
+#hardButton {
   font-family: 'Press Start 2P', cursive;
   font-size: 8vh;
   position: relative;
@@ -64,7 +66,9 @@
   margin: 1vh;
 }
 
-#easyButton:focus-visible, #mediumButton:focus-visible, #hardButton:focus-visible {
+#easyButton:focus-visible,
+#mediumButton:focus-visible,
+#hardButton:focus-visible {
   background-color: #b8b8b8;
 }
 
@@ -78,7 +82,8 @@
   color: white;
 }
 
-#submitButton {
+#submitButton,
+#initializeGame {
   font-family: 'Press Start 2P', cursive;
   font-size: 8vh;
   position: relative;
@@ -99,7 +104,9 @@
   border: 1px solid white;
 }
 
-tr, th, td {
+tr,
+th,
+td {
   font-family: 'Press Start 2P', cursive;
   color: white;
   width: 6vw;
@@ -111,11 +118,19 @@ tr, th, td {
 }
 
 
-#pskill, #fskill, #mskill, #eskill {
+#pskill,
+#fskill,
+#mskill,
+#eskill {
   width: 5vw;
 }
 
-#statsDifficulty, #pLevel, #fLevel, #mLevel, #eLevel, #credits {
+#statsDifficulty,
+#pLevel,
+#fLevel,
+#mLevel,
+#eLevel,
+#credits {
   font-family: 'Press Start 2P', cursive;
   font-size: 4vw;
   color: white;
@@ -124,9 +139,13 @@ tr, th, td {
 @keyframes moveUpDown {
   0% {
     transform: translateY(0px);
-  } 50% {
+  }
+
+  50% {
     transform: translateY(-50px);
-  } 100% {
+  }
+
+  100% {
     transform: translateY(0px)
   }
 }
@@ -134,7 +153,9 @@ tr, th, td {
 @keyframes starsMove {
   0% {
     background-position: 100vw 0;
-  } 100% {
+  }
+
+  100% {
     background-position: -100vw 0;
   }
 }
@@ -142,7 +163,9 @@ tr, th, td {
 @keyframes nextScreen {
   0% {
     transform: translateX(0vw);
-  } 100% {
+  }
+
+  100% {
     transform: translateX(100vw);
   }
 }
