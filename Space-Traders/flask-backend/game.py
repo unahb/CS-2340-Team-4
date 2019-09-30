@@ -1,14 +1,19 @@
 import random
 
 class Game:
-    def __init__(self, difficulty):
-        self.difficulty = difficulty
+    def __init__(self, difficulty, attributes):
         NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
                  'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
         TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
                        'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
+        CREDITS = {'easy': 2000, 'medium': 1000, 'hard', 500}
 
-        self.universe = Universe(NAMES, TECH_LEVELS)
+        self._difficulty = difficulty
+        self._universe = Universe(NAMES, TECH_LEVELS)
+        self._player = Player(attributes, NAMES(random.randint(1, len(NAMES))), CREDITS[self._difficulty])
+
+        def travel(self, region):
+            self._player.set_region(region)
 
 
 class Region:
@@ -19,9 +24,10 @@ class Region:
 
 
 class Player:
-    def __init__(self, attributes, region):  
-        self._attributes = attributes # Pilot, Fighter, Merchant, Engineer
+    def __init__(self, attributes, region, credits):  
+        self._attributes = attributes # [Pilot, Fighter, Merchant, Engineer] (all ints)
         self._region = region # single underscore for protected
+        self._credits = credits
 
     # getters
     def get_region(self):
@@ -30,10 +36,10 @@ class Player:
         return self._credits
 
     # setters
-    def set_region(self, x):
-        self._region = x
-    def set_credits(self, x):
-        self._credits = x
+    def set_region(self, region):
+        self._region = region
+    def set_credits(self, credits):
+        self._credits = credits
 
 class Universe:
     __instance = None
