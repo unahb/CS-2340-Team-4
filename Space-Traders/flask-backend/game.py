@@ -36,6 +36,7 @@ class Player:
         self._credits = x
 
 class Universe:
+    __instance = None
     def __init__(self, planets, tech_names):
         # Needs to be singleton (can't make more than 1)
         if Universe.__instance != None:
@@ -45,14 +46,14 @@ class Universe:
 
             for name in planets:  # add regions to game_regions
                 while True:
-                    valid_coordinates = True;
+                    valid_coordinates = True
                     x = random.randint(-200, 200)
                     y = random.randint(-200, 200)
-                    for name in names:
-                        if (self.game_regions[name].coordinates[0]) - x < 5:
-                            valid_coordinates = False
-                        if (self.game_regions[name].coordinates[1]) - y < 5:
-                            valid_coordinates = False
+
+                    if (self.game_regions[name].coordinates[0]) - x < 5:
+                        valid_coordinates = False
+                    if (self.game_regions[name].coordinates[1]) - y < 5:
+                        valid_coordinates = False
                             
                     if valid_coordinates == True:
                         break                        
