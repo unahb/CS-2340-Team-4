@@ -12,6 +12,8 @@ class Game:
         self._universe = Universe(PLANET_NAMES, TECH_LEVELS)
         self._player = Player(attributes, PLANET_NAMES[random.randint(0, len(PLANET_NAMES)-1)], CREDITS[self._difficulty])
 
+        print('New game initialized.')
+
     def travel(self, region):
         self._player.set_region(region)
     
@@ -27,7 +29,7 @@ class Game:
     def __str__(self):
         builder = ''
         builder += 'Player: ' + str(self._player) + '\n'
-        #TODO Universe Representation
+        builder += str(self._universe)
         return builder
 
 
@@ -111,5 +113,5 @@ class Universe:
     def __str__(self):
         builder = 'List of Planets: '
         for planet in self.game_regions:
-            builder += planet + '  '
+            builder += str(self.game_regions[planet]) + ' '
         return builder

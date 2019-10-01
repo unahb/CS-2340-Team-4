@@ -1,5 +1,7 @@
 import json
 import game
+
+from flask import json as flaskjson
 # Takes universe, player, and difficulty
 
 # Frontend needs to display List of regions
@@ -30,9 +32,10 @@ def get_json(Game):
         }
         data.append(item)
 
-    json_data = json.dumps(data)
-    print(json_data)
-    return json_data
+    #print(data)
+    #json_data = json.dumps(data)
+    #print(json_data)
+    return flaskjson.jsonify(data)
 
     
     #     json_coordinates = json.dumps(regions[region].get_coordinates()) #wrap json.dumps
