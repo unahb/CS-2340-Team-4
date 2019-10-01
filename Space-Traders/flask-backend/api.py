@@ -1,6 +1,6 @@
 import random 
 
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_restful import reqparse, abort, Api, Resource
 
 import game
@@ -10,6 +10,10 @@ app = Flask(__name__)
 api = Api(app)
 
 space_traders = game.Game('easy', [1,1,1,1]) #TODO: make cleaner and add DB
+
+@app.route("/")
+def my_index():
+    return render_template("index.html")
 
 class SpaceTraders(Resource):
     def get(self):
