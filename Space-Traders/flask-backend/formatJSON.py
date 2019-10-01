@@ -10,16 +10,18 @@ from flask import json as flaskjson
 
 # Game -> 
 
-def get_json(Game):
+def get_json(game):
     data = [] # empty list
 
-    regions = Game.get_universe().get_game_regions()
-    player = Game.get_player()
+    regions = game.get_universe().get_game_regions()
+    player = game.get_player()
 
     player_item = {
+        'difficulty' : game.get_difficulty(),
         'skills' : player.get_attributes(),
         'location' : player.get_region(),
-        'credits' : player.get_credits()
+        'credits' : player.get_credits(), 
+        'name' : player.get_name()
     }
     data.append(player_item)
 

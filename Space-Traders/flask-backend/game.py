@@ -1,7 +1,7 @@
 import random
 
 class Game:
-    def __init__(self, difficulty, attributes):
+    def __init__(self, difficulty, attributes, name):
         PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
                  'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
         TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
@@ -10,7 +10,7 @@ class Game:
 
         self._difficulty = difficulty
         self._universe = Universe(PLANET_NAMES, TECH_LEVELS)
-        self._player = Player(attributes, PLANET_NAMES[random.randint(0, len(PLANET_NAMES)-1)], CREDITS[self._difficulty])
+        self._player = Player(attributes, PLANET_NAMES[random.randint(0, len(PLANET_NAMES)-1)], CREDITS[self._difficulty], name)
 
         print('New game initialized.')
 
@@ -55,10 +55,11 @@ class Region:
 
 
 class Player:
-    def __init__(self, attributes, region, credits):  
+    def __init__(self, attributes, region, credits, name):  
         self._attributes = attributes # [Pilot, Fighter, Merchant, Engineer] (all ints)
         self._region = region # single underscore for protected
         self._credits = credits
+        self._name = name
 
     # getters
     def get_region(self):
@@ -67,6 +68,8 @@ class Player:
         return self._credits
     def get_attributes(self):
         return self._attributes
+    def get_name(self):
+        return self._name
 
     # setters
     def set_region(self, region):

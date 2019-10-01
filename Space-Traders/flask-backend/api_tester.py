@@ -1,4 +1,3 @@
-import subprocess
 import json
 import requests
 
@@ -37,10 +36,20 @@ while True:
             else:
                 break
         attributes = command
+
+        while True:
+            print('Enter name:')
+            command = input()
+            if not len(command) == 0:
+                break
+        name = command
         
-        payload = {'difficulty': difficulty, 'attributes': attributes}
-        requests.post(url, headers={'content-type' : 'application/json'}, data=json.dumps(payload))
-        print('done.')
+        payload = {'difficulty': difficulty, 'attributes': attributes, 'name': name}
+        r = requests.post(url, headers={'content-type' : 'application/json'}, data=json.dumps(payload))
+        if r.status_code == 400:
+            print('Error in POST request (400)')
+        else:
+            print('done.')
 
     elif command == 'travel':
         print('Enter desired location:')
@@ -50,14 +59,20 @@ while True:
             print('Enter desired location:')
             command = input()
         url = 'http://127.0.0.1:5000/Space-Traders/travel/' + command
-        requests.put(url)
-        print('done.')
+        r = requests.put(url)
+        if r.status_code == 400:
+            print('Error in POST request (400)')
+        else:
+            print('done.')
 
     elif command == 'status':
         url = 'http://127.0.0.1:5000/Space-Traders'
         r = requests.get(url)
         print(r.text)
-        print('done.')
+        if r.status_code == 400:
+            print('Error in POST request (400)')
+        else:
+            print('done.')
     
     else:
         print('Command not recognized.')

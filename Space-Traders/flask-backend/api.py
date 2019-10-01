@@ -9,7 +9,7 @@ import formatJSON
 app = Flask(__name__)
 api = Api(app)
 
-space_traders = game.Game('easy', [1,1,1,1]) #TODO: make cleaner and add DB
+space_traders = game.Game('easy', [1,1,1,1], 'placeholder') #TODO: make cleaner and add DB
 
 @app.route("/")
 def my_index():
@@ -25,6 +25,7 @@ class SpaceTraders(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('difficulty', type=str, required=True)
         parser.add_argument('attributes', type=list, required=True)
+        parser.add_argument('name', type=str, required=True)
         args = parser.parse_args()
 
         attributes = []
@@ -39,7 +40,7 @@ class SpaceTraders(Resource):
                 attributes.append(int(builder))
         
         global space_traders
-        space_traders = game.Game(args['difficulty'], attributes)
+        space_traders = game.Game(args['difficulty'], attributes, args['name'])
 
         return 200 
 
