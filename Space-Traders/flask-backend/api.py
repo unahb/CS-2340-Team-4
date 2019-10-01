@@ -9,7 +9,7 @@ import formatJSON
 app = Flask(__name__)
 api = Api(app)
 
-space_traders = game.Game('easy', [1,1,1,1]) #TODO: make cleaner
+space_traders = game.Game('easy', [1,1,1,1]) #TODO: make cleaner and add DB
 
 class SpaceTraders(Resource):
     def get(self):
@@ -26,20 +26,16 @@ class SpaceTraders(Resource):
         attributes = []
         builder = ''
         for i, char in enumerate(args['attributes']):
-            print(char)
-            if i == (len(args['attributes']) - 1):
+            if not char == ',':
                 builder += char
-                attributes.append(int(builder))
-            elif not char == ',':
-                builder += char
-                print('not delimiter')    
             else:
                 attributes.append(int(builder))
                 builder = ''
+            if i == (len(args['attributes']) - 1):
+                attributes.append(int(builder))
         
         global space_traders
         space_traders = game.Game(args['difficulty'], attributes)
-         
 
         return 200 
 
