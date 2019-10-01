@@ -2,15 +2,15 @@ import random
 
 class Game:
     def __init__(self, difficulty, attributes):
-        NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
+        PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
                  'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
         TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
                        'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
         CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
 
         self._difficulty = difficulty
-        self._universe = Universe(NAMES, TECH_LEVELS)
-        self._player = Player(attributes, NAMES[random.randint(0, len(NAMES)-1)], CREDITS[self._difficulty])
+        self._universe = Universe(PLANET_NAMES, TECH_LEVELS)
+        self._player = Player(attributes, PLANET_NAMES[random.randint(0, len(PLANET_NAMES)-1)], CREDITS[self._difficulty])
 
     def travel(self, region):
         self._player.set_region(region)
@@ -39,6 +39,12 @@ class Region:
 
     def get_coordinates(self):
         return self.__coordinates
+    
+    def get_tech_level(self):
+        return self.__tech_level
+
+    def get_name(self):
+        return self.__name
 
     def __str__(self):
         builder = ''
@@ -57,6 +63,8 @@ class Player:
         return self._region
     def get_credits(self):
         return self._credits
+    def get_attributes(self):
+        return self._attributes
 
     # setters
     def set_region(self, region):
@@ -89,11 +97,19 @@ class Universe:
                         valid_coordinates = True
             
                     for planet in self.game_regions:
-                        if (self.game_regions[planet].get_coordinates()[0]) - x > 5:
-                            valid_coordinates = True
-                        if (self.game_regions[planet].get_coordinates()[1]) - y > 5:
-                            valid_coordinates = True
+                        if abs(self.game_regions[planet].get_coordinates()[0] - x) > 5:
+                            if abs(self.game_regions[planet].get_coordinates()[1] - y) > 5:
+                                valid_coordinates = True
                                                     
 
                 tech = random.randint(1, len(tech_names) - 1)
-                self.game_regions[name] = Region((x, y), tech_names[tech], planets)
+                self.game_regions[name] = Region((x, y), tech_names[tech], name)
+
+    def get_game_regions(self):
+        return self.game_regions
+
+    def __str__(self):
+        builder = 'List of Planets: '
+        for planet in self.game_regions:
+            builder += planet + '  '
+        return builder
