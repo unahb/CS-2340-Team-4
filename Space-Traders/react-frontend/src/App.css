@@ -12,6 +12,12 @@
   height: 100vh;
 }
 
+#mapBack {
+  background-image: url(./resources/mapBack.png);
+  background-size: 100vw;
+  height: 100vh;
+}
+
 #spaceship {
   animation: moveUpDown infinite 5s ease-in-out;
   height: 40vh;
@@ -39,7 +45,7 @@
   color: white;
 }
 
-#startButton {
+#startButton, #initailizeGame {
   font-family: 'Press Start 2P', cursive;
   font-size: 8vh;
   position: relative;
@@ -117,7 +123,6 @@ td {
   margin: 10px;
 }
 
-
 #pskill,
 #fskill,
 #mskill,
@@ -134,6 +139,26 @@ td {
   font-family: 'Press Start 2P', cursive;
   font-size: 4vw;
   color: white;
+}
+
+.circle {
+  background: #f00;
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  z-index: 0;
+}
+
+#mapArea {
+  width: 100%;
+  height: 100%; 
+  position: absolute; 
+  top: 0px; 
+  left: 0px; 
+  z-index: 1;
 }
 
 @keyframes moveUpDown {
@@ -157,15 +182,5 @@ td {
 
   100% {
     background-position: -100vw 0;
-  }
-}
-
-@keyframes nextScreen {
-  0% {
-    transform: translateX(0vw);
-  }
-
-  100% {
-    transform: translateX(100vw);
   }
 }
