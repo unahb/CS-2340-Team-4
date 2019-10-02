@@ -75,8 +75,10 @@ function PlayerSetup() {
           player.total = player.pPoints + player.fPoints + player.mPoints + player.ePoints
           document.getElementById("totalPoints").innerText = totalPoints - player.total;
           if (document.getElementById("name").value != "" && player.total == totalPoints) {
+            document.getElementById("submitButton").hidden = false;
             document.getElementById("submitButton").disabled = false;
           } else {
+            document.getElementById("submitButton").hidden = false;
             document.getElementById("submitButton").disabled = true;
           }
         }}></input>
@@ -94,11 +96,13 @@ function PlayerSetup() {
         </div>
         <div>
           <form id="nameForm">
-            <input type="text" id="name" placeholder="Please enter your name!" onChange={(event) => {
+            <input type="text" id="name" autoFocus placeholder="Please enter your name!" onChange={(event) => {
               player.name = event.target.value
               if (document.getElementById("name").value != "" && player.total == totalPoints) {
+                document.getElementById("submitButton").hidden = false;
                 document.getElementById("submitButton").disabled = false;
               } else {
+                document.getElementById("submitButton").hidden = false;
                 document.getElementById("submitButton").disabled = true;
               }
             }}></input>
@@ -106,6 +110,8 @@ function PlayerSetup() {
         </div>
         <div>
           <button type="button" id="easyButton" onClick={(event) => {
+              document.getElementById("submitButton").hidden = false;
+              document.getElementById("submitButton").disabled = true;
               player.difficulty = "Easy"
               player.credits = 1000
               totalPoints = 16
@@ -116,6 +122,8 @@ function PlayerSetup() {
           </button>
           <br></br>
           <button type="button" id="mediumButton" onClick={(event) => {
+              document.getElementById("submitButton").hidden = false;
+              document.getElementById("submitButton").disabled = true;
               player.difficulty = "Medium"
               player.credits = 500
               totalPoints = 12
@@ -126,6 +134,8 @@ function PlayerSetup() {
           </button>
           <br></br>
           <button type="button" id="hardButton" onClick={(event) => {
+              document.getElementById("submitButton").hidden = false;
+              document.getElementById("submitButton").disabled = true;
               player.difficulty = "Hard"
               player.credits = 100
               totalPoints = 8
@@ -154,8 +164,8 @@ function PlayerSetup() {
               player
             }}
             className="nav-link" 
-            player={player}>
-        <button type="submit" id="submitButton" disabled={true}>
+        >
+        <button hidden={true} type="submit" id="submitButton" onClick={() => updatePlayerData(player)}>
           SUBMIT
         </button>
         </Link>
@@ -180,6 +190,21 @@ function reset(player) {
     document.getElementById("m" + i).style.opacity = "0.0";
     document.getElementById("e" + i).style.opacity = "0.0";
   }
+}
+
+function updatePlayerData(player) {
+  console.log('updating')
+  var xhr = new XMLHttpRequest()
+
+  // get a callback when the server responds
+  xhr.addEventListener('load', () => {
+    // update the state of the component with the result here
+    console.log(xhr.responseText)
+  })
+  // open the request with the verb and the url
+  xhr.open('GET', '/Space-Traders')
+  // send the request
+  xhr.send()
 }
 
 export default PlayerSetup;
