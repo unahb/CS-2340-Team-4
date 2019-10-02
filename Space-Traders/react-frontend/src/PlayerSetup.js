@@ -75,10 +75,8 @@ function PlayerSetup() {
           player.total = player.pPoints + player.fPoints + player.mPoints + player.ePoints
           document.getElementById("totalPoints").innerText = totalPoints - player.total;
           if (document.getElementById("name").value != "" && player.total == totalPoints) {
-            document.getElementById("submitButton").hidden = false;
             document.getElementById("submitButton").disabled = false;
           } else {
-            document.getElementById("submitButton").hidden = false;
             document.getElementById("submitButton").disabled = true;
           }
         }}></input>
@@ -99,10 +97,8 @@ function PlayerSetup() {
             <input type="text" id="name" autoFocus placeholder="Please enter your name!" onChange={(event) => {
               player.name = event.target.value
               if (document.getElementById("name").value != "" && player.total == totalPoints) {
-                document.getElementById("submitButton").hidden = false;
                 document.getElementById("submitButton").disabled = false;
               } else {
-                document.getElementById("submitButton").hidden = false;
                 document.getElementById("submitButton").disabled = true;
               }
             }}></input>
@@ -110,47 +106,32 @@ function PlayerSetup() {
         </div>
         <div>
           <button type="button" id="easyButton" onClick={(event) => {
-              document.getElementById("submitButton").hidden = false;
-              document.getElementById("submitButton").disabled = true;
-              player.difficulty = "Easy"
-              player.credits = 1000
               totalPoints = 16
-              reset(player)
-              document.getElementById("totalPoints").innerText = totalPoints - player.total
+              difficultyChanged("easyButton", "Easy", 1000, totalPoints, player)
             }}>
             Easy
           </button>
           <br></br>
           <button type="button" id="mediumButton" onClick={(event) => {
-              document.getElementById("submitButton").hidden = false;
-              document.getElementById("submitButton").disabled = true;
-              player.difficulty = "Medium"
-              player.credits = 500
               totalPoints = 12
-              reset(player)
-              document.getElementById("totalPoints").innerText = totalPoints - player.total
+              difficultyChanged("mediumButton", "Medium", 500, totalPoints, player)
             }}> 
             Medium
           </button>
           <br></br>
           <button type="button" id="hardButton" onClick={(event) => {
-              document.getElementById("submitButton").hidden = false;
-              document.getElementById("submitButton").disabled = true;
-              player.difficulty = "Hard"
-              player.credits = 100
               totalPoints = 8
-              reset(player)
-              document.getElementById("totalPoints").innerText = totalPoints - player.total
+              difficultyChanged("hardButton", "Hard", 100, totalPoints, player)
             }}>
             Hard
           </button>
           <br></br>
-          <label id="totalPoints">
+          <label id="totalPoints" hidden={true}>
             {totalPoints - player.total}
           </label>
         </div>
         
-        <table id="Attribute-Table" align="right">
+        <table id="Attribute-Table" align="right" hidden={true}>
           <tr>
             <th>Skill</th>
             <th colSpan="9">Level</th>
@@ -172,6 +153,20 @@ function PlayerSetup() {
       </div>
     </div>
   );
+}
+
+function difficultyChanged(buttonId, difficulty, credits, totalPoints, player) {
+  document.getElementById("easyButton").style.color = buttonId == "easyButton" ? "blue" : null;
+  document.getElementById("mediumButton").style.color = buttonId == "mediumButton" ? "blue" : null;
+  document.getElementById("hardButton").style.color = buttonId == "hardButton" ? "blue" : null;
+  document.getElementById("submitButton").hidden = false;
+  document.getElementById("submitButton").disabled = true;
+  document.getElementById("Attribute-Table").hidden = false;
+  document.getElementById("totalPoints").hidden = false;
+  document.getElementById("totalPoints").innerText = totalPoints;
+  player.difficulty = difficulty
+  player.credits = credits
+  reset(player)
 }
 
 function reset(player) {
