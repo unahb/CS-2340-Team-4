@@ -8,12 +8,28 @@ CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
 
 class Game:
     def __init__(self, difficulty='easy', attributes=None, name='John Doe'):
+        #set parameters to defaults if they aren't correctly formatted
+        if difficulty not in ('easy', 'medium', 'hard'):   #difficulty
+            difficulty = 'easy'
+            print('difficulty set to default')
+        if attributes is None or not isinstance(attributes, list): #attributes
+            attributes = [1, 1, 1, 1]
+            print('attributes set to default')
+        if len(attributes) != 4:
+            attributes = [1, 1, 1, 1]
+            print('attributes set to default')
+        for num in attributes:
+            if not isinstance(num, int):
+                attributes = [1, 1, 1, 1]
+                print('attributes set to default')
+                break
+        if not isinstance(name, str):                              #name
+            name = 'John Doe'
+            print('name set to default')
+
+        #initialize new game
         self._difficulty = difficulty
         self._universe = Universe()
-
-        if attributes is None:
-            attributes = [1, 1, 1, 1]
-
         starting_planet = PLANET_NAMES[random.randint(0, len(PLANET_NAMES)-1)]
         self._player = Player(attributes, starting_planet, CREDITS[self._difficulty], name)
 
@@ -31,7 +47,7 @@ class Game:
     def get_difficulty(self):
         return self._difficulty
 
-    def __str__(self):
+    def __str__(self):  #mostly for debugging
         builder = ''
         builder += 'Player: ' + str(self._player) + '\n'
         builder += str(self._universe)
@@ -97,7 +113,7 @@ class Universe:
 
         self.game_regions = {}
 
-        for name in PLANET_NAMES:  # add regions to game_regions
+        for name in PLANET_NAMES:  # add regions to game_regions with random attributes
             valid_coordinates = False
             while not valid_coordinates:
                 x_coord = random.randint(-200, 200)
@@ -106,7 +122,7 @@ class Universe:
                 if not self.game_regions:   #pythonic way of checking that a list is empty
                     valid_coordinates = True
 
-                for planet in self.game_regions:
+                for planet in self.game_regions:    #make sure regions are sufficiently far apart
                     if abs(self.game_regions[planet].get_coordinates()[0] - x_coord) > 5:
                         if abs(self.game_regions[planet].get_coordinates()[1] - y_coord) > 5:
                             valid_coordinates = True
