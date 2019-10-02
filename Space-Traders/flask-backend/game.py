@@ -1,28 +1,33 @@
 import random
 
-class Game:
-    def __init__(self, difficulty, attributes, name):
-        PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
-                 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
-        TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
-                       'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
-        CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
+PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
+                'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
+TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
+               'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
+CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
 
+class Game:
+    def __init__(self, difficulty='easy', attributes=None, name='John Doe'):
         self._difficulty = difficulty
-        self._universe = Universe(PLANET_NAMES, TECH_LEVELS)
-        self._player = Player(attributes, PLANET_NAMES[random.randint(0, len(PLANET_NAMES)-1)], CREDITS[self._difficulty], name)
+        self._universe = Universe()
+
+        if attributes is None:
+            attributes = [1, 1, 1, 1]
+
+        starting_planet = PLANET_NAMES[random.randint(0, len(PLANET_NAMES)-1)]
+        self._player = Player(attributes, starting_planet, CREDITS[self._difficulty], name)
 
         print('New game initialized.')
 
     def travel(self, region):
         self._player.set_region(region)
-    
+
     def get_player(self):
         return self._player
 
     def get_universe(self):
         return self._universe
-    
+
     def get_difficulty(self):
         return self._difficulty
 
@@ -41,7 +46,7 @@ class Region:
 
     def get_coordinates(self):
         return self.__coordinates
-    
+
     def get_tech_level(self):
         return self.__tech_level
 
@@ -55,10 +60,10 @@ class Region:
 
 
 class Player:
-    def __init__(self, attributes, region, credits, name):  
+    def __init__(self, attributes, region, money, name):
         self._attributes = attributes # [Pilot, Fighter, Merchant, Engineer] (all ints)
         self._region = region # single underscore for protected
-        self._credits = credits
+        self._credits = money
         self._name = name
 
     # getters
@@ -74,9 +79,9 @@ class Player:
     # setters
     def set_region(self, region):
         self._region = region
-    def set_credits(self, credits):
-        self._credits = credits
-    
+    def set_credits(self, money):
+        self._credits = money
+
     def __str__(self):
         builder = ''
         builder += 'Player is currently at ' + str(self._region) + '\n'
@@ -85,30 +90,29 @@ class Player:
 
 class Universe:
     __instance = None
-    def __init__(self, planets, tech_names):
+    def __init__(self):
         # Needs to be singleton (can't make more than 1)
-        if Universe.__instance != None:
+        if Universe.__instance is not None:
             raise Exception("This class is a singleton!")
-        else:
-            self.game_regions = {}
 
-            for name in planets:  # add regions to game_regions
-                valid_coordinates = False
-                while not valid_coordinates:
-                    x = random.randint(-200, 200)
-                    y = random.randint(-200, 200)
+        self.game_regions = {}
 
-                    if len(self.game_regions) == 0:
-                        valid_coordinates = True
-            
-                    for planet in self.game_regions:
-                        if abs(self.game_regions[planet].get_coordinates()[0] - x) > 5:
-                            if abs(self.game_regions[planet].get_coordinates()[1] - y) > 5:
-                                valid_coordinates = True
-                                                    
+        for name in PLANET_NAMES:  # add regions to game_regions
+            valid_coordinates = False
+            while not valid_coordinates:
+                x_coord = random.randint(-200, 200)
+                y_coord = random.randint(-200, 200)
 
-                tech = random.randint(1, len(tech_names) - 1)
-                self.game_regions[name] = Region((x, y), tech_names[tech], name)
+                if not self.game_regions:   #pythonic way of checking that a list is empty
+                    valid_coordinates = True
+
+                for planet in self.game_regions:
+                    if abs(self.game_regions[planet].get_coordinates()[0] - x_coord) > 5:
+                        if abs(self.game_regions[planet].get_coordinates()[1] - y_coord) > 5:
+                            valid_coordinates = True
+
+            tech = random.randint(1, len(TECH_LEVELS) - 1)
+            self.game_regions[name] = Region((x_coord, y_coord), TECH_LEVELS[tech], name)
 
     def get_game_regions(self):
         return self.game_regions

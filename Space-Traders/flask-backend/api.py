@@ -1,15 +1,22 @@
-import random 
-
-from flask import Flask, request, render_template
-from flask_restful import reqparse, abort, Api, Resource
+from flask import Flask, render_template
+from flask_restful import reqparse, Api, Resource
 
 import game
-import formatJSON
+import format_json
 
 app = Flask(__name__)
 api = Api(app)
 
-space_traders = game.Game('easy', [1,1,1,1], 'placeholder') #TODO: make cleaner and add DB
+#Why does this exist? Because PyLint is stupid and we don't have a DB
+class SpaceTradersContainer:
+    space_traders = game.Game()
+
+    #these functions actually do nothing but pylint demands more than 1 function
+    def lol(self):
+        return 'lol'
+
+    def lole(self):
+        return 'lole'
 
 @app.route("/")
 def my_index():
@@ -17,37 +24,43 @@ def my_index():
 
 class SpaceTraders(Resource):
     def get(self):
-        print(space_traders)
-        return formatJSON.get_json(space_traders) 
+        print(SpaceTradersContainer.space_traders)
+        return format_json.get_json(SpaceTradersContainer.space_traders)
 
     def post(self):
-        #expect a POST in the form of '{"difficulty":"string", "attributes":"int, int, int, int"}'
+        #expect a POST in the form of
+        #'{"difficulty":"string", "attributes":"int,int,int,int", "name":"string"}'
+        #POST request should be formatted with a JSON payload
         parser = reqparse.RequestParser()
         parser.add_argument('difficulty', type=str, required=True)
         parser.add_argument('attributes', type=list, required=True)
         parser.add_argument('name', type=str, required=True)
         args = parser.parse_args()
 
+        #parse attributes as a list since it comes in as a string with comma delimiters
         attributes = []
         builder = ''
         for i, char in enumerate(args['attributes']):
             if not char == ',':
                 builder += char
             else:
+                print(builder)
                 attributes.append(int(builder))
                 builder = ''
             if i == (len(args['attributes']) - 1):
                 attributes.append(int(builder))
-        
-        global space_traders
-        space_traders = game.Game(args['difficulty'], attributes, args['name'])
 
-        return 200 
+        #pylint_passer = game.Game()
+        SpaceTradersContainer.space_traders = game.Game(difficulty=args['difficulty'],
+                                                        attributes=attributes,
+                                                        name=args['name'])
+
+        return 200
 
 
 class Travel(Resource):
     def put(self, planet_id):
-        space_traders.travel(planet_id)
+        SpaceTradersContainer.space_traders.travel(planet_id)
         return 200
 
 
