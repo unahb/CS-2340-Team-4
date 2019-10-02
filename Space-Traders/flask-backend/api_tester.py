@@ -1,63 +1,112 @@
-import subprocess
 import json
+import random
+import string
+
 import requests
+
+#This file exists as a way to use and test the REST API without using Postman or cURL
+#Commands that can be used are 'new', 'travel', 'status', 'player', 'randnew'
 
 DIFFICULTIES = ['easy', 'medium', 'hard']
 PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
-                 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
+                'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
 
 while True:
-    print('Type \"new\" to start a new game, \"travel\" to travel somewhere, or \"status\" to view the current game state. CTRL+C to quit.')
+    print('Type \"new\" to start a new game, \"travel\" to travel \
+somewhere, or \"status\" to view the current game state. CTRL+C to quit.')
     command = input().lower()
-    
-    if command == 'new':
+
+    if command == 'new':    #generate new game state with some input validation
         url = 'http://127.0.0.1:5000/Space-Traders'
         print('Enter your difficulty (easy, medium, hard):')
         command = input().lower()
         while command not in DIFFICULTIES:
-            print('Difficulty not recognized. Enter your difficulty (easy, medium, hard):')
+            print('Difficulty not recognized. Enter your \
+difficulty (easy, medium, hard):')
             command = input().lower()
-        
-        difficulty = command
-        while True:
-            print('Enter your attributes (list of 4 ints like 1,1,1,1):')
-            command = input().lower()
-            builder = ''
-            attributes = []
-            for i, char in enumerate(command):
-                if not char == ',':
-                    builder += char
-                else:
-                    attributes.append(int(builder))
-                    builder = ''
-                if i == (len(command) - 1):
-                    attributes.append(int(builder))
-            if not len(attributes) == 4:
-                print('Incorrect number of attributes entered or format incorrect.')
-            else:
-                break
-        attributes = command
-        
-        payload = {'difficulty': difficulty, 'attributes': attributes}
-        requests.post(url, headers={'content-type' : 'application/json'}, data=json.dumps(payload))
-        print('done.')
 
-    elif command == 'travel':
+        #there used to be input validation here but it was buggy.
+        #just use the tool correctly and don't mess up
+        #worst case seems to be a 500 error with no crash so won't fix
+        difficulty = command
+        print('Enter your attributes (list of 4 ints like 1,1,1,1):')
+        command = input()
+        attributes = command
+
+        while True:
+            print('Enter name:')
+            command = input()
+            if not command == '':
+                break
+        name = command
+
+        payload = {'difficulty': difficulty, 'attributes': attributes, 'name': name}
+        r = requests.post(url,
+                          headers={'content-type' : 'application/json'},
+                          data=json.dumps(payload))
+        if r.status_code == 200:
+            print('Successful request.')
+        elif r.status_code == 500:
+            print('Error in request with status code 500. This probably means your \
+input is improperly formatted. (likely the \"attributes\" field!)')
+        else:
+            print('Error in request with status code ', r.status_code)
+
+    elif command == 'travel':   #PUT request to travel with input validation
         print('Enter desired location:')
         command = input()
+        command = command[0].upper() + command[1:]
         while command not in PLANET_NAMES:
-            print('Planet not recognized. (Make sure you enter it with an uppercase first letter!')
+            print('Planet not recognized.')
             print('Enter desired location:')
             command = input()
+            command = command[0].upper() + command[1:]
         url = 'http://127.0.0.1:5000/Space-Traders/travel/' + command
-        requests.put(url)
-        print('done.')
+        r = requests.put(url)
+        if r.status_code == 200:
+            print('Successful request.')
+        else:
+            print('Error in request with status code ', r.status_code)
 
-    elif command == 'status':
+    elif command in ('status', 'get'):   #print full json dump received from GET request
         url = 'http://127.0.0.1:5000/Space-Traders'
         r = requests.get(url)
         print(r.text)
-        print('done.')
-    
+        if r.status_code == 200:
+            print('Successful request.')
+        else:
+            print('Error in request with status code ', r.status_code)
+
+    elif command == 'player':   #short status, just prints player. not exposed
+        url = 'http://127.0.0.1:5000/Space-Traders'
+        r = requests.get(url)
+        print(r.text[5:r.text.index(']') + 2])
+        if r.status_code == 200:
+            print('Successful request.')
+        else:
+            print('Error in request with status code ', r.status_code)
+
+    elif command == 'randnew':  #generate new game state, randomized. not exposed
+        url = 'http://127.0.0.1:5000/Space-Traders'
+        name = ''.join(random.choices(string.ascii_lowercase, k=random.randint(1, 6)))
+        attributes_list = [random.randint(1, 15) for i in range(4)]
+        attributes = ''
+        for a in attributes_list:
+            attributes += str(a) + ','
+        attributes = attributes[0:len(attributes)-1]
+        difficulty = DIFFICULTIES[random.randint(0, 2)]
+
+        payload = {'difficulty': difficulty, 'attributes': attributes, 'name': name}
+
+        r = requests.post(url,
+                          headers={'content-type' : 'application/json'},
+                          data=json.dumps(payload))
+        print('randomized game state: ', name, attributes, difficulty)
+
+        if r.status_code == 200:
+            print('Successful request.')
+        else:
+            print('Error in request with status code ', r.status_code)
+
     else:
         print('Command not recognized.')
