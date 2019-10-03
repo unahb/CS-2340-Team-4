@@ -2,13 +2,14 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import spaceship from './resources/spaceship.png';
 import './App.css';
+import { post, get } from './requests';
 
 function PlayerSetup() {
   const types = [{name: 'Pilot:', id: 'p'}, {name: 'Fighter:', id: 'f'}, {name: 'Merchant:', id: 'm'}, {name: 'Engineer:', id: 'e'}]
   const points = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
   let totalPoints = 16
-  let player = { name: null, pPoints: 0, fPoints: 0, mPoints: 0, ePoints: 0, total: 0, credits: 1000, difficulty: "Easy"}
+  let player = { name: null, pPoints: 0, fPoints: 0, mPoints: 0, ePoints: 0, total: 0, difficulty: "easy"}
   const table = types.map((row) => 
     <tr>
       <th>{row.name}</th>
@@ -108,21 +109,21 @@ function PlayerSetup() {
         <div id="buttons" hidden={true}>
           <button type="button" id="easyButton" onClick={(event) => {
               totalPoints = 16
-              difficultyChanged("easyButton", "Easy", 1000, totalPoints, player)
+              difficultyChanged("easyButton", "easy", totalPoints, player)
             }}>
             Easy
           </button>
           <br></br>
           <button type="button" id="mediumButton" onClick={(event) => {
               totalPoints = 12
-              difficultyChanged("mediumButton", "Medium", 500, totalPoints, player)
+              difficultyChanged("mediumButton", "medium", totalPoints, player)
             }}> 
             Medium
           </button>
           <br></br>
           <button type="button" id="hardButton" onClick={(event) => {
               totalPoints = 8
-              difficultyChanged("hardButton", "Hard", 100, totalPoints, player)
+              difficultyChanged("hardButton", "hard", totalPoints, player)
             }}>
             Hard
           </button>
@@ -156,7 +157,7 @@ function PlayerSetup() {
   );
 }
 
-function difficultyChanged(buttonId, difficulty, credits, totalPoints, player) {
+function difficultyChanged(buttonId, difficulty, totalPoints, player) {
   document.getElementById("easyButton").style.color = buttonId == "easyButton" ? "blue" : null;
   document.getElementById("mediumButton").style.color = buttonId == "mediumButton" ? "blue" : null;
   document.getElementById("hardButton").style.color = buttonId == "hardButton" ? "blue" : null;
@@ -166,7 +167,6 @@ function difficultyChanged(buttonId, difficulty, credits, totalPoints, player) {
   document.getElementById("totalPoints").hidden = false;
   document.getElementById("totalPoints").innerText = totalPoints;
   player.difficulty = difficulty
-  player.credits = credits
   reset(player)
 }
 
@@ -189,18 +189,11 @@ function reset(player) {
 }
 
 function updatePlayerData(player) {
-  console.log('updating')
-  var xhr = new XMLHttpRequest()
-
-  // get a callback when the server responds
-  xhr.addEventListener('load', () => {
-    // update the state of the component with the result here
-    console.log(xhr.responseText)
-  })
-  // open the request with the verb and the url
-  xhr.open('GET', '/Space-Traders')
-  // send the request
-  xhr.send()
+  // Send POST request to update player data
+  const attributes = player.pPoints + "," + player.fPoints + "," + player.mPoints + "," + player.ePoints
+  const playerStats = {"difficulty": player.difficulty, "attributes": attributes, "name": player.name}
+  post(playerStats, '/Space-Traders')
+  get()
 }
 
 export default PlayerSetup;
