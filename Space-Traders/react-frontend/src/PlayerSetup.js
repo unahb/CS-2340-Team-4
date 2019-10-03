@@ -10,6 +10,7 @@ function PlayerSetup() {
 
   let totalPoints = 16
   let player = { name: null, pPoints: 0, fPoints: 0, mPoints: 0, ePoints: 0, total: 0, difficulty: "easy"}
+  
   const table = types.map((row) => 
     <tr>
       <th>{row.name}</th>
@@ -193,7 +194,8 @@ function updatePlayerData(player) {
   const attributes = player.pPoints + "," + player.fPoints + "," + player.mPoints + "," + player.ePoints
   const playerStats = {"difficulty": player.difficulty, "attributes": attributes, "name": player.name}
   post(playerStats, '/Space-Traders')
-  get()
+  // Pass callback function to GET request
+  // get((state) => {console.log(state)})
 }
 
 export default PlayerSetup;

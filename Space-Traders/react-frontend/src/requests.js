@@ -1,16 +1,21 @@
 // GET request to retrieve data
-function get() {
+function get(callback, state) {
   var xhrGET = new XMLHttpRequest()
+  // get a callback when the server responds to GET request
   xhrGET.addEventListener('load', () => {
+    // pass data back to callback function
     // console.log(xhrGET.responseText)
-    return xhrGET.responseText
+    if (callback) {
+      callback(xhrGET.responseText)
+    }
+    state = xhrGET.responseText
   })
   xhrGET.open('GET', '/Space-Traders')
   xhrGET.send();
 }
 
 // POST request and return updated data
-function post(value, location) {
+function post(value, location, callback) {
   var xhrPOST = new XMLHttpRequest()
   var xhrGET = new XMLHttpRequest()
   // get a callback when the server responds to POST request
@@ -22,7 +27,11 @@ function post(value, location) {
   })
   // get a callback when the server responds to GET request
   xhrGET.addEventListener('load', () => {
+    // pass data back to callback function
     // console.log(xhrGET.responseText)
+    if (callback) {
+      callback(xhrGET.responseText)
+    }
   })
 
   // open and send POST request to update player data

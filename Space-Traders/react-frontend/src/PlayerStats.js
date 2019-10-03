@@ -2,10 +2,11 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import spaceship from './resources/spaceship.png'
 import './App.css'
+import { post, get } from './requests';
 
 function PlayerStats(props) {
+  get((state) => { console.log(state) })
   const player = props.location.player
-  console.log(player)
   return (
     <div id="Main">
       <div id="stars">
