@@ -9,10 +9,10 @@ CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
 class Game:
     def __init__(self, difficulty='easy', attributes=None, name='John Doe'):
         #set parameters to defaults if they aren't correctly formatted
-        if difficulty not in ('easy', 'medium', 'hard'):   #difficulty
+        if difficulty not in ('easy', 'medium', 'hard'):    #difficulty
             difficulty = 'easy'
             print('difficulty set to default')
-        if attributes is None or not isinstance(attributes, list): #attributes
+        if attributes is None or not isinstance(attributes, list):  #attributes
             attributes = [1, 1, 1, 1]
             print('attributes set to default')
         if len(attributes) != 4:
@@ -23,20 +23,22 @@ class Game:
                 attributes = [1, 1, 1, 1]
                 print('attributes set to default')
                 break
-        if not isinstance(name, str):                              #name
+        if not isinstance(name, str):   #name
             name = 'John Doe'
             print('name set to default')
 
         #initialize new game
         self._difficulty = difficulty
         self._universe = Universe()
-        starting_planet = PLANET_NAMES[random.randint(0, len(PLANET_NAMES)-1)]
+        starting_planet_name = PLANET_NAMES[random.randint(0, len(PLANET_NAMES) - 1)]
+        starting_planet = self._universe.get_game_regions()[starting_planet_name]
         self._player = Player(attributes, starting_planet, CREDITS[self._difficulty], name)
 
-        print('New game initialized.')
+        print('New game initialized with player starting at ', self._player.get_region())
+        print('Universe Configuration: ', str(self._universe))
 
     def travel(self, region):
-        self._player.set_region(region)
+        self._player.set_region(self._universe.get_game_regions()[region])
 
     def get_player(self):
         return self._player
@@ -127,14 +129,14 @@ class Universe:
                         if abs(self.game_regions[planet].get_coordinates()[1] - y_coord) > 5:
                             valid_coordinates = True
 
-            tech = random.randint(1, len(TECH_LEVELS) - 1)
+            tech = random.randint(0, len(TECH_LEVELS) - 1)
             self.game_regions[name] = Region((x_coord, y_coord), TECH_LEVELS[tech], name)
 
     def get_game_regions(self):
         return self.game_regions
 
     def __str__(self):
-        builder = 'List of Planets: '
+        builder = ''
         for planet in self.game_regions:
             builder += str(self.game_regions[planet]) + ' '
         return builder
