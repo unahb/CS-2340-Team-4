@@ -5,11 +5,57 @@
   height: 100vh;
 }
 
+#mainMap {
+  background-color: #000000;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#planetInfo {
+  background-color: #333333;
+  position: relative;
+  width: 100vw;
+  height: 15vh;
+  overflow: hidden;
+}
+
+#planetName,
+#planetTech,
+#planetLoc {
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  font-size: 4vh;
+  position: relative;
+  top: 1vh;
+  left: 1vw;
+}
+
+#travelTo {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 4vh;
+  position: absolute;
+  top: 0vh;
+  right: 0vw;
+  height: 15vh;
+  width: 20vw;
+}
+
+#travelTo:hover {
+  background-color: #CCCCCC;
+  cursor: pointer;
+}
+
 #stars {
   animation: starsMove infinite 25s linear;
   background-image: url(./resources/stars.png);
   background-size: 200vw;
   height: 100vh;
+}
+
+#mapBack {
+  background-image: url(./resources/mapBack.png);
+  background-size: 100vw;
+  height: 85vh;
 }
 
 #spaceship {
@@ -39,7 +85,8 @@
   color: white;
 }
 
-#startButton {
+#startButton, 
+#initailizeGame {
   font-family: 'Press Start 2P', cursive;
   font-size: 8vh;
   position: relative;
@@ -125,7 +172,6 @@ td {
   margin: 10px;
 }
 
-
 #pskill,
 #fskill,
 #mskill,
@@ -142,6 +188,28 @@ td {
   font-family: 'Press Start 2P', cursive;
   font-size: 4vw;
   color: white;
+}
+
+.circle {
+  background-color: #003399;
+  font-family: 'Press Start 2P', cursive;
+  text-indent: 2vw;
+  color: white;
+  border: none;
+  position: absolute;
+  top: 50vh;
+  left: 50vw;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  z-index: 0;
+}
+
+.circle:hover {
+  background-color: #003366;
+  cursor: pointer;
 }
 
 @keyframes moveUpDown {
@@ -165,15 +233,5 @@ td {
 
   100% {
     background-position: -100vw 0;
-  }
-}
-
-@keyframes nextScreen {
-  0% {
-    transform: translateX(0vw);
-  }
-
-  100% {
-    transform: translateX(100vw);
   }
 }
