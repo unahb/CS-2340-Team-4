@@ -40,10 +40,10 @@ function TravelMap() {
       </div>
       <div id="planetInfo">
         <label id="planetName">Name: </label>
+        <br></br>
         <label id="planetTech">Tech: </label>
+        <br></br>
         <label id="planetLoc">Location: </label>
-      </div>
-      <div id="travelLink">
         <Link to={{ 
               pathname: '/Regions'
             }}
@@ -58,7 +58,7 @@ function TravelMap() {
 function regionSetup(x, y, butt) {
   var radius = "2vw";
   var left = new String(((x + 200) / 400.0) * 92) + "vw";
-  var top = new String((((y + 200) / 400.0) * 86)) + "vh";
+  var top = new String((((y + 200) / 400.0) * 81)) + "vh";
   butt.style.top = top;
   butt.style.left = left;
   butt.style.width = radius;

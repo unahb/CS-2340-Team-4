@@ -14,8 +14,8 @@
 #planetInfo {
   background-color: #333333;
   position: relative;
-  width: 90vw;
-  height: 10vh;
+  width: 100vw;
+  height: 15vh;
   overflow: hidden;
 }
 
@@ -27,14 +27,17 @@
   font-size: 4vh;
   position: relative;
   top: 1vh;
+  left: 1vw;
 }
 
 #travelTo {
   font-family: 'Press Start 2P', cursive;
   font-size: 4vh;
   position: absolute;
-  right: 0%;
-  top: 1vh;
+  top: 0vh;
+  right: 0vw;
+  height: 15vh;
+  width: 20vw;
 }
 
 #stars {
@@ -47,7 +50,7 @@
 #mapBack {
   background-image: url(./resources/mapBack.png);
   background-size: 100vw;
-  height: 90vh;
+  height: 85vh;
 }
 
 #spaceship {
@@ -189,8 +192,8 @@ td {
   color: white;
   border: none;
   position: absolute;
-  top: 1000px;
-  left: 1000px;
+  top: 50vh;
+  left: 50vw;
   width: 200px;
   height: 200px;
   border-radius: 50%;
