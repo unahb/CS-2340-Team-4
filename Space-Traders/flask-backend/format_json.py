@@ -28,7 +28,7 @@ def get_json(game):
             'name' : region,
             'x_coordinate' : regions[region].get_coordinates()[0],
             'y_coordinate' : regions[region].get_coordinates()[1],
-            'tech-level' : regions[region].get_tech_level()
+            'tech_level' : regions[region].get_tech_level()
         }
         data.append(item)
 
