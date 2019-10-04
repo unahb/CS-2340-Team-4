@@ -14,9 +14,12 @@ def get_json(game):
     player_item = {
         'difficulty' : game.get_difficulty(),
         'skills' : player.get_attributes(),
-        'location' : player.get_region(),
         'credits' : player.get_credits(),
-        'name' : player.get_name()
+        'name' : player.get_name(),
+        'region-name' : player.get_region().get_name(),
+        'region-x-coordinate' : player.get_region().get_coordinates()[0],
+        'region-y-coordinate' : player.get_region().get_coordinates()[1],
+        'region-tech-level' : player.get_region().get_tech_level()
     }
     data.append(player_item)
 
