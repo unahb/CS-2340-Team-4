@@ -38,36 +38,44 @@ class SpaceTraders(Resource):
         parser.add_argument('name', type=str, required=True)
         args = parser.parse_args()
 
-        #parse attributes as a list since it comes in as a string with comma delimiters
-        attributes = []
-        builder = ''
-        for i, char in enumerate(args['attributes']):
-            if not char == ',':
-                builder += char
-            else:
-                attributes.append(int(builder))
-                builder = ''
-            if i == (len(args['attributes']) - 1):
-                attributes.append(int(builder))
-
         #initialize new game
-        SpaceTradersContainer.space_traders = game.Game(difficulty=args['difficulty'],
-                                                        attributes=attributes,
-                                                        name=args['name'])
+        try:
+            #parse attributes as a list since it comes in as a string with comma delimiters
+            attributes = []
+            builder = ''
+            for i, char in enumerate(args['attributes']):
+                if not char == ',':
+                    builder += char
+                else:
+                    attributes.append(int(builder))
+                    builder = ''
+                if i == (len(args['attributes']) - 1):
+                    attributes.append(int(builder))
+            SpaceTradersContainer.space_traders = game.Game(difficulty=args['difficulty'],
+                                                            attributes=attributes,
+                                                            name=args['name'])
 
-        return 200
+            return 200
+        except:
+            print('Error in game initialization')
+            return 405
+        else:
+            print('Unknown error')
+            return 400
 
 #travel to a planet. assume request validation has been done already.
 class Travel(Resource):
     def put(self, planet_id):
         try:
             SpaceTradersContainer.space_traders.travel(planet_id)
-            print('Traveled to ', planet_id)
+            print('Traveled to', planet_id)
             return 200
         except (KeyError):
             print('Region not recognized')
             return 405
-
+        else:
+            print('Unknown error')
+            return 400
 
 ##
 # Actually setup the API resource routing here
