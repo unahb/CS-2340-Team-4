@@ -194,8 +194,6 @@ function updatePlayerData(player) {
   const attributes = player.pPoints + "," + player.fPoints + "," + player.mPoints + "," + player.ePoints
   const playerStats = {"difficulty": player.difficulty, "attributes": attributes, "name": player.name}
   post(playerStats, '/Space-Traders')
-  // Pass callback function to GET request
-  // get((state) => {console.log(state)})
 }
 
 export default PlayerSetup;
