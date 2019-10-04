@@ -61,6 +61,7 @@ class SpaceTraders(Resource):
 #travel to a planet. assume request validation has been done already.
 class Travel(Resource):
     def put(self, planet_id):
+        print('Traveled to ', planet_id)
         SpaceTradersContainer.space_traders.travel(planet_id)
         return 200
 
