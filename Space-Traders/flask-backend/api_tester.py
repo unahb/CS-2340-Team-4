@@ -11,6 +11,7 @@ DIFFICULTIES = ['easy', 'medium', 'hard']
 PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
                 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
 
+unsafe = False
 while True:
     print('Type \"new\" to start a new game, \"travel\" to travel \
 somewhere, or \"status\" to view the current game state. CTRL+C to quit.')
@@ -20,7 +21,7 @@ somewhere, or \"status\" to view the current game state. CTRL+C to quit.')
         url = 'http://127.0.0.1:5000/Space-Traders'
         print('Enter your difficulty (easy, medium, hard):')
         command = input().lower()
-        while command not in DIFFICULTIES:
+        while command not in DIFFICULTIES and not unsafe:
             print('Difficulty not recognized. Enter your \
 difficulty (easy, medium, hard):')
             command = input().lower()
@@ -36,7 +37,7 @@ difficulty (easy, medium, hard):')
         while True:
             print('Enter name:')
             command = input()
-            if not command == '':
+            if not command == '' or unsafe:
                 break
         name = command
 
@@ -56,7 +57,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         print('Enter desired location:')
         command = input()
         command = command[0].upper() + command[1:]
-        while command not in PLANET_NAMES:
+        while command not in PLANET_NAMES and not unsafe:
             print('Planet not recognized.')
             print('Enter desired location:')
             command = input()
@@ -107,6 +108,10 @@ input is improperly formatted. (likely the \"attributes\" field!)')
             print('Successful request.')
         else:
             print('Error in request with status code ', r.status_code)
+
+    elif command == 'unsafe':   #turns on unsafe commands for testing purposes
+        unsafe = not unsafe
+        print('unsafe mode set to', unsafe)
 
     else:
         print('Command not recognized.')
