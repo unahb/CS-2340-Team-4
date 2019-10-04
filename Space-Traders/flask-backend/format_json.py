@@ -1,4 +1,5 @@
-from flask import json
+from flask import jsonify
+import json as json_normal
 # Takes universe, player, and difficulty
 
 # Frontend needs to display List of regions
@@ -6,7 +7,7 @@ from flask import json
 # Display player skills and location
 
 def get_json(game):
-    data = [] # empty list
+    data = {} # empty dict
 
     regions = game.get_universe().get_game_regions()
     player = game.get_player()
@@ -21,7 +22,7 @@ def get_json(game):
         'region-y-coordinate' : player.get_region().get_coordinates()[1],
         'region-tech-level' : player.get_region().get_tech_level()
     }
-    data.append(player_item)
+    data.update(player_item)
 
     for region in regions:
         item = {
@@ -30,6 +31,6 @@ def get_json(game):
             'y-coordinate' : regions[region].get_coordinates()[1],
             'tech-level' : regions[region].get_tech_level()
         }
-        data.append(item)
+        data.update(item)
 
-    return json.jsonify(data)
+    return (jsonify(data), data)
