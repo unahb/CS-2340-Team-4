@@ -55,27 +55,34 @@ class SpaceTraders(Resource):
                                                             attributes=attributes,
                                                             name=args['name'])
 
-            return 200
-        except:
-            print('Error in game initialization')
-            return 405
+            message = 'New game created successfully'
+
+            return {'message': message}, 200
+        except ValueError:
+            message = 'Error in game initialization. Incorrect parameter types'
+            print(message)
+            return {'message': message}, 405
         else:
-            print('Unknown error')
-            return 400
+            message = 'Unknown error'
+            print(message)
+            return {'message': message}, 400
 
 #travel to a planet. assume request validation has been done already.
 class Travel(Resource):
     def put(self, planet_id):
         try:
             SpaceTradersContainer.space_traders.travel(planet_id)
-            print('Traveled to', planet_id)
-            return 200
-        except (KeyError):
-            print('Region not recognized')
-            return 405
+            message = 'Traveled to ' + planet_id
+            print(message)
+            return {'message': message}, 200
+        except KeyError:
+            message = 'Unknown region'
+            print(message)
+            return {'message': message}, 405
         else:
-            print('Unknown error')
-            return 400
+            message = 'Unknown error'
+            print(message)
+            return {'message': message}, 400
 
 ##
 # Actually setup the API resource routing here

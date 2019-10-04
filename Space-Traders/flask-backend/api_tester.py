@@ -51,7 +51,7 @@ difficulty (easy, medium, hard):')
             print('Error in request with status code 500. This probably means your \
 input is improperly formatted. (likely the \"attributes\" field!)')
         else:
-            print('Error in request with status code ', r.status_code)
+            print('Error in request with status code', r.status_code)
 
     elif command == 'travel':   #PUT request to travel with input validation
         print('Enter desired location:')
@@ -67,7 +67,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         if r.status_code == 200:
             print('Successful request.')
         else:
-            print('Error in request with status code ', r.status_code)
+            print('Error in request with status code', r.status_code)
 
     elif command in ('status', 'get'):   #print full json dump received from GET request
         url = 'http://127.0.0.1:5000/Space-Traders'
@@ -76,7 +76,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         if r.status_code == 200:
             print('Successful request.')
         else:
-            print('Error in request with status code ', r.status_code)
+            print('Error in request with status code', r.status_code)
 
     elif command == 'player':   #short status, just prints player. not exposed
         url = 'http://127.0.0.1:5000/Space-Traders'
@@ -85,7 +85,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         if r.status_code == 200:
             print('Successful request.')
         else:
-            print('Error in request with status code ', r.status_code)
+            print('Error in request with status code', r.status_code)
 
     elif command == 'randnew':  #generate new game state, randomized. not exposed
         url = 'http://127.0.0.1:5000/Space-Traders'
@@ -107,7 +107,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         if r.status_code == 200:
             print('Successful request.')
         else:
-            print('Error in request with status code ', r.status_code)
+            print('Error in request with status code', r.status_code)
 
     elif command == 'unsafe':   #turns on unsafe commands for testing purposes
         unsafe = not unsafe
