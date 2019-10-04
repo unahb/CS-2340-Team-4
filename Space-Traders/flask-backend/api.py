@@ -26,7 +26,6 @@ def my_index():
 
 class SpaceTraders(Resource):
     def get(self):
-        print(SpaceTradersContainer.space_traders)  #extremely useful for API testing
         return format_json.get_json(SpaceTradersContainer.space_traders)
 
     def post(self):
@@ -61,8 +60,13 @@ class SpaceTraders(Resource):
 #travel to a planet. assume request validation has been done already.
 class Travel(Resource):
     def put(self, planet_id):
-        SpaceTradersContainer.space_traders.travel(planet_id)
-        return 200
+        try:
+            SpaceTradersContainer.space_traders.travel(planet_id)
+            print('Traveled to ', planet_id)
+            return 200
+        except (KeyError):
+            print('Region not recognized')
+            return 405
 
 
 ##
