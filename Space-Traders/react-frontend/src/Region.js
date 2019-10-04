@@ -5,12 +5,29 @@ import './App.css';
 import { put } from './requests';
 
 function Region(props) {
-  const region = props.location.player.location
+
+  let region = ""
+  let coordX = 0
+  let coordY = 0
+
+  if (props.location.player) {
+    console.log('player')
+    region = props.location.player.region_name
+    coordX = props.location.player.region_x_coordinate
+    coordY = props.location.player.region_y_coordinate
+  } else {
+    console.log('region')
+    region = props.location.currRegion.name
+    coordX = props.location.currRegion.x_coordinate
+    coordY = props.location.currRegion.y_coordinate
+  }
+
   put(region)
   return (
     <div id="Main">
       <header id="Welcome-header">
-        <h1>{region}</h1>
+        <h1>{region.toUpperCase()}</h1>
+        <h1 style={{ fontSize: 20 }}>Location: ({coordX}, {coordY})</h1>
       </header>
       <Link
         to={{
@@ -19,7 +36,7 @@ function Region(props) {
         className="nav-link"
       >
         <button type="button" id="startButton">
-          CONTINUE
+          Map
         </button>
       </Link>
     </div>

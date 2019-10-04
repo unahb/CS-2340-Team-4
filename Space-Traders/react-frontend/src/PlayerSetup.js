@@ -84,6 +84,8 @@ function PlayerSetup() {
       </td>
     </tr>
   )
+
+  const currRegion = player
   return (
     <div id="Main">
       <div id="stars">

@@ -1,83 +1,94 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import './App.css'
+import { get } from './requests';
 
-function TravelMap() {
-  return (
-    <div id="mainMap">
-      <div id="mapBack">
-          <button class="circle mercuryButt" onClick={(e) => {
-            regionSetup(-200, -200, e.target); // Replace 1st param with x-coord of mercury and 2nd param with y-coord (from api data)
-            displayPlanet(e); // Place the Mercury Planet object in the param (e should not be there)
-          }}>Mercury</button>
-          <button class="circle venusButt" onClick={(e) => {
-            regionSetup(-200, 200, e.target); // regionSetup should be called when the TravelMap is loaded in
-            displayPlanet(e);
-          }}>Venus</button>
-          <button class="circle earthButt" onClick={(e) => {
-            regionSetup(-150, 50, e.target);
-            displayPlanet(e);
-          }}>Earth</button>
-          <button class="circle marsButt" onClick={(e) => {
-            regionSetup(0, -50, e.target);
-            displayPlanet(e);
-          }}>Mars</button>
-          <button class="circle jupiterButt" onClick={(e) => {
-            regionSetup(200, -200, e.target);
-            displayPlanet(e);
-          }}>Jupiter</button>
-          <button class="circle saturnButt" onClick={(e) => {
-            regionSetup(0, -150, e.target);
-            displayPlanet(e);
-          }}>Saturn</button>
-          <button class="circle uranusButt" onClick={(e) => {
-            regionSetup(0, -100, e.target);
-            displayPlanet(e);
-          }}>Uranus</button>
-          <button class="circle neptuneButt" onClick={(e) => {
-            regionSetup(200, 200, e.target);
-            displayPlanet(e);
-          }}>Neptune</button>
-          <button class="circle plutoButt" onClick={(e) => {
-            regionSetup(0, 200, e.target);
-            displayPlanet(e);
-          }}>Pluto</button>
-          <button class="circle europaButt" onClick={(e) => {
-            regionSetup(50, -150, e.target);
-            displayPlanet(e);
-          }}>Europa</button>
-      </div>
-      <div id="planetInfo">
-        <label id="planetName">Name: </label> {/*These should be initialized to the player's current location*/}
-        <br></br>
-        <label id="planetTech">Technology: </label>
-        <br></br>
-        <label id="planetLoc">Location: </label>
-        <Link to={{ 
-              pathname: '/Regions'
-            }}
+class TravelMap extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      player: {},
+      currRegion: {},
+      regions: [],
+    }
+  }
+
+  componentWillMount() {
+    get((item) => {
+      this.setState({ player: item[0], regions: item.slice(1, 11) })
+      const player = this.state.player
+      console.log(player)
+      const currRegion = 
+        { name: player.region_name,
+          tech_level: player.region_tech_level,
+          x_coordinate: player.region_x_coordinate,
+          y_coordinate: player.region_y_coordinate,
+          distance: 0
+        }
+      this.setState({ currRegion: currRegion })
+      displayPlanet(currRegion)
+      const distances = this.state.regions.map((region) => {
+        const distance = calculateDistance(player.region_x_coordinate, player.region_y_coordinate, region.x_coordinate, region.y_coordinate)
+        region.distance = distance
+        return region
+      })
+      console.log(distances)
+    })
+  }
+
+  render() {
+    const buttons = this.state.regions.map((region) =>
+      <button 
+        id={region.name.toLowerCase()} 
+        class="circle mercuryButt" 
+        style={{ left: new String(((region.x_coordinate + 200) / 400.0) * 92) + "vw",
+          top: new String(81 - (((region.y_coordinate + 200) / 400.0) * 81)) + "vh" }}
+        onClick={(e) => {
+          displayPlanet(region)
+          this.setState({ currRegion: region })
+        }}>
+        {region.name}
+      </button>)
+
+    const currRegion = this.state.currRegion
+    return (
+      <div id="mainMap">
+        <div id="mapBack">
+          {buttons}
+        </div>
+        <div id="planetInfo">
+          <label id="planetName">Name: </label> {/*These should be initialized to the player's current location*/}
+          <br></br>
+          <label id="planetTech">Technology: </label>
+          <br></br>
+          <label id="planetLoc">Location: </label>
+          <br></br>
+          <label id="planetDist">Distance: </label>
+          <Link to={{
+            pathname: '/Region',
+            currRegion
+          }}
             className="nav-link">
             <button type="button" id="travelTo" align="right">Travel</button>
-        </Link>
+          </Link>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
-function regionSetup(x, y, butt) {
-  var radius = "2vw";
-  var left = new String(((x + 200) / 400.0) * 92) + "vw";
-  var top = new String(81 - (((y + 200) / 400.0) * 81)) + "vh";
-  butt.style.top = top;
-  butt.style.left = left;
-  butt.style.width = radius;
-  butt.style.height = radius;
+// Calculate distance between current and planet location
+function calculateDistance(playerX, playerY, regionX, regionY) {
+  const distance = Math.sqrt(Math.pow((playerX - regionX), 2) + Math.pow((playerY - regionY), 2))
+  return distance
 }
 
 function displayPlanet(planet) {
-  document.getElementById("planetName").innerText = "Name: Earth"; // Use the Planet Data to fill in this information
-  document.getElementById("planetTech").innerText = "Technology: Agriculture";
-  document.getElementById("planetLoc").innerText = "Location: (-150, 50)";
+  document.getElementById("planetName").innerText = "Name: " + planet.name;
+  document.getElementById("planetTech").innerText = "Technology: " + planet.tech_level;
+  document.getElementById("planetLoc").innerText = "Location: (" + planet.x_coordinate + ", " + planet.y_coordinate + ")";
+  document.getElementById("planetDist").innerText = "Distance: " + planet.distance;
 }
 
 export default TravelMap
