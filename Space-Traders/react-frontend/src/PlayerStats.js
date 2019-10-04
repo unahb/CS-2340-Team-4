@@ -55,7 +55,7 @@ class PlayerStats extends React.Component {
               <br></br>
               <Link 
                 to={{
-                  pathname: '/Region',
+                  pathname: '/TravelMap',
                   player
                 }}
                 className="nav-link" 

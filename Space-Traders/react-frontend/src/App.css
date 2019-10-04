@@ -40,6 +40,11 @@
   width: 20vw;
 }
 
+#travelTo:hover {
+  background-color: #CCCCCC;
+  cursor: pointer;
+}
+
 #stars {
   animation: starsMove infinite 25s linear;
   background-image: url(./resources/stars.png);
