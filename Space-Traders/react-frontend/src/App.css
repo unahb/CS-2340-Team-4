@@ -14,7 +14,7 @@
 #planetInfo {
   background-color: #333333;
   position: relative;
-  width: 100vw;
+  width: 90vw;
   height: 10vh;
   overflow: hidden;
 }
@@ -26,14 +26,15 @@
   color: white;
   font-size: 4vh;
   position: relative;
-  top: 2vh;
+  top: 1vh;
 }
 
 #travelTo {
   font-family: 'Press Start 2P', cursive;
   font-size: 4vh;
-  position: relative;
-  top: 2vh;
+  position: absolute;
+  right: 0%;
+  top: 1vh;
 }
 
 #stars {

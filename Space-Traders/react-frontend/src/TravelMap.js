@@ -6,10 +6,6 @@ function TravelMap() {
   return (
     <div id="mainMap">
       <div id="mapBack">
-        <link to={{ 
-              pathname: '/PlayerStats'
-            }}
-            className="nav-link">
           <button class="circle mercuryButt" onClick={(e) => {
             regionSetup(-200, -200, e.target); // Replace 1st param with x-coord of planet and 2nd param with y-coord (from api data)
             displayPlanet(e);
@@ -41,13 +37,19 @@ function TravelMap() {
           <button class="circle europaButt" onClick={(e) => {
             regionSetup(50, -150, e.target);
           }}>Europa</button>
-        </link>
       </div>
       <div id="planetInfo">
         <label id="planetName">Name: </label>
-        <label id="planetTech">Technology: </label>
+        <label id="planetTech">Tech: </label>
         <label id="planetLoc">Location: </label>
-        <button type="button" id="travelTo">Travel</button>
+      </div>
+      <div id="travelLink">
+        <Link to={{ 
+              pathname: '/Regions'
+            }}
+            className="nav-link">
+            <button type="button" id="travelTo" align="right">Travel</button>
+        </Link>
       </div>
     </div>
   )
@@ -64,9 +66,9 @@ function regionSetup(x, y, butt) {
 }
 
 function displayPlanet(event) {
-  document.getElementById("planeName").innerText = "Mercury";
-  document.getElementById("planeTech").innerText = "Mercury";
-  document.getElementById("planeLoc").innerText = "Mercury";
+  document.getElementById("planetName").innerText = "Name: Mercury,";
+  document.getElementById("planetTech").innerText = "Tech: Agriculture,";
+  document.getElementById("planetLoc").innerText = "Location: (-200, -200)";
 }
 
 export default TravelMap
