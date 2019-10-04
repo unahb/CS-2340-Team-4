@@ -16,13 +16,13 @@ class PlayerStats extends React.Component {
 
   componentWillMount() {
     // Make POST request with updated player values
-    // Make GET request when POST complete
     const player = this.props.location.player
     const attributes = player.pPoints + "," + player.fPoints + "," + player.mPoints + "," + player.ePoints
     const playerStats = {"difficulty": player.difficulty, "attributes": attributes, "name": player.name}
     post(playerStats, '/Space-Traders', this.getRegionCoordinates.bind(this))
   }
 
+  // Make GET request when POST complete
   getRegionCoordinates() {
     get((item) => {
       this.setState({ player: item[0], regions: item.slice(1, 11) })
@@ -81,8 +81,10 @@ class PlayerStats extends React.Component {
   }
 }
 
+// Calculate distance between current and planet location
 function calculateDistance(playerX, playerY, regionX, regionY) {
-  return Math.sqrt(Math.abs(Math.pow(playerX - regionX), 2 + Math.pow(playerY - regionY), 2))
+  const distance = Math.sqrt(Math.pow((playerX - regionX), 2) + Math.pow((playerY - regionY), 2))
+  return distance
 }
 
 const styles = {
