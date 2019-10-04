@@ -2,13 +2,15 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import spaceship from './resources/spaceship.png';
 import './App.css';
+import { post, get } from './requests';
 
 function PlayerSetup() {
   const types = [{name: 'Pilot:', id: 'p'}, {name: 'Fighter:', id: 'f'}, {name: 'Merchant:', id: 'm'}, {name: 'Engineer:', id: 'e'}]
   const points = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
   let totalPoints = 16
-  let player = { name: null, pPoints: 0, fPoints: 0, mPoints: 0, ePoints: 0, total: 0, credits: 1000, difficulty: "Easy"}
+  let player = { name: null, pPoints: 0, fPoints: 0, mPoints: 0, ePoints: 0, total: 0, difficulty: "easy"}
+  
   const table = types.map((row) => 
     <tr>
       <th>{row.name}</th>
@@ -94,53 +96,45 @@ function PlayerSetup() {
         </div>
         <div>
           <form id="nameForm">
-            <input type="text" id="name" placeholder="Please enter your name!" onChange={(event) => {
+            <input type="text" id="name" autoFocus placeholder="Please enter your name!" onChange={(event) => {
               player.name = event.target.value
               if (document.getElementById("name").value != "" && player.total == totalPoints) {
                 document.getElementById("submitButton").disabled = false;
               } else {
+                document.getElementById("buttons").hidden = false;
                 document.getElementById("submitButton").disabled = true;
               }
             }}></input>
           </form>
         </div>
-        <div>
+        <div id="buttons" hidden={true}>
           <button type="button" id="easyButton" onClick={(event) => {
-              player.difficulty = "Easy"
-              player.credits = 1000
               totalPoints = 16
-              reset(player)
-              document.getElementById("totalPoints").innerText = totalPoints - player.total
+              difficultyChanged("easyButton", "easy", totalPoints, player)
             }}>
             Easy
           </button>
           <br></br>
           <button type="button" id="mediumButton" onClick={(event) => {
-              player.difficulty = "Medium"
-              player.credits = 500
               totalPoints = 12
-              reset(player)
-              document.getElementById("totalPoints").innerText = totalPoints - player.total
+              difficultyChanged("mediumButton", "medium", totalPoints, player)
             }}> 
             Medium
           </button>
           <br></br>
           <button type="button" id="hardButton" onClick={(event) => {
-              player.difficulty = "Hard"
-              player.credits = 100
               totalPoints = 8
-              reset(player)
-              document.getElementById("totalPoints").innerText = totalPoints - player.total
+              difficultyChanged("hardButton", "hard", totalPoints, player)
             }}>
             Hard
           </button>
           <br></br>
-          <label id="totalPoints">
+          <label id="totalPoints" hidden={true}>
             {totalPoints - player.total}
           </label>
         </div>
         
-        <table id="Attribute-Table" align="right">
+        <table id="Attribute-Table" align="right" hidden={true}>
           <tr>
             <th>Skill</th>
             <th colSpan="9">Level</th>
@@ -154,14 +148,27 @@ function PlayerSetup() {
               player
             }}
             className="nav-link" 
-            player={player}>
-        <button type="submit" id="submitButton" disabled={true}>
+        >
+        <button hidden={true} type="submit" id="submitButton" onClick={() => updatePlayerData(player)}>
           SUBMIT
         </button>
         </Link>
       </div>
     </div>
   );
+}
+
+function difficultyChanged(buttonId, difficulty, totalPoints, player) {
+  document.getElementById("easyButton").style.color = buttonId == "easyButton" ? "blue" : null;
+  document.getElementById("mediumButton").style.color = buttonId == "mediumButton" ? "blue" : null;
+  document.getElementById("hardButton").style.color = buttonId == "hardButton" ? "blue" : null;
+  document.getElementById("submitButton").disabled = true;
+  document.getElementById("submitButton").hidden = false;
+  document.getElementById("Attribute-Table").hidden = false;
+  document.getElementById("totalPoints").hidden = false;
+  document.getElementById("totalPoints").innerText = totalPoints;
+  player.difficulty = difficulty
+  reset(player)
 }
 
 function reset(player) {
@@ -180,6 +187,13 @@ function reset(player) {
     document.getElementById("m" + i).style.opacity = "0.0";
     document.getElementById("e" + i).style.opacity = "0.0";
   }
+}
+
+function updatePlayerData(player) {
+  // Send POST request to update player data
+  const attributes = player.pPoints + "," + player.fPoints + "," + player.mPoints + "," + player.ePoints
+  const playerStats = {"difficulty": player.difficulty, "attributes": attributes, "name": player.name}
+  post(playerStats, '/Space-Traders')
 }
 
 export default PlayerSetup;

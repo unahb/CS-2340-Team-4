@@ -120,13 +120,21 @@
   color: white;
 }
 
-#submitButton,
-#initializeGame {
+#submitButton {
   font-family: 'Press Start 2P', cursive;
   font-size: 8vh;
   position: relative;
   top: 10vh;
   left: 15vh;
+  color: #400080;
+}
+
+#initializeGame {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8vh;
+  position: relative;
+  top: 1vh;
+  color: #400080;
 }
 
 #Attribute-Table {
