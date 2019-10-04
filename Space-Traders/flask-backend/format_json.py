@@ -16,18 +16,18 @@ def get_json(game):
         'skills' : player.get_attributes(),
         'credits' : player.get_credits(),
         'name' : player.get_name(),
-        'region-name' : player.get_region().get_name(),
-        'region-x-coordinate' : player.get_region().get_coordinates()[0],
-        'region-y-coordinate' : player.get_region().get_coordinates()[1],
-        'region-tech-level' : player.get_region().get_tech_level()
+        'region_name' : player.get_region().get_name(),
+        'region_x_coordinate' : player.get_region().get_coordinates()[0],
+        'region_y_coordinate' : player.get_region().get_coordinates()[1],
+        'region_tech_level' : player.get_region().get_tech_level()
     }
     data.append(player_item)
 
     for region in regions:
         item = {
             'name' : region,
-            'x-coordinate' : regions[region].get_coordinates()[0],
-            'y-coordinate' : regions[region].get_coordinates()[1],
+            'x_coordinate' : regions[region].get_coordinates()[0],
+            'y_coordinate' : regions[region].get_coordinates()[1],
             'tech-level' : regions[region].get_tech_level()
         }
         data.append(item)
