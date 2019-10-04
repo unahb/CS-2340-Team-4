@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import spaceship from './resources/spaceship.png';
 import './App.css';
-import { post, get } from './requests';
 
 function PlayerSetup() {
   const types = [{name: 'Pilot:', id: 'p'}, {name: 'Fighter:', id: 'f'}, {name: 'Merchant:', id: 'm'}, {name: 'Engineer:', id: 'e'}]
@@ -149,7 +148,7 @@ function PlayerSetup() {
             }}
             className="nav-link" 
         >
-        <button hidden={true} type="submit" id="submitButton" onClick={() => updatePlayerData(player)}>
+        <button hidden={true} type="submit" id="submitButton">
           SUBMIT
         </button>
         </Link>
@@ -187,13 +186,6 @@ function reset(player) {
     document.getElementById("m" + i).style.opacity = "0.0";
     document.getElementById("e" + i).style.opacity = "0.0";
   }
-}
-
-function updatePlayerData(player) {
-  // Send POST request to update player data
-  const attributes = player.pPoints + "," + player.fPoints + "," + player.mPoints + "," + player.ePoints
-  const playerStats = {"difficulty": player.difficulty, "attributes": attributes, "name": player.name}
-  post(playerStats, '/Space-Traders')
 }
 
 export default PlayerSetup;

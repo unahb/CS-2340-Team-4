@@ -15,9 +15,15 @@ class PlayerStats extends React.Component {
   }
 
   componentWillMount() {
-    get((item) => {
-      const parsed = JSON.parse(item)
-      this.setState({ player: parsed[0], regions: parsed.slice(1, 11) })
+    // Make POST request with updated player values
+    // Make GET request when POST complete
+    const player = this.props.location.player
+    const attributes = player.pPoints + "," + player.fPoints + "," + player.mPoints + "," + player.ePoints
+    const playerStats = {"difficulty": player.difficulty, "attributes": attributes, "name": player.name}
+    post(playerStats, '/Space-Traders', () => {
+      get((item) => {
+        this.setState({ player: item[0], regions: item.slice(1, 11) })
+      })
     })
   }
 
@@ -47,9 +53,17 @@ class PlayerStats extends React.Component {
               <br></br>
               <text id="credits">Credits: <span style={styles.blue}>{player.credits}</span></text>
               <br></br>
-              <button type="button" id="initializeGame">
-                Continue
-              </button>
+              <Link 
+                to={{
+                  pathname: '/Region',
+                  player
+                }}
+                className="nav-link" 
+              >
+                <button type="button" id="initializeGame" onClick={() => {}}>
+                  CONTINUE
+                </button>
+              </Link>
             </div>
           </div>
         </div>
