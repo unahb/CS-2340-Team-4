@@ -5,7 +5,8 @@ import string
 import requests
 
 #This file exists as a way to use and test the REST API without using Postman or cURL
-#Commands that can be used are 'new', 'travel', 'status', 'player', 'randnew'
+#Commands that can be used are 'new', 'travel', 'status', 'player', 'ship', 'randnew'
+#(cont): 'buy', 'sell'
 
 DIFFICULTIES = ['easy', 'medium', 'hard']
 PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
@@ -69,6 +70,36 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         else:
             print('Error in request with status code', r.status_code)
 
+    elif command == 'buy':  #PUT request to buy item, no input validation (yet)
+        print('Enter item:')
+        command = input()
+        command = command[0].upper() + command[1:]
+        url_builder = command
+        print('Enter amount:')
+        command = input()
+        url_builder += '/' + command
+        url = 'http://127.0.0.1:5000/Space-Traders/buy/' + url_builder
+        r = requests.put(url)
+        if r.status_code == 200:
+            print('Successful request.')
+        else:
+            print('Error in request with status code', r.status_code)
+
+    elif command == 'sell':  #PUT request to sell item, no input validation (yet)
+        print('Enter item:')
+        command = input()
+        command = command[0].upper() + command[1:]
+        url_builder = command
+        print('Enter amount:')
+        command = input()
+        url_builder += '/' + command
+        url = 'http://127.0.0.1:5000/Space-Traders/sell/' + url_builder
+        r = requests.put(url)
+        if r.status_code == 200:
+            print('Successful request.')
+        else:
+            print('Error in request with status code', r.status_code)
+
     elif command in ('status', 'get'):   #print full json dump received from GET request
         url = 'http://127.0.0.1:5000/Space-Traders'
         r = requests.get(url)
@@ -81,7 +112,16 @@ input is improperly formatted. (likely the \"attributes\" field!)')
     elif command == 'player':   #short status, just prints player. not exposed
         url = 'http://127.0.0.1:5000/Space-Traders'
         r = requests.get(url)
-        print(r.text[5:r.text.index(']') + 2])
+        print(json.dumps(r.json().get('Player'), indent=4))
+        if r.status_code == 200:
+            print('Successful request.')
+        else:
+            print('Error in request with status code', r.status_code)
+
+    elif command == 'ship':     #same as above but for ship
+        url = 'http://127.0.0.1:5000/Space-Traders'
+        r = requests.get(url)
+        print(json.dumps(r.json().get('Ship'), indent=4))
         if r.status_code == 200:
             print('Successful request.')
         else:

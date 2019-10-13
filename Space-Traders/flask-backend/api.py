@@ -5,6 +5,7 @@ import game
 import format_json
 
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 api = Api(app)
 
 #Why does this exist? Because PyLint is stupid and we don't have a DB
@@ -67,7 +68,7 @@ class SpaceTraders(Resource):
             print(message)
             return {'message': message}, 400
 
-#travel to a planet. assume request validation has been done already.
+#travel to a planet. KeyError produced upon invalid planet
 class Travel(Resource):
     def put(self, planet_id):
         try:
@@ -84,11 +85,52 @@ class Travel(Resource):
             print(message)
             return {'message': message}, 400
 
+#buy an item. region is fetched from current game. KeyError produced upon invalid item
+class Buy(Resource):
+    def put(self, item_id, item_amount):
+        try:
+            region = SpaceTradersContainer.space_traders.get_player().get_region().get_name() #ugly but probably necessary
+            amount = SpaceTradersContainer.space_traders.transaction(region, item_id, item_amount)
+            message = 'Purchased ' + item_amount + ' ' + item_id + '(s) for ' + str(amount) + ' credits.'
+            print(message)
+            return {'message': message}, 200
+        except KeyError:
+            region = SpaceTradersContainer.space_traders.get_player().get_region().get_name()
+            amount = SpaceTradersContainer.space_traders.transaction(item_id, region, item_amount)
+            print(region, amount)
+            message = 'Unknown or invalid item'
+            print(message)
+            return {'message': message}, 405
+        else:
+            message = 'Unknown error'
+            print(message)
+            return {'message': message}, 400
+
+#sell an item. region is fetched from current game. KeyError produced upon invalid item
+class Sell(Resource):
+    def put(self, item_id, item_amount):
+        try:
+            region = SpaceTradersContainer.space_traders.get_player().get_region().get_name() #ugly but probably necessary
+            amount = SpaceTradersContainer.space_traders.transaction(region, item_id, item_amount, buy=False)
+            message = 'Sold ' + item_amount + ' ' + item_id + '(s) and got ' + str(amount) + ' credits.'
+            print(message)
+            return {'message': message}, 200
+        except KeyError:
+            message = 'Unknown or invalid item'
+            print(message)
+            return {'message': message}, 405
+        else:
+            message = 'Unknown error'
+            print(message)
+            return {'message': message}, 400
+
 ##
 # Actually setup the API resource routing here
 ##
-api.add_resource(Travel, '/Space-Traders/travel/<planet_id>')
 api.add_resource(SpaceTraders, '/Space-Traders')
+api.add_resource(Travel, '/Space-Traders/travel/<planet_id>')
+api.add_resource(Buy, '/Space-Traders/buy/<item_id>/<item_amount>')
+api.add_resource(Sell, '/Space-Traders/sell/<item_id>/<item_amount>')
 
 
 if __name__ == '__main__':
