@@ -13,11 +13,11 @@ def get_json(game):
     ship = game.get_ship()
 
     player_region = {
-        'region_name' : player.get_region().get_name(),
-        'region_x_coordinate' : player.get_region().get_coordinates()[0],
-        'region_y_coordinate' : player.get_region().get_coordinates()[1],
-        'region_tech_level' : player.get_region().get_tech_level(),
-        'region_market' : player.get_region().get_market()
+        'name' : player.get_region().get_name(),
+        'tech_level' : player.get_region().get_tech_level(),
+        'x_coordinate' : player.get_region().get_coordinates()[0],
+        'y_coordinate' : player.get_region().get_coordinates()[1],
+        'market' : player.get_region().get_market()
     }
     player_item = {
         'name' : player.get_name(),
@@ -40,6 +40,7 @@ def get_json(game):
     planets_dict = {}
     for name, region in regions.items():
         item = {
+            'name' : name,
             'tech_level' : region.get_tech_level(),
             'x_coordinate' : region.get_coordinates()[0],
             'y_coordinate' : region.get_coordinates()[1],
