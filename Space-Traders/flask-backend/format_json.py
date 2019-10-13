@@ -7,29 +7,37 @@ from flask import json
 
 def get_json(game):
     data = [] # empty list
+    json_dictionary = {}
 
     regions = game.get_universe().get_game_regions()
     player = game.get_player()
 
-    player_item = {
-        'difficulty' : game.get_difficulty(),
-        'skills' : player.get_attributes(),
-        'credits' : player.get_credits(),
-        'name' : player.get_name(),
+    player_region = {
         'region_name' : player.get_region().get_name(),
         'region_x_coordinate' : player.get_region().get_coordinates()[0],
         'region_y_coordinate' : player.get_region().get_coordinates()[1],
         'region_tech_level' : player.get_region().get_tech_level()
     }
+    player_item = {
+        'name' : player.get_name(),
+        'difficulty' : game.get_difficulty(),
+        'credits' : player.get_credits(),
+        'skills' : player.get_attributes(),
+        'region' : player_region
+    }
     data.append(player_item)
 
-    for region in regions:
+    planets_dict = {}
+    for name, region in regions.items():
         item = {
-            'name' : region,
-            'x_coordinate' : regions[region].get_coordinates()[0],
-            'y_coordinate' : regions[region].get_coordinates()[1],
-            'tech_level' : regions[region].get_tech_level()
+            'tech_level' : region.get_tech_level(),
+            'x_coordinate' : region.get_coordinates()[0],
+            'y_coordinate' : region.get_coordinates()[1]
         }
         data.append(item)
+        planets_dict[name] = item
 
-    return json.jsonify(data)
+    json_dictionary["Player"] = player_item
+    json_dictionary["Planets"] = planets_dict
+
+    return json.jsonify(json_dictionary)

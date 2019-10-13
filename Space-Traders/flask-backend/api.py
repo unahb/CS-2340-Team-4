@@ -5,6 +5,7 @@ import game
 import format_json
 
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 api = Api(app)
 
 #Why does this exist? Because PyLint is stupid and we don't have a DB

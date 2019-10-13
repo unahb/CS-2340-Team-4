@@ -1,7 +1,7 @@
 import random
 
 PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
-                'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Europa']
+                'Europa', 'Saturn', 'Uranus', 'Neptune', 'Pluto']
 TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
                'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
 CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
@@ -79,7 +79,11 @@ class Region:
 
 class Player:
     def __init__(self, attributes, region, money, name):
-        self._attributes = attributes # [Pilot, Fighter, Merchant, Engineer] (all ints)
+        self._attributes = {} # attributes is [Pilot, Fighter, Merchant, Engineer] (all ints)
+        self._attributes['Pilot'] = attributes[0]
+        self._attributes['Fighter'] = attributes[1]
+        self._attributes['Merchant'] = attributes[2]
+        self._attributes['Engineer'] = attributes[3]
         self._region = region # single underscore for protected
         self._credits = money
         self._name = name
@@ -113,7 +117,7 @@ class Universe:
         if Universe.__instance is not None:
             raise Exception("This class is a singleton!")
 
-        self.game_regions = {}
+        self.game_regions = {} #set of Region types (not strings!!!)
 
         for name in PLANET_NAMES:  # add regions to game_regions with random attributes
             valid_coordinates = False
@@ -133,6 +137,7 @@ class Universe:
             self.game_regions[name] = Region((x_coord, y_coord), TECH_LEVELS[tech], name)
 
     def get_game_regions(self):
+        print(type(self.game_regions))
         return self.game_regions
 
     def __str__(self):

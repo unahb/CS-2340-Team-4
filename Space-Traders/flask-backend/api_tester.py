@@ -81,7 +81,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
     elif command == 'player':   #short status, just prints player. not exposed
         url = 'http://127.0.0.1:5000/Space-Traders'
         r = requests.get(url)
-        print(r.text[5:r.text.index(']') + 2])
+        print(json.dumps(r.json().get('Player'), indent=4))
         if r.status_code == 200:
             print('Successful request.')
         else:
