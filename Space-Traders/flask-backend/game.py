@@ -5,10 +5,21 @@ PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
 TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
                'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
 CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
-SPACESHIP_TYPES = {'Starship': {'name': 'Starship', 'cargo_space':50, 'fuel':1000, 'health':15}, 'Jet':{}, 'Wasp':{}, 'Ladybug':{}}
+SPACESHIP_TYPES = {'Starship': {'name': 'Starship', 'cargo_space':50, 'fuel':1000, 'health':15}, 
+                        'Jet':{'name': 'Jet', 'cargo_space' : 70, 'fuel': 2000, 'health': 12}, 
+                        'Wasp':{'name': 'Wasp', 'cargo_space': 70, 'fuel': 1000, 'health': 20}, 
+                        'Ladybug':{'name': 'Ladybug', 'cargo_space': 70, 'fuel': 1200, 'health': 18}}
 #TODO: actually fill in all that crap ^^ lololol (and that crap too below)
-MARKET_ITEMS = {'PRE-AG':['Wood', 'Gold'], 'AGRICULTURE':['Wood', 'Gold'], 'MEDIEVAL':['Wood', 'Gold'],
-               'RENAISSANCE':['Wood', 'Gold'], 'INDUSTRIAL':['Wood', 'Gold'], 'MODERN':['Wood', 'Gold'], 'FUTURISTIC':['Wood', 'Gold']}
+MARKET_ITEMS = {'PRE-AG':['Wood', 'Water', 'Deer', 'Bear', 'Cooked Bear', 'Cooked Deer', 'Mystery Meat', 'Cooked Mystery Meat', 'Cow', 'Cooked Cow'], 
+                'AGRICULTURE':['Wood', 'Water', 'Corn', 'Tomatoes', 'Soybean', 'Wheat', 'Sugar', 'Potatoes', 'Walnuts', 'Yams'], 
+                'MEDIEVAL':['Water', 'Iron Platebody', 'Iron Full Helm', 'Iron Platelegs', 'Iron Plateskirt', 'Iron Sword'
+                            'Steel Platebody', 'Steel Full Helm', 'Steel Platelegs', 'Steel Plateskirt', 'Steel Sword'],
+               'RENAISSANCE':['Water', 'Shirt', 'Pants', 'Skirt', 'Ruby', 'Emerald', 'Sapphire', 'Necklace', 'Ring', 'Steel Sword'], 
+               'INDUSTRIAL':['Shirt', 'Pants', 'Fancy Shirt', 'Fancy Pants', 'Fancy Skirt', 
+                                'Ruby', 'Emerald', 'Necklace', 'Ring', 'Water'], 
+               'MODERN':['Water', 'Computer', 'Phone', 'Laptop', 'Fortnite', 'XBOX', 'PS4', 'TV', 'Water Bottle', 'Video Game'], 
+               'FUTURISTIC':['Computer', 'Phone', 'Laptop', 'Fancy Phone', 'Fancy Laptop', 
+                                'Glasses', 'Virtual Food', 'Virtual Water', 'Virtual Money', 'Virtual Sword']}
 
 def fuel_cost_helper(distance, pilot_attribute):
     pilot_attribute += 1
@@ -160,16 +171,23 @@ class Ship:
         self._cargo = {}
         self._current_fuel = ship['fuel']
         self._current_health = ship['health']
+        self._current_cargo = 0
 
     def add_cargo(self, item, amount=1):
         if item in self._cargo:
             self._cargo[item] += amount
         else:
             self._cargo[item] = amount
+            
+        self._current_cargo += amount
+        
+
     def remove_cargo(self, item, amount=1):
         self._cargo[item] -= amount
         if self._cargo[item] <= 0:
             del self._cargo[item]   #delete entry if no more item of type
+        
+        self._current_cargo -= amount
 
     def remove_fuel(self, amount):
         self._current_fuel -= amount
@@ -188,6 +206,8 @@ class Ship:
         return self._current_fuel
     def get_current_health(self):
         return self._current_health
+    def get_current_cargo(self):
+        return self._current_cargo
 
 class Universe:
     __instance = None
@@ -209,8 +229,8 @@ class Universe:
                     valid_coordinates = True
 
                 for planet in self._game_regions:    #make sure regions are sufficiently far apart
-                    if abs(self._game_regions[planet].get_coordinates()[0] - x_coord) > 5:
-                        if abs(self._game_regions[planet].get_coordinates()[1] - y_coord) > 5:
+                    if abs(self._game_regions[planet].get_coordinates()[0] - x_coord) > 8:
+                        if abs(self._game_regions[planet].get_coordinates()[1] - y_coord) > 8:
                             valid_coordinates = True
 
             tech = random.randint(0, len(TECH_LEVELS) - 1)
