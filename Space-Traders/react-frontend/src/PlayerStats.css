@@ -1,14 +1,14 @@
 @import "./App.css";
 
-#Welcome-header {
-    font-family: 'Press Start 2P', cursive;
-    min-height: 30vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+#Hi-header {
+  font-family: 'Press Start 2P', cursive;
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
 #statsDifficulty,
@@ -23,9 +23,9 @@
 }
 
 #initializeGame {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 8vh;
-    position: relative;
-    top: 1vh;
-    color: #400080;
-  }
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8vh;
+  position: relative;
+  top: 1vh;
+  color: #400080;
+}

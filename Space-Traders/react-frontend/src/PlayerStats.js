@@ -36,7 +36,7 @@ class PlayerStats extends React.Component {
       return (
         <div id="Main">
           <div id="stars">
-            <header id="Welcome-header">
+            <header id="Hi-header">
               <h1>Hi <span style={styles.green}>{player.name.toUpperCase()}!</span></h1>
             </header>
             <div>

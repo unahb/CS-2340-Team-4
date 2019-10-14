@@ -70,7 +70,7 @@ class TravelMap extends React.Component {
             currRegion
           }}
             className="nav-link">
-            <button type="button" id="travelTo" align="right">Travel</button>
+            <button type="button" id="travelTo" align="right" disabled="true">Travel</button>
           </Link>
         </div>
       </div>
