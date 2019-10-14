@@ -12,13 +12,23 @@ def get_json(game):
     player = game.get_player()
     ship = game.get_ship()
 
+    distances_and_costs = {}
+    distance_set = game.get_universe().get_region_distances().get_distances(player.get_region().get_name())
+    for region in regions:
+        distances_and_costs[region] = {
+            'distance' : distance_set[region],
+            'fuel_cost' : player.get_fuel_costs()[region]
+        }
+
     player_region = {
-        'region_name' : player.get_region().get_name(),
-        'region_x_coordinate' : player.get_region().get_coordinates()[0],
-        'region_y_coordinate' : player.get_region().get_coordinates()[1],
-        'region_tech_level' : player.get_region().get_tech_level(),
-        'region_market' : player.get_region().get_market()
+        'name' : player.get_region().get_name(),
+        'tech_level' : player.get_region().get_tech_level(),
+        'x_coordinate' : player.get_region().get_coordinates()[0],
+        'y_coordinate' : player.get_region().get_coordinates()[1],
+        'market' : player.get_region_market_adjusted_prices(),
+        'travel_distances_and_costs' : distances_and_costs
     }
+
     player_item = {
         'name' : player.get_name(),
         'difficulty' : game.get_difficulty(),
@@ -40,6 +50,7 @@ def get_json(game):
     planets_dict = {}
     for name, region in regions.items():
         item = {
+            'name' : name,
             'tech_level' : region.get_tech_level(),
             'x_coordinate' : region.get_coordinates()[0],
             'y_coordinate' : region.get_coordinates()[1],
@@ -47,8 +58,8 @@ def get_json(game):
         }
         planets_dict[name] = item
 
-    json_dictionary["Player"] = player_item
-    json_dictionary["Ship"] = ship_item
-    json_dictionary["Planets"] = planets_dict
+    json_dictionary['Player'] = player_item
+    json_dictionary['Ship'] = ship_item
+    json_dictionary['Planets'] = planets_dict
 
     return json.jsonify(json_dictionary)
