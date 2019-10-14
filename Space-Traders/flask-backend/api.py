@@ -1,12 +1,26 @@
 from flask import Flask, render_template
 from flask_restful import reqparse, Api, Resource
 
+import json
 import game
 import format_json
+
+import pymongo
+from pymongo import MongoClient
+import ast
+
+import bson
+from bson import Binary, Code
+from bson.json_util import dumps, loads
+from bson.codec_options import CodecOptions
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 api = Api(app)
+
+client = MongoClient('mongodb+srv://2340group:team4444@cluster0-e4amt.mongodb.net/test?retryWrites=true&w=majority')
+db = client.users
+collection = db.vals
 
 #Why does this exist? Because PyLint is stupid and we don't have a DB
 class SpaceTradersContainer:
@@ -55,6 +69,11 @@ class SpaceTraders(Resource):
             SpaceTradersContainer.space_traders = game.Game(difficulty=args['difficulty'],
                                                             attributes=attributes,
                                                             name=args['name'])
+
+            normal = format_json.get_json(SpaceTradersContainer.space_traders)
+            print(type(normal))
+            posts = db.posts
+            post_id = posts.insert_one(normal).inserted_id
 
             message = 'New game created successfully'
 

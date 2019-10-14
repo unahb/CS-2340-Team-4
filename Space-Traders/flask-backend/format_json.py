@@ -61,5 +61,6 @@ def get_json(game):
     json_dictionary['Player'] = player_item
     json_dictionary['Ship'] = ship_item
     json_dictionary['Planets'] = planets_dict
-
-    return json.jsonify(json_dictionary)
+    #print(json_dictionary)
+    #print(json.jsonify(json_dictionary))
+    return json_dictionary
