@@ -11,9 +11,11 @@ MARKET_ITEMS = {'PRE-AG':['Wood', 'Gold'], 'AGRICULTURE':['Wood', 'Gold'], 'MEDI
                'RENAISSANCE':['Wood', 'Gold'], 'INDUSTRIAL':['Wood', 'Gold'], 'MODERN':['Wood', 'Gold'], 'FUTURISTIC':['Wood', 'Gold']}
 
 def fuel_cost_helper(distance, pilot_attribute):
+    pilot_attribute += 1
     return int(1 / pilot_attribute * distance)
 
 def item_cost_helper(base_cost, merchant_attribute, buy=True):
+    merchant_attribute += 1
     if buy:
         return int(base_cost * merchant_attribute * .1)
     return int(base_cost * merchant_attribute * 1.1)

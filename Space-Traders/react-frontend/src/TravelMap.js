@@ -10,48 +10,40 @@ class TravelMap extends React.Component {
     this.state = {
       player: {},
       currRegion: {},
-      regions: [],
+      regions: {},
+      ship: {},
     }
   }
 
   componentWillMount() {
     get((item) => {
-      this.setState({ player: item[0], regions: item.slice(1, 11) })
-      const player = this.state.player
-      console.log(player)
-      const currRegion = 
-        { name: player.region_name,
-          tech_level: player.region_tech_level,
-          x_coordinate: player.region_x_coordinate,
-          y_coordinate: player.region_y_coordinate,
-          distance: 0
-        }
-      this.setState({ currRegion: currRegion })
+      this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship })
+      const currRegion = item.Player.region
       displayPlanet(currRegion)
-      const distances = this.state.regions.map((region) => {
-        const distance = calculateDistance(player.region_x_coordinate, player.region_y_coordinate, region.x_coordinate, region.y_coordinate)
-        region.distance = distance
-        return region
-      })
-      console.log(distances)
     })
   }
 
   render() {
-    const buttons = this.state.regions.map((region) =>
-      <button 
-        id={region.name.toLowerCase()} 
-        class="circle mercuryButt" 
-        style={{ left: new String(((region.x_coordinate + 200) / 400.0) * 92) + "vw",
-          top: new String(81 - (((region.y_coordinate + 200) / 400.0) * 81)) + "vh" }}
-        onClick={(e) => {
-          displayPlanet(region)
-          this.setState({ currRegion: region })
-        }}>
-        {region.name}
-      </button>)
+    let buttons = []
+    for (let [key, planet] of Object.entries(this.state.regions)) {
+      const button =
+        <button
+          id={planet.name.toLowerCase()}
+          class="circle mercuryButt"
+          style={{
+            left: new String(((planet.x_coordinate + 200) / 400.0) * 92) + "vw",
+            top: new String(81 - (((planet.y_coordinate + 200) / 400.0) * 81)) + "vh"
+          }}
+          onClick={(e) => {
+            displayPlanet(planet)
+            this.setState({ currRegion: planet })
+          }}>
+          {planet.name}
+        </button>
+        buttons.push(button)
+    }
 
-    const currRegion = this.state.currRegion
+    const region = this.state.currRegion
     return (
       <div id="mainMap">
         <div id="mapBack">
@@ -65,9 +57,11 @@ class TravelMap extends React.Component {
           <label id="planetLoc">Location: </label>
           <br></br>
           <label id="planetDist">Distance: </label>
+          <br></br>
+          <label id="planetFuel">Fuel Cost: </label>
           <Link to={{
             pathname: '/Region',
-            currRegion
+            region
           }}
             className="nav-link">
             <button type="button" id="travelTo" align="right">Travel</button>
@@ -78,17 +72,12 @@ class TravelMap extends React.Component {
   }
 }
 
-// Calculate distance between current and planet location
-function calculateDistance(playerX, playerY, regionX, regionY) {
-  const distance = Math.sqrt(Math.pow((playerX - regionX), 2) + Math.pow((playerY - regionY), 2))
-  return distance
-}
-
 function displayPlanet(planet) {
   document.getElementById("planetName").innerText = "Name: " + planet.name;
   document.getElementById("planetTech").innerText = "Technology: " + planet.tech_level;
   document.getElementById("planetLoc").innerText = "Location: (" + planet.x_coordinate + ", " + planet.y_coordinate + ")";
-  document.getElementById("planetDist").innerText = "Distance: " + planet.distance;
+  document.getElementById("planetDist").innerText = planet.distance ? "Distance: " + planet.distance : "Distance: " + 0;
+  document.getElementById("planetFuel").innerText = planet.fuel_cost ? "Fuel Cost: " + planet.fuel_cost : "Fuel Cost: " + 0;
 }
 
 export default TravelMap

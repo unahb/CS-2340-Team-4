@@ -10,17 +10,9 @@ function Region(props) {
   let coordX = 0
   let coordY = 0
 
-  if (props.location.player) {
-    console.log('player')
-    region = props.location.player.region_name
-    coordX = props.location.player.region_x_coordinate
-    coordY = props.location.player.region_y_coordinate
-  } else {
-    console.log('region')
-    region = props.location.currRegion.name
-    coordX = props.location.currRegion.x_coordinate
-    coordY = props.location.currRegion.y_coordinate
-  }
+  region = props.location.region.name
+  coordX = props.location.region.x_coordinate
+  coordY = props.location.region.y_coordinate
 
   put(region)
   return (
