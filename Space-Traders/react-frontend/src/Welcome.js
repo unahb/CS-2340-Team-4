@@ -14,7 +14,7 @@ function Welcome() {
           <img src={spaceship} id="spaceship" align="left"/>
         </div>
         <button type="button" id="startButton">
-          <Link to={/*'/PlayerSetup'*/'/TravelMap'} className="nav-link">START</Link>
+          <Link to={'/PlayerSetup'} className="nav-link">START</Link>
         </button>
       </div>
     </div>
