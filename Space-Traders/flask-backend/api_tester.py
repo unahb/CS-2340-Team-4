@@ -17,6 +17,9 @@ while True:
     print('Type \"new\" to start a new game, \"travel\" to travel \
 somewhere, or \"status\" to view the current game state. CTRL+C to quit.')
     command = input().lower()
+    if command == 'load':
+        url = 'http://127.0.0.1:5000/Space-Traders'
+        
 
     if command == 'new':    #generate new game state with some input validation
         url = 'http://127.0.0.1:5000/Space-Traders'

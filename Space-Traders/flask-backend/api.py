@@ -71,9 +71,9 @@ class SpaceTraders(Resource):
                                                             name=args['name'])
 
             normal = format_json.get_json(SpaceTradersContainer.space_traders)
-            print(type(normal))
-            posts = db.posts
-            post_id = posts.insert_one(normal).inserted_id
+            #print(type(normal))
+            vals = db.vals
+            post_id = vals.insert_one(normal).inserted_id
 
             message = 'New game created successfully'
 
@@ -150,6 +150,7 @@ api.add_resource(SpaceTraders, '/Space-Traders')
 api.add_resource(Travel, '/Space-Traders/travel/<planet_id>')
 api.add_resource(Buy, '/Space-Traders/buy/<item_id>/<item_amount>')
 api.add_resource(Sell, '/Space-Traders/sell/<item_id>/<item_amount>')
+api.add_resource(Load, '/Space-Traders/load')
 
 
 if __name__ == '__main__':
