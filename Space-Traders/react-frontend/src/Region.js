@@ -6,13 +6,11 @@ import { put } from './requests';
 
 function Region(props) {
 
-  let region = ""
-  let coordX = 0
-  let coordY = 0
+  let region = props.location.region.name
+  let coordX = props.location.region.x_coordinate
+  let coordY = props.location.region.y_coordinate
 
-  region = props.location.region.name
-  coordX = props.location.region.x_coordinate
-  coordY = props.location.region.y_coordinate
+  let ship = props.location.ship
 
   put(region)
   return (
