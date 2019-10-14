@@ -113,7 +113,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         url = 'http://127.0.0.1:5000/Space-Traders'
         r = requests.get(url)
         player = r.json().get('Player')
-        del player['region']['travel_distances_and_costs']
+        #del player['region']['travel_distances_and_costs']
         print(json.dumps(player, indent=4))
         if r.status_code == 200:
             print('Successful request.')
