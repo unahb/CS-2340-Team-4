@@ -1,0 +1,21 @@
+@import "./App.css";
+
+#Region-header {
+    font-family: 'Press Start 2P', cursive;
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+#mapButton {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8vh;
+    position: relative;
+    top: 50vh;
+    left: 20vw;
+    color: #400080;
+}

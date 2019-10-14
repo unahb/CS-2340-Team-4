@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import spaceship from './resources/spaceship.png'
-import './App.css'
+import './PlayerStats.css'
 import { post, get } from './requests';
 
 class PlayerStats extends React.Component {
@@ -37,7 +37,7 @@ class PlayerStats extends React.Component {
       return (
         <div id="Main">
           <div id="stars">
-            <header id="Welcome-header">
+            <header id="Hi-header">
               <h1>Hi <span style={styles.green}>{player.name.toUpperCase()}!</span></h1>
             </header>
             <div>

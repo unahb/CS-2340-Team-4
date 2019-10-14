@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import './App.css'
+import './TravelMap.css'
 import { get } from './requests';
 
 class TravelMap extends React.Component {
@@ -19,7 +19,7 @@ class TravelMap extends React.Component {
     get((item) => {
       this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship })
       const currRegion = item.Player.region
-      displayPlanet(currRegion)
+      displayPlanet(currRegion, item.Player)
     })
   }
 
@@ -29,9 +29,9 @@ class TravelMap extends React.Component {
       const button =
         <button
           id={planet.name.toLowerCase()}
-          class="circle mercuryButt"
+          class="circle"
           style={{
-            left: new String(((planet.x_coordinate + 200) / 400.0) * 92) + "vw",
+            left: new String(((planet.x_coordinate + 200) / 400.0) * 81) + "vw",
             top: new String(81 - (((planet.y_coordinate + 200) / 400.0) * 81)) + "vh"
           }}
           onClick={(e) => {
@@ -44,6 +44,7 @@ class TravelMap extends React.Component {
     }
 
     const region = this.state.currRegion
+    const ship = this.state.ship
     return (
       <div id="mainMap">
         <div id="mapBack">
@@ -61,7 +62,8 @@ class TravelMap extends React.Component {
           <label id="planetFuel">Fuel Cost: </label>
           <Link to={{
             pathname: '/Region',
-            region
+            region,
+            ship
           }}
             className="nav-link">
             <button type="button" id="travelTo" align="right">Travel</button>
@@ -72,7 +74,10 @@ class TravelMap extends React.Component {
   }
 }
 
-function displayPlanet(planet) {
+function displayPlanet(planet, Player) {
+  if (Player != null && planet.name == Player.region.name) {
+    document.getElementById(planet.name.toLowerCase()).style.backgroundColor = "#FF0000"
+  }
   document.getElementById("planetName").innerText = "Name: " + planet.name;
   document.getElementById("planetTech").innerText = "Technology: " + planet.tech_level;
   document.getElementById("planetLoc").innerText = "Location: (" + planet.x_coordinate + ", " + planet.y_coordinate + ")";

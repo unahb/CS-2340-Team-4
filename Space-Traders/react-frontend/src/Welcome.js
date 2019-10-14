@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import spaceship from './resources/spaceship.png';
-import './App.css';
+import './Welcome.css';
 
 function Welcome() {
   return (
@@ -14,7 +14,7 @@ function Welcome() {
           <img src={spaceship} id="spaceship" align="left"/>
         </div>
         <button type="button" id="startButton">
-          <Link to={/*'/PlayerSetup'*/'/PlayerSetup'} className="nav-link">START</Link>
+          <Link to={'/PlayerSetup'} className="nav-link">START</Link>
         </button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import random
+import math
 
 PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
                 'Europa', 'Saturn', 'Uranus', 'Neptune', 'Pluto']
@@ -22,14 +23,14 @@ MARKET_ITEMS = {'PRE-AG':['Wood', 'Water', 'Deer', 'Bear', 'Cooked Bear', 'Cooke
                                 'Glasses', 'Virtual Food', 'Virtual Water', 'Virtual Money', 'Virtual Sword']}
 
 def fuel_cost_helper(distance, pilot_attribute):
-    pilot_attribute += 1
-    return int(1 / pilot_attribute * distance)
+    pilot_attribute += 2
+    return int(distance / (1 + math.log(pilot_attribute)))
 
 def item_cost_helper(base_cost, merchant_attribute, buy=True):
-    merchant_attribute += 1
+    merchant_attribute += 2
     if buy:
-        return int(base_cost * merchant_attribute * .1)
-    return int(base_cost * merchant_attribute * 1.1)
+        return int(base_cost / (1 + math.log(merchant_attribute)))
+    return int(base_cost * math.log(merchant_attribute) * 1.1)
 
 class Game:
     def __init__(self, difficulty='easy', attributes=None, name='John Doe'):
