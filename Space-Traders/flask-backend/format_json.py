@@ -14,19 +14,13 @@ def get_json(game):
 
     distances_and_costs = {}
     distance_set = game.get_universe().get_region_distances().get_distances(player.get_region().get_name())
-    for region in regions:
-        distances_and_costs[region] = {
-            'distance' : distance_set[region],
-            'fuel_cost' : player.get_fuel_costs()[region]
-        }
 
     player_region = {
         'name' : player.get_region().get_name(),
         'tech_level' : player.get_region().get_tech_level(),
         'x_coordinate' : player.get_region().get_coordinates()[0],
         'y_coordinate' : player.get_region().get_coordinates()[1],
-        'market' : player.get_region_market_adjusted_prices(),
-        'travel_distances_and_costs' : distances_and_costs
+        'market' : player.get_region_market_adjusted_prices()
     }
 
     player_item = {
@@ -54,7 +48,9 @@ def get_json(game):
             'tech_level' : region.get_tech_level(),
             'x_coordinate' : region.get_coordinates()[0],
             'y_coordinate' : region.get_coordinates()[1],
-            'market' : region.get_market()
+            'market' : region.get_market(),
+            'distance' : distance_set[region.get_name()],
+            'fuel_cost' : player.get_fuel_costs()[region.get_name()]
         }
         planets_dict[name] = item
 
