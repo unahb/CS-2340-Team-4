@@ -58,16 +58,15 @@ class Game:
         self._universe = Universe()
         starting_planet_name = PLANET_NAMES[random.randint(0, len(PLANET_NAMES) - 1)]
         starting_planet = self._universe.get_game_regions()[starting_planet_name]
-        self._player = Player(attributes, starting_planet, CREDITS[self._difficulty], name)
+        self._player = Player(attributes, starting_planet, CREDITS[self._difficulty], name, 'Starship')
         self._player.calc_fuel_costs(PLANET_NAMES, self._universe.get_region_distances().get_distances(self._player.get_region().get_name()))
-        self._ship = Ship(SPACESHIP_TYPES['Starship'])
 
         print('New game initialized with player starting at ', self._player.get_region())
         print('Universe Configuration: ', str(self._universe))
 
     def travel(self, region):   #travel when the api is called to do so. fuel costs automatically subtracted
         cost = self._player.get_fuel_costs()[region]
-        self._ship.remove_fuel(cost)
+        self._player.get_ship().remove_fuel(cost)
         self._player.set_region(self._universe.get_game_regions()[region])
         self._player.calc_fuel_costs(PLANET_NAMES, self._universe.get_region_distances().get_distances(self._player.get_region().get_name()))
 
@@ -77,13 +76,13 @@ class Game:
             planet_price = self._player.get_region_market_adjusted_prices()[item_key]
             amount =  planet_price * int(item_amount)
             self._player.transaction(amount*-1)
-            self._ship.add_cargo(item, int(item_amount))
+            self._player.get_ship().add_cargo(item, int(item_amount))
         else:
             item_key = 'sell_' + item
             planet_price = self._player.get_region_market_adjusted_prices()[item_key]
             amount =  planet_price * int(item_amount)
             self._player.transaction(amount)
-            self._ship.remove_cargo(item, int(item_amount))
+            self._player.get_ship().remove_cargo(item, int(item_amount))
         print('Successful transaction of ' + str(item_amount) + ' ' + item + ' on ' + region)   #print for debug
         print('Planet item price: ' + str(planet_price) + ' Transaction amount: ' + str(amount))
         return amount
@@ -91,7 +90,7 @@ class Game:
     def get_player(self):
         return self._player
     def get_ship(self):
-        return self._ship
+        return self._player.get_ship()
     def get_universe(self):
         return self._universe
     def get_difficulty(self):
@@ -104,7 +103,7 @@ class Game:
         return builder
 
 class Player:
-    def __init__(self, attributes, region, money, name):
+    def __init__(self, attributes, region, money, name, ship):
         self._attributes = {} # attributes is [Pilot, Fighter, Merchant, Engineer] (all ints)
         self._attributes['Pilot'] = attributes[0]
         self._attributes['Fighter'] = attributes[1]
@@ -113,6 +112,7 @@ class Player:
         self._region = region
         self._credits = int(money)
         self._name = name
+        self._ship = Ship(SPACESHIP_TYPES[ship])
         self._region_market_adjusted_prices = {}
         self.calculate_market_costs()
         #expect that fuel costs will be updated using the calculate function
@@ -130,10 +130,14 @@ class Player:
         self._region_market_adjusted_prices = {}
         for item in self._region.get_market():    #generate the market for the planet the player is on, taking into account merchant skill
             item_key = ('buy_' + item, 'sell_' + item)
-            if random.randint(0,1) == 0:
-                self._region_market_adjusted_prices[item_key[0]] = item_cost_helper(self._region.get_market()[item], self._attributes['Merchant'])
-            else:
-                self._region_market_adjusted_prices[item_key[1]] = item_cost_helper(self._region.get_market()[item], self._attributes['Merchant'], buy=False)
+            price = item_cost_helper(self._region.get_market()[item], self._attributes['Merchant'])
+            self._region_market_adjusted_prices[item_key[0]] = price
+            self._region_market_adjusted_prices[item_key[1]] = price
+        for item, price in self._ship.get_cargo().items():
+            item_key = 'sell_' + item
+            if not item_key in self._region_market_adjusted_prices:
+                price = item_cost_helper(random.randint(10, 50), self._attributes['Merchant'], buy=False)
+                self._region_market_adjusted_prices[item_key] = price
 
     # getters
     def get_region(self):
@@ -146,6 +150,8 @@ class Player:
         return self._attributes
     def get_name(self):
         return self._name
+    def get_ship(self):
+        return self._ship
     def get_fuel_costs(self):
         return self._fuel_costs
 
