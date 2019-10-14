@@ -81,7 +81,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         url = 'http://127.0.0.1:5000/Space-Traders/buy/' + url_builder
         r = requests.put(url)
         if r.status_code == 200:
-            print('Successful request.')
+            print(r.json())
         else:
             print('Error in request with status code', r.status_code)
 
@@ -96,7 +96,7 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         url = 'http://127.0.0.1:5000/Space-Traders/sell/' + url_builder
         r = requests.put(url)
         if r.status_code == 200:
-            print('Successful request.')
+            print(r.json())
         else:
             print('Error in request with status code', r.status_code)
 
@@ -109,16 +109,18 @@ input is improperly formatted. (likely the \"attributes\" field!)')
         else:
             print('Error in request with status code', r.status_code)
 
-    elif command == 'player':   #short status, just prints player. not exposed
+    elif command == 'player':   #short status, just prints player and strips distances. not exposed
         url = 'http://127.0.0.1:5000/Space-Traders'
         r = requests.get(url)
-        print(json.dumps(r.json().get('Player'), indent=4))
+        player = r.json().get('Player')
+        del player['region']['travel_distances_and_costs']
+        print(json.dumps(player, indent=4))
         if r.status_code == 200:
             print('Successful request.')
         else:
             print('Error in request with status code', r.status_code)
 
-    elif command == 'ship':     #same as above but for ship
+    elif command in ('ship', 'cargo'):     #same as above but for ship
         url = 'http://127.0.0.1:5000/Space-Traders'
         r = requests.get(url)
         print(json.dumps(r.json().get('Ship'), indent=4))
