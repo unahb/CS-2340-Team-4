@@ -127,17 +127,12 @@ class Player:
     def calculate_market_costs(self):
         self._region_market_adjusted_prices = {}
         for item in self._region.get_market():    #generate the market for the planet the player is on, taking into account merchant skill
-            #item_key = ('buy_' + item, 'sell_' + item)
             price = item_cost_helper(self._region.get_market()[item], self._attributes['Merchant'])
             self._region_market_adjusted_prices[item] = {'Buy' : price, 'Sell' : price}
-            #self._region_market_adjusted_prices[item_key[0]] = price
-            #self._region_market_adjusted_prices[item_key[1]] = price
         for item, price in self._ship.get_cargo().items():
-            #item_key = 'sell_' + item
             if not item in self._region_market_adjusted_prices:
                 price = item_cost_helper(random.randint(10, 50), self._attributes['Merchant'], buy=False)
                 self._region_market_adjusted_prices[item] = {'Sell' : price}
-                #self._region_market_adjusted_prices[item_key] = price
 
     # getters
     def get_region(self):
