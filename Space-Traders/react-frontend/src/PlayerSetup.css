@@ -1,0 +1,89 @@
+@import "./App.css";
+
+#Attributes-header {
+    font-family: 'Press Start 2P', cursive;
+    min-height: 25vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+#Attribute-Table {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    width: 50vw;
+    height: 40vh;
+    align-self: center;
+    position: relative;
+    bottom: 40vh;
+    right: 5vh;
+    border-collapse: collapse;
+    border: 1px solid white;
+}
+
+#name {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 5vh;
+    width: 60vw;
+    left: 5vw;
+    position: relative;
+    bottom: 3vh;
+}
+
+#easyButton,
+#mediumButton,
+#hardButton {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8vh;
+  position: relative;
+  right: 25vw;
+  margin: 1vh;
+}
+
+#easyButton:focus-visible,
+#mediumButton:focus-visible,
+#hardButton:focus-visible {
+  background-color: #b8b8b8;
+}
+
+#totalPoints {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8vh;
+    position: relative;
+    right: 25vw;
+    margin: 3vh;
+    top: 5vh;
+    color: white;
+}
+  
+tr,
+th,
+td {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    width: 6vw;
+    height: 12vh;
+    align-self: center;
+    border-collapse: collapse;
+    border: 1px solid white;
+    margin: 10px;
+}
+  
+#pskill,
+#fskill,
+#mskill,
+#eskill {
+    width: 5vw;
+}
+
+#submitButton {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8vh;
+    position: relative;
+    top: 10vh;
+    left: 15vh;
+    color: #400080;
+}

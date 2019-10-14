@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import spaceship from './resources/spaceship.png'
-import './App.css'
+import './PlayerStats.css'
 import { post, get } from './requests';
 
 class PlayerStats extends React.Component {
