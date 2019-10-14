@@ -44,7 +44,6 @@ class TravelMap extends React.Component {
     }
 
     const region = this.state.currRegion
-    const ship = this.state.ship
     return (
       <div id="mainMap">
         <div id="mapBack">
@@ -62,8 +61,7 @@ class TravelMap extends React.Component {
           <label id="planetFuel">Fuel Cost: </label>
           <Link to={{
             pathname: '/Region',
-            region,
-            ship
+            region
           }}
             className="nav-link">
             <button type="button" id="travelTo" align="right">Travel</button>
