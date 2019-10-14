@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import spaceship from './resources/spaceship.png';
-import './App.css';
+import './Region.css';
 import { put } from './requests';
 
 function Region(props) {
@@ -15,7 +15,7 @@ function Region(props) {
   put(region)
   return (
     <div id="Main">
-      <header id="Welcome-header">
+      <header id="Region-header">
         <h1>{region.toUpperCase()}</h1>
         <h1 style={{ fontSize: 20 }}>Location: ({coordX}, {coordY})</h1>
       </header>
@@ -25,7 +25,7 @@ function Region(props) {
         }}
         className="nav-link"
       >
-        <button type="button" id="startButton">
+        <button type="button" id="mapButton">
           Map
         </button>
       </Link>
