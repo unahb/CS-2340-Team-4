@@ -17,7 +17,7 @@ function Region(props) {
     <div id="Main">
       <header id="Region-header">
         <h1>{region.toUpperCase()}</h1>
-        <h1 style={{ fontSize: 20 }}>Location: ({coordX}, {coordY})</h1>
+        <h1 style={{ fontSize: "3vh" }}>Location: ({coordX}, {coordY})</h1>
       </header>
       <Link
         to={{

@@ -39,15 +39,35 @@
     height: 15vh;
     overflow: hidden;
 }
+
+#travelInfo {
+    background-color: #333333;
+    position: absolute;
+    top: 0vh;
+    left: 80vw;
+    width: 20vw;
+    height: 85vh;
+    overflow: hidden;
+}
+
+#planetFuel,
+#fuelLeft {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    font-size: 3vh;
+    position: relative;
+    top: 1vh;
+    left: 1vw;
+    width: 20vw;
+}
   
 #planetName,
 #planetTech,
 #planetLoc,
-#planetDist,
-#planetFuel {
+#planetDist {
     font-family: 'Press Start 2P', cursive;
     color: white;
-    font-size: 2vh;
+    font-size: 3vh;
     position: relative;
     top: 1vh;
     left: 1vw;
@@ -55,12 +75,12 @@
 
 #travelTo {
     font-family: 'Press Start 2P', cursive;
-    font-size: 4vh;
+    font-size: 3vh;
     position: absolute;
     top: 0vh;
     right: 0vw;
     height: 15vh;
-    width: 25vw;
+    width: 20vw;
 }
   
 #travelTo:hover {
