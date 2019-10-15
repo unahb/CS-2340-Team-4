@@ -12,8 +12,8 @@ def get_json(game):
     player = game.get_player()
     ship = game.get_ship()
 
-    distances_and_costs = {}
-    distance_set = game.get_universe().get_region_distances().get_distances(player.get_region().get_name())
+    player_region_name = player.get_region().get_name()
+    distance_set = game.get_universe().get_region_distances().get_distances(player_region_name)
 
     player_region = {
         'name' : player.get_region().get_name(),

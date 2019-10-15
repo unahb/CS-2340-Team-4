@@ -89,9 +89,10 @@ class Travel(Resource):
 class Buy(Resource):
     def put(self, item_id, item_amount):
         try:
-            region = SpaceTradersContainer.space_traders.get_player().get_region().get_name() #ugly but probably necessary
+            region = SpaceTradersContainer.space_traders.get_player().get_region().get_name()
             amount = SpaceTradersContainer.space_traders.transaction(region, item_id, item_amount)
-            message = 'Purchased ' + item_amount + ' ' + item_id + '(s) for ' + str(amount) + ' credits.'
+            smount = str(amount) #for pylint lol
+            message = 'Purchased ' + item_amount + ' ' + item_id + '(s) for ' + smount + ' credits.'
             print(message)
             return {'message': message}, 200
         except KeyError:
@@ -110,9 +111,11 @@ class Buy(Resource):
 class Sell(Resource):
     def put(self, item_id, item_amount):
         try:
-            region = SpaceTradersContainer.space_traders.get_player().get_region().get_name() #ugly but probably necessary
-            amount = SpaceTradersContainer.space_traders.transaction(region, item_id, item_amount, buy=False)
-            message = 'Sold ' + item_amount + ' ' + item_id + '(s) and got ' + str(amount) + ' credits.'
+            region = SpaceTradersContainer.space_traders.get_player().get_region().get_name()
+            amount = SpaceTradersContainer.space_traders.transaction(region, item_id,
+                                                                     item_amount, buy=False)
+            smount = str(amount) #for pylint lol
+            message = 'Sold ' + item_amount + ' ' + item_id + '(s) and got ' + smount + ' credits.'
             print(message)
             return {'message': message}, 200
         except KeyError:

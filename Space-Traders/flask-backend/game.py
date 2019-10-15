@@ -3,24 +3,33 @@ import math
 
 PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
                 'Europa', 'Saturn', 'Uranus', 'Neptune', 'Pluto']
+
 TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
                'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
+
 CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
-SPACESHIP_TYPES = {'Starship': {'name': 'Starship', 'cargo_space':50, 'fuel':1000, 'health':15}, 
-                        'Jet':{'name': 'Jet', 'cargo_space' : 70, 'fuel': 2000, 'health': 12}, 
-                        'Wasp':{'name': 'Wasp', 'cargo_space': 70, 'fuel': 1000, 'health': 20}, 
-                        'Ladybug':{'name': 'Ladybug', 'cargo_space': 70, 'fuel': 1200, 'health': 18}}
-#TODO: actually fill in all that crap ^^ lololol (and that crap too below)
-MARKET_ITEMS = {'PRE-AG':['Wood', 'Water', 'Deer', 'Bear', 'Cooked Bear', 'Cooked Deer', 'Mystery Meat', 'Cooked Mystery Meat', 'Cow', 'Cooked Cow'], 
-                'AGRICULTURE':['Wood', 'Water', 'Corn', 'Tomatoes', 'Soybean', 'Wheat', 'Sugar', 'Potatoes', 'Walnuts', 'Yams'], 
-                'MEDIEVAL':['Water', 'Iron Platebody', 'Iron Full Helm', 'Iron Platelegs', 'Iron Plateskirt', 'Iron Sword'
-                            'Steel Platebody', 'Steel Full Helm', 'Steel Platelegs', 'Steel Plateskirt', 'Steel Sword'],
-               'RENAISSANCE':['Water', 'Shirt', 'Pants', 'Skirt', 'Ruby', 'Emerald', 'Sapphire', 'Necklace', 'Ring', 'Steel Sword'], 
-               'INDUSTRIAL':['Shirt', 'Pants', 'Fancy Shirt', 'Fancy Pants', 'Fancy Skirt', 
-                                'Ruby', 'Emerald', 'Necklace', 'Ring', 'Water'], 
-               'MODERN':['Water', 'Computer', 'Phone', 'Laptop', 'Fortnite', 'XBOX', 'PS4', 'TV', 'Water Bottle', 'Video Game'], 
-               'FUTURISTIC':['Computer', 'Phone', 'Laptop', 'Fancy Phone', 'Fancy Laptop', 
-                                'Glasses', 'Virtual Food', 'Virtual Water', 'Virtual Money', 'Virtual Sword']}
+
+SPACESHIP_TYPES = {'Starship' : {'name': 'Starship', 'cargo_space':50, 'fuel':1000, 'health':15},
+                   'Jet' : {'name': 'Jet', 'cargo_space' : 70, 'fuel': 2000, 'health': 12},
+                   'Wasp' : {'name': 'Wasp', 'cargo_space': 70, 'fuel': 1000, 'health': 20},
+                   'Ladybug' : {'name': 'Ladybug', 'cargo_space': 70, 'fuel': 1200, 'health': 18}}
+
+MARKET_ITEMS = {'PRE-AG' : ['Wood', 'Water', 'Deer', 'Bear', 'Cooked Bear', 'Cooked Deer',
+                            'Mystery Meat', 'Cooked Mystery Meat', 'Cow', 'Cooked Cow'],
+                'AGRICULTURE' : ['Wood', 'Water', 'Corn', 'Tomatoes', 'Soybean',
+                                 'Wheat', 'Sugar', 'Potatoes', 'Walnuts', 'Yams'],
+                'MEDIEVAL' : ['Water', 'Iron Platebody', 'Iron Full Helm', 'Iron Platelegs',
+                              'Iron Plateskirt', 'Iron Sword', 'Steel Platebody', 'Steel Full Helm',
+                              'Steel Platelegs', 'Steel Plateskirt', 'Steel Sword'],
+                'RENAISSANCE' : ['Water', 'Shirt', 'Pants', 'Skirt', 'Ruby', 'Emerald',
+                                 'Sapphire', 'Necklace', 'Ring', 'Steel Sword'],
+                'INDUSTRIAL' : ['Shirt', 'Pants', 'Fancy Shirt', 'Fancy Pants', 'Fancy Skirt',
+                                'Ruby', 'Emerald', 'Necklace', 'Ring', 'Water'],
+                'MODERN' : ['Water', 'Computer', 'Phone', 'Laptop', 'Fortnite', 'XBOX',
+                            'PS4', 'TV', 'Water Bottle', 'Video Game'],
+                'FUTURISTIC' : ['Computer', 'Phone', 'Laptop', 'Fancy Phone', 'Fancy Laptop',
+                                'Glasses', 'Virtual Food', 'Virtual Water', 'Virtual Money',
+                                'Virtual Sword']}
 
 def fuel_cost_helper(distance, pilot_attribute):
     pilot_attribute += 2
@@ -58,30 +67,35 @@ class Game:
         self._universe = Universe()
         starting_planet_name = PLANET_NAMES[random.randint(0, len(PLANET_NAMES) - 1)]
         starting_planet = self._universe.get_game_regions()[starting_planet_name]
-        self._player = Player(attributes, starting_planet, CREDITS[self._difficulty], name, 'Starship')
-        self._player.calc_fuel_costs(PLANET_NAMES, self._universe.get_region_distances().get_distances(self._player.get_region().get_name()))
+        self._player = Player(attributes, starting_planet, CREDITS[self._difficulty], name)
+        player_region_name = self._player.get_region().get_name()
+        distances = self._universe.get_region_distances().get_distances(player_region_name)
+        self._player.calc_fuel_costs(PLANET_NAMES, distances)
 
         print('New game initialized with player starting at ', self._player.get_region())
         print('Universe Configuration: ', str(self._universe))
 
-    def travel(self, region):   #travel when the api is called to do so. fuel costs automatically subtracted
+    def travel(self, region):   #travel when the api is called to do so. fuel costs subtracted
         cost = self._player.get_fuel_costs()[region]
         self._player.get_ship().remove_fuel(cost)
         self._player.set_region(self._universe.get_game_regions()[region])
-        self._player.calc_fuel_costs(PLANET_NAMES, self._universe.get_region_distances().get_distances(self._player.get_region().get_name()))
+        player_region_name = self._player.get_region().get_name()
+        distances = self._universe.get_region_distances().get_distances(player_region_name)
+        self._player.calc_fuel_costs(PLANET_NAMES, distances)
 
-    def transaction(self, region, item, item_amount, buy=True): #buy/sell when api asks to. item is added to ship and credits subtracted
+    #buy/sell when api asks to. item is added to ship and credits subtracted
+    def transaction(self, region, item, item_amount, buy=True):
         if buy:
             planet_price = self._player.get_region_market_adjusted_prices()[item]['Buy']
-            amount =  planet_price * int(item_amount)
+            amount = planet_price * int(item_amount)
             self._player.transaction(amount*-1)
             self._player.get_ship().add_cargo(item, int(item_amount))
         else:
             planet_price = self._player.get_region_market_adjusted_prices()[item]['Sell']
-            amount =  planet_price * int(item_amount)
+            amount = planet_price * int(item_amount)
             self._player.transaction(amount)
             self._player.get_ship().remove_cargo(item, int(item_amount))
-        print('Successful transaction of ' + str(item_amount) + ' ' + item + ' on ' + region)   #print for debug
+        print('Successful transaction of ' + str(item_amount) + ' ' + item + ' on ' + region)
         print('Planet item price: ' + str(planet_price) + ' Transaction amount: ' + str(amount))
         return amount
 
@@ -101,7 +115,7 @@ class Game:
         return builder
 
 class Player:
-    def __init__(self, attributes, region, money, name, ship):
+    def __init__(self, attributes, region, money, name):
         self._attributes = {} # attributes is [Pilot, Fighter, Merchant, Engineer] (all ints)
         self._attributes['Pilot'] = attributes[0]
         self._attributes['Fighter'] = attributes[1]
@@ -110,7 +124,7 @@ class Player:
         self._region = region
         self._credits = int(money)
         self._name = name
-        self._ship = Ship(SPACESHIP_TYPES[ship])
+        self._ship = Ship(SPACESHIP_TYPES['Starship'])
         self._region_market_adjusted_prices = {}
         self.calculate_market_costs()
         #expect that fuel costs will be updated using the calculate function
@@ -119,19 +133,22 @@ class Player:
     def transaction(self, monetary_value):
         self._credits += int(monetary_value)
 
-    def calc_fuel_costs(self, region_list, region_distances):   #generate fuel costs with pilot skill
+    def calc_fuel_costs(self, region_list, region_distances):  #generate fuel costs with pilot skill
         self._fuel_costs = {}
-        for connected_region in region_list:
-            self._fuel_costs[connected_region] = fuel_cost_helper(region_distances[connected_region], self._attributes['Pilot'])
+        for conn_region in region_list:
+            self._fuel_costs[conn_region] = fuel_cost_helper(region_distances[conn_region],
+                                                             self._attributes['Pilot'])
 
     def calculate_market_costs(self):
         self._region_market_adjusted_prices = {}
-        for item in self._region.get_market():    #generate the market for the planet the player is on, taking into account merchant skill
+        #generate the market for the planet the player is on, taking into account merchant skill
+        for item in self._region.get_market():
             price = item_cost_helper(self._region.get_market()[item], self._attributes['Merchant'])
             self._region_market_adjusted_prices[item] = {'Buy' : price, 'Sell' : price}
         for item, price in self._ship.get_cargo().items():
             if not item in self._region_market_adjusted_prices:
-                price = item_cost_helper(random.randint(10, 50), self._attributes['Merchant'], buy=False)
+                price = item_cost_helper(random.randint(10, 50), self._attributes['Merchant'],
+                                         buy=False)
                 self._region_market_adjusted_prices[item] = {'Sell' : price}
 
     # getters
@@ -166,9 +183,6 @@ class Player:
 class Ship:
     def __init__(self, ship):
         self._ship_type = ship['name']
-        self._max_cargo_space = ship['cargo_space']
-        self._max_fuel_capacity = ship['fuel']
-        self._max_health = ship['health']
 
         self._cargo = {}
         self._current_fuel = ship['fuel']
@@ -180,15 +194,14 @@ class Ship:
             self._cargo[item] += amount
         else:
             self._cargo[item] = amount
-            
+
         self._current_cargo += amount
-        
 
     def remove_cargo(self, item, amount=1):
         self._cargo[item] -= amount
         if self._cargo[item] <= 0:
             del self._cargo[item]   #delete entry if no more item of type
-        
+
         self._current_cargo -= amount
 
     def remove_fuel(self, amount):
@@ -197,11 +210,11 @@ class Ship:
     def get_type(self):
         return self._ship_type
     def get_max_cargo_space(self):
-        return self._max_cargo_space
+        return SPACESHIP_TYPES[self._ship_type]['cargo_space']
     def get_max_fuel_capacity(self):
-        return self._max_fuel_capacity
+        return SPACESHIP_TYPES[self._ship_type]['fuel']
     def get_max_health(self):
-        return self._max_health
+        return SPACESHIP_TYPES[self._ship_type]['health']
     def get_cargo(self):
         return self._cargo
     def get_current_fuel(self):
@@ -278,14 +291,20 @@ class RegionDistances:  #RegionDistances class to handle fuel costs and distance
     def __init__(self, region_list):
         self._distances = {}
         for region in region_list:
-            for connected_region in region_list:    #going to have 2 way connected node graph for easy lookup
+            #going to have 2 way connected node graph for easy lookup
+            for connected_region in region_list:
                 r1_x, r1_y = region_list[region].get_coordinates()
                 r2_x, r2_y = region_list[connected_region].get_coordinates()
                 distance = ((r2_x - r1_x)**2 + (r2_y-r1_y)**2)**.5
-                self._distances[(region_list[region].get_name(), region_list[connected_region].get_name())] = distance
+                region_name = region_list[region].get_name()
+                connected_region_name = region_list[connected_region].get_name()
+                self._distances[(region_name, connected_region_name)] = distance
 
     def get_distances(self, region):
         distance_set = {}
         for connected_region in PLANET_NAMES:
             distance_set[connected_region] = self._distances[(region, connected_region)]
         return distance_set
+
+    def get_all_distances(self):
+        return self._distances
