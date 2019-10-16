@@ -51,9 +51,9 @@ class Region extends React.Component {
 
           <table id="table" align="center">
             <tr>
-              <th>Items</th>
-              <th>Buy</th>
-              <th>Sell</th>
+              <th style={styles.blue}>Items</th>
+              <th style={styles.blue}>Buy</th>
+              <th style={styles.blue}>Sell</th>
             </tr>
             {table}
           </table>
@@ -74,6 +74,11 @@ class Region extends React.Component {
       return (<div></div>)
     }
   }
+}
+
+const styles = {
+  blue: { color: "#00d0ff" },
+  green: { color: "#15ff00" },
 }
 
 export default Region;
