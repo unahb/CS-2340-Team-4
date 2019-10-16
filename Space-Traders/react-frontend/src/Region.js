@@ -34,7 +34,7 @@ class Region extends React.Component {
       for (let [name, prices] of Object.entries(market)) {
         console.log(prices)
         const row =
-          <tr id="tableRow">
+          <tr>
             <th>{name}</th>
             <td>{prices.Buy}</td>
             <td>{prices.Sell}</td>
@@ -49,7 +49,7 @@ class Region extends React.Component {
             <h1 style={{ fontSize: 20, marginTop: -15 }}>Location: ({region.x_coordinate}, {region.y_coordinate})</h1>
           </header>
 
-          <table id="table" align="left">
+          <table id="table" align="center">
             <tr>
               <th>Items</th>
               <th>Buy</th>

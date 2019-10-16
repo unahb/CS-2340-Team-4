@@ -15,7 +15,7 @@
     font-family: 'Press Start 2P', cursive;
     font-size: 8vh;
     position: relative;
-    top: 50vh;
+    top: 10vh;
     left: 20vw;
     color: #400080;
 }
@@ -25,14 +25,14 @@
     color: white;
     width: 50vw;
     height: 40vh;
-    align-self: center;
+    justify-content: right;
     position: relative;
-    bottom: 40vh;
-    left: 5vh;
     border-collapse: collapse;
     border: 1px solid white;
 }
 
-#tableRow {
-    height: 1vw;
+th,
+td,
+tr {
+    height: 3vh;
 }
