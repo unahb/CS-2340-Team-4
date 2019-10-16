@@ -19,3 +19,20 @@
     left: 20vw;
     color: #400080;
 }
+
+#table {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    width: 50vw;
+    height: 40vh;
+    align-self: center;
+    position: relative;
+    bottom: 40vh;
+    left: 5vh;
+    border-collapse: collapse;
+    border: 1px solid white;
+}
+
+#tableRow {
+    height: 1vw;
+}
