@@ -19,7 +19,7 @@ class TravelMap extends React.Component {
     get((item) => {
       this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship })
       const currRegion = item.Player.region
-      displayPlanet(currRegion, item.Player)
+      displayPlanet(currRegion, this.state.player, this.state.ship)
     })
   }
 
@@ -31,11 +31,11 @@ class TravelMap extends React.Component {
           id={planet.name.toLowerCase()}
           class="circle"
           style={{
-            left: new String(((planet.x_coordinate + 200) / 400.0) * 81) + "vw",
+            left: new String(((planet.x_coordinate + 200) / 400.0) * 72) + "vw",
             top: new String(81 - (((planet.y_coordinate + 200) / 400.0) * 81)) + "vh"
           }}
           onClick={(e) => {
-            displayPlanet(planet)
+            displayPlanet(planet, null, this.state.ship)
             this.setState({ currRegion: planet })
           }}>
           {planet.name}
@@ -58,7 +58,7 @@ class TravelMap extends React.Component {
           <br></br>
           <label id="planetDist">Distance: </label>
           <br></br>
-          <label id="planetFuel">Fuel Cost: </label>
+
           <Link to={{
             pathname: '/Region',
             region
@@ -67,20 +67,33 @@ class TravelMap extends React.Component {
             <button type="button" id="travelTo" align="right">Travel</button>
           </Link>
         </div>
+        <div id="travelInfo">
+          <label id="fuelLeft">Fuel Left:</label>
+          <br></br>
+          <label id="planetFuel">Fuel Cost:</label>
+        </div>
       </div>
     )
   }
 }
 
-function displayPlanet(planet, Player) {
-  if (Player != null && planet.name == Player.region.name) {
+function displayPlanet(planet, player, ship) {
+  if (player != null && planet.name == player.region.name) {
     document.getElementById(planet.name.toLowerCase()).style.backgroundColor = "#FF0000"
+  }
+  if (player != null || (ship != null && ship.current_fuel >= planet.fuel_cost)) {
+    document.getElementById("travelTo").disabled = false;
+    document.getElementById("travelTo").innerText = "Travel"
+  } else {
+    document.getElementById("travelTo").disabled = true;
+    document.getElementById("travelTo").innerText = "Insufficient Fuel"
   }
   document.getElementById("planetName").innerText = "Name: " + planet.name;
   document.getElementById("planetTech").innerText = "Technology: " + planet.tech_level;
   document.getElementById("planetLoc").innerText = "Location: (" + planet.x_coordinate + ", " + planet.y_coordinate + ")";
   document.getElementById("planetDist").innerText = planet.distance ? "Distance: " + planet.distance : "Distance: " + 0;
-  document.getElementById("planetFuel").innerText = planet.fuel_cost ? "Fuel Cost: " + planet.fuel_cost : "Fuel Cost: " + 0;
+  document.getElementById("fuelLeft").innerText = "Fuel Left:\n" + ship.current_fuel + "\n";
+  document.getElementById("planetFuel").innerText = planet.fuel_cost ? "Fuel Cost:\n" + planet.fuel_cost : "Fuel Cost:\n" + 0;
 }
 
 export default TravelMap
