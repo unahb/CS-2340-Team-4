@@ -11,9 +11,9 @@ function PlayerSetup() {
   let player = { name: null, pPoints: 0, fPoints: 0, mPoints: 0, ePoints: 0, total: 0, difficulty: "easy"}
   
   const table = types.map((row) => 
-    <tr>
-      <th>{row.name}</th>
-      {points.map(i => <td id={row.id + i}></td>)}
+    <tr class="AttTr">
+      <th class="AttTh">{row.name}</th>
+      {points.map(i => <td class="AttTd" id={row.id + i}></td>)}
       <td>
         <input type="range" id={row.id + 'skill'} min={0} max={9} defaultValue={0} onChange={(event) => {
           if (row.id == 'p') {
@@ -137,9 +137,9 @@ function PlayerSetup() {
         
         <table id="Attribute-Table" align="right" hidden={true}>
           <tr>
-            <th>Skill</th>
-            <th colSpan="9">Level</th>
-            <th>Overall:</th>
+            <th class="AttTh">Skill</th>
+            <th class="AttTh" colSpan="9">Level</th>
+            <th class="AttTh">Overall:</th>
           </tr>
           {table}
         </table>

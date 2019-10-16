@@ -59,9 +59,9 @@
     color: white;
 }
   
-tr,
-th,
-td {
+.AttTh,
+.AttTd,
+.AttTr {
     font-family: 'Press Start 2P', cursive;
     color: white;
     width: 6vw;
