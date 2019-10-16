@@ -2,13 +2,18 @@
 
 #Region-header {
     font-family: 'Press Start 2P', cursive;
-    min-height: 30vh;
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
+    font-size: calc(5px + 2vmin);
     color: white;
+    padding-top: 0.2vh;
+}
+
+#banner {
+    height: 15vh;
+    background-color: grey;
+    margin-bottom: 10vh;
 }
 
 #mapButton {
@@ -32,8 +37,13 @@
 }
 
 #spaceship-static {
-    height: 20vh;
+    height: 10vh;
     transform: rotate(-90deg);
+}
+
+#pixelFont {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 4vh;
 }
 
 .MarkTh,

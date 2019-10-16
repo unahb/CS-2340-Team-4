@@ -54,18 +54,23 @@ class Region extends React.Component {
 
       return (
         <div id="Main">
-          <button type="button" style={styles.spaceshipButton} onClick={() => this.toggleSidebar()}>
-            <div style={styles.spaceshipContainer}>
-              <img src={spaceship} id="spaceship-static"/>
-            </div>
-          </button>
           <div id="sidebar" hidden={true} style={styles.sidebar}>
-
+            <h1 id="pixelFont">Inventory</h1>
           </div>
-          <header id="Region-header">
-            <h1>{region.name.toUpperCase()}</h1>
-            <h1 style={{ fontSize: 20, marginTop: -15 }}>Location: ({region.x_coordinate}, {region.y_coordinate})</h1>
-          </header>
+
+          <div id="banner" style={{ flexDirection: 'row' }}>
+            <header id="Region-header">
+              <h1>{region.name.toUpperCase()}</h1>
+              <h1 style={{ fontSize: 20, marginTop: -15 }}>Location: ({region.x_coordinate}, {region.y_coordinate})</h1>
+            </header>
+            <button type="button" style={styles.spaceshipButton} onClick={() => this.toggleSidebar()}>
+              <div style={styles.spaceshipContainer}>
+                <img src={spaceship} id="spaceship-static"/>
+              </div>
+            </button>
+          </div>
+
+
 
           <table id="table" align="center">
             <tr class="MarkTr">
@@ -103,8 +108,8 @@ const styles = {
   // components
   spaceshipButton: {
     position: 'absolute',
-    top: 15,
-    right: 20,
+    top: '2vh',
+    right: '3vh',
     backgroundColor: 'transparent',
     borderWidth: 0,
   },
@@ -116,9 +121,12 @@ const styles = {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    height: '70vh',
+    height: '84vh',
     width: '45vh',
-    backgroundColor: 'grey',
+    'align-content': 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    opacity: 0.8,
   },
 }
 
