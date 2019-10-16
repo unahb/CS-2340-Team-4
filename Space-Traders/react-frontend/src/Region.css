@@ -1,4 +1,4 @@
-@import "./App.css";
+@import "App.css";
 
 #Region-header {
     font-family: 'Press Start 2P', cursive;
@@ -15,7 +15,7 @@
     font-family: 'Press Start 2P', cursive;
     font-size: 8vh;
     position: relative;
-    top: 10vh;
+    top: 8vh;
     left: 20vw;
     color: #400080;
 }
@@ -31,8 +31,9 @@
     border: 1px solid white;
 }
 
-th,
-td,
-tr {
-    height: 3vh;
+.MarkTh,
+.MarkTd,
+.MarkTr {
+    height: 4vh;
+    border: 1px solid white;
 }

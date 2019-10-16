@@ -24,36 +24,54 @@ class Region extends React.Component {
     })
   }
 
+  toggleSidebar() {
+    if (document.getElementById("sidebar").hidden) {
+      document.getElementById("sidebar").hidden = false;
+    } else {
+      document.getElementById("sidebar").hidden = true;
+    }
+  }
+
   render() {
     if (Object.entries(this.state.player).length !== 0) {
       const region = this.state.region
       const market = this.state.player.region.market
       const ship = this.state.ship
 
+      console.log(ship)
+
       let table = []
       for (let [name, prices] of Object.entries(market)) {
         console.log(prices)
         const row =
-          <tr>
-            <th>{name}</th>
-            <td>{prices.Buy}</td>
-            <td>{prices.Sell}</td>
+          <tr class="MarkTr">
+            <th class="MarkTh">{name}</th>
+            <td class="MarkTd">{prices.Buy}</td>
+            <td class="MarkTd">{prices.Sell}</td>
           </tr>
         table.push(row)
       }
 
       return (
         <div id="Main">
+          <button type="button" style={styles.spaceshipButton} onClick={() => this.toggleSidebar()}>
+            <div style={styles.spaceshipContainer}>
+              <img src={spaceship} id="spaceship-static"/>
+            </div>
+          </button>
+          <div id="sidebar" hidden={true} style={styles.sidebar}>
+
+          </div>
           <header id="Region-header">
             <h1>{region.name.toUpperCase()}</h1>
             <h1 style={{ fontSize: 20, marginTop: -15 }}>Location: ({region.x_coordinate}, {region.y_coordinate})</h1>
           </header>
 
           <table id="table" align="center">
-            <tr>
-              <th style={styles.blue}>Items</th>
-              <th style={styles.blue}>Buy</th>
-              <th style={styles.blue}>Sell</th>
+            <tr class="MarkTr">
+              <th class="MarkTh" style={styles.blue}>Items</th>
+              <th class="MarkTh" style={styles.yellow}>Buy</th>
+              <th class="MarkTh" style={styles.yellow}>Sell</th>
             </tr>
             {table}
           </table>
@@ -77,8 +95,31 @@ class Region extends React.Component {
 }
 
 const styles = {
+  // colors
   blue: { color: "#00d0ff" },
   green: { color: "#15ff00" },
+  yellow: { color: "yellow" },
+
+  // components
+  spaceshipButton: {
+    position: 'absolute',
+    top: 15,
+    right: 20,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
+  spaceshipContainer: {
+    backgroundColor: "#65cee6",
+    borderRadius: '10vh',
+  },
+  sidebar: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    height: '70vh',
+    width: '45vh',
+    backgroundColor: 'grey',
+  },
 }
 
 export default Region;
