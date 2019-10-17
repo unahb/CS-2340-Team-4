@@ -35,7 +35,7 @@ class Region extends React.Component {
         console.log(prices)
         const row =
           <tr class="MarkTr">
-            <th class="MarkTh">{name}</th>
+            <td class="MarkTd">{name}</td>
             <td class="MarkTd">{prices.Buy}</td>
             <td class="MarkTd">{prices.Sell}</td>
           </tr>
