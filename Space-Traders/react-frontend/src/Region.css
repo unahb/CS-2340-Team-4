@@ -16,13 +16,80 @@
     margin-bottom: 10vh;
 }
 
+#credits {
+    font-family: 'Press Start 2P', cursive;
+    position: relative;
+    left: 2vw;
+    top: 3vh;
+    font-size: 4vh;
+    color: white;
+}
+
 #mapButton {
     font-family: 'Press Start 2P', cursive;
     font-size: 8vh;
     position: relative;
-    top: 8vh;
-    left: 20vw;
+    top: 5vh;
+    left: 15vw;
     color: #400080;
+}
+
+#customAlert,
+#customConfirm {
+    position: absolute;
+    width: 40vw;
+    height: 20vh;
+    top: 40vh;
+    left: 30vw;
+}
+
+#customAlert,
+#alertHead,
+#alertMes,
+#customConfirm,
+#confirmHead,
+#confirmMes  {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3vh;
+    color: #FFFFFF;
+    background-color: #171B1F;
+    z-index: 1;
+    border: 1vh;
+}
+
+.buyButton,
+.sellButton,
+.quantityInput,
+#alertBut {
+    font-family: 'Press Start 2P', cursive;
+    height: 3vh;
+    width: 4vw;
+    font-size: 2vh;
+    position: relative;
+    color: #FFFFFF;
+    background-color: #666666;
+    text-align: center;
+}
+
+#confirmSubmit,
+#confirmCancel {
+    font-family: 'Press Start 2P', cursive;
+    height: 3vh;
+    width: 8vw;
+    margin: 1vw;
+    font-size: 2vh;
+    position: relative;
+    color: #FFFFFF;
+    background-color: #666666;
+    text-align: center;
+}
+
+.buyButton:hover,
+.sellButton:hover,
+#alertBut:hover,
+#confirmSubmit:hover,
+#confirmCancel:hover {
+    background-color: #333333;
 }
 
 #table {
