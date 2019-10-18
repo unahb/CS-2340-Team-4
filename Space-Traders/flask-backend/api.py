@@ -14,6 +14,9 @@ from bson import Binary, Code
 from bson.json_util import dumps, loads
 from bson.codec_options import CodecOptions
 
+import sys 
+import api_tester
+
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 api = Api(app)
@@ -21,6 +24,7 @@ api = Api(app)
 client = MongoClient('mongodb+srv://2340group:team4444@cluster0-e4amt.mongodb.net/test?retryWrites=true&w=majority')
 db = client.users
 collection = db.vals
+
 
 #Why does this exist? Because PyLint is stupid and we don't have a DB
 class SpaceTradersContainer:
@@ -73,7 +77,8 @@ class SpaceTraders(Resource):
             normal = format_json.get_json(SpaceTradersContainer.space_traders)
             #print(type(normal))
             vals = db.vals
-            post_id = vals.insert_one(normal).inserted_id
+            post_id2 = vals.insert_one(normal).inserted_id
+            #print(post_id2)
 
             message = 'New game created successfully'
 
@@ -143,6 +148,58 @@ class Sell(Resource):
             print(message)
             return {'message': message}, 400
 
+class Load(Resource):
+    def put(self, post_id):
+        #if (post_id.len() > 0):
+        pprint.pprint(posts.find_one({"_id": post_id}))
+    def get(self):
+        return format_json.get_json(SpaceTradersContainer.space_traders)
+
+    def post(self):
+        #expect a POST in the form of
+        #'{"difficulty":"string", "attributes":"int,int,int,int", "name":"string"}'
+        #POST request should be formatted with a JSON payload
+        parser = reqparse.RequestParser()
+        parser.add_argument('difficulty', type=str, required=True)
+        parser.add_argument('attributes', type=list, required=True)
+        parser.add_argument('name', type=str, required=True)
+        args = parser.parse_args()
+
+        #initialize new game
+        try:
+            #parse attributes as a list since it comes in as a string with comma delimiters
+            attributes = []
+            builder = ''
+            for i, char in enumerate(args['attributes']):
+                if not char == ',':
+                    builder += char
+                else:
+                    attributes.append(int(builder))
+                    builder = ''
+                if i == (len(args['attributes']) - 1):
+                    attributes.append(int(builder))
+            SpaceTradersContainer.space_traders = game.Game(difficulty=args['difficulty'],
+                                                            attributes=attributes,
+                                                            name=args['name'])
+
+            normal = format_json.get_json(SpaceTradersContainer.space_traders)
+            #print(type(normal))
+            vals = db.vals
+            post_id2 = vals.insert_one(normal).inserted_id
+            #print(post_id2)
+
+            message = 'New game created successfully'
+
+            return {'message': message}, 200
+        except ValueError:
+            message = 'Error in game initialization. Incorrect parameter types'
+            print(message)
+            return {'message': message}, 405
+        else:
+            message = 'Unknown error'
+            print(message)
+            return {'message': message}, 400
+
 ##
 # Actually setup the API resource routing here
 ##
@@ -150,7 +207,7 @@ api.add_resource(SpaceTraders, '/Space-Traders')
 api.add_resource(Travel, '/Space-Traders/travel/<planet_id>')
 api.add_resource(Buy, '/Space-Traders/buy/<item_id>/<item_amount>')
 api.add_resource(Sell, '/Space-Traders/sell/<item_id>/<item_amount>')
-api.add_resource(Load, '/Space-Traders/load')
+api.add_resource(Load, '/Space-Traders/load/<post_id>')
 
 
 if __name__ == '__main__':

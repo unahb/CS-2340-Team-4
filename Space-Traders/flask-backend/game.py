@@ -88,6 +88,7 @@ class Game:
         builder += 'Player: ' + str(self._player) + '\n'
         builder += str(self._universe)
         return builder
+    def __init__(self, ):
 
 class Player:
     def __init__(self, attributes, region, money, name):

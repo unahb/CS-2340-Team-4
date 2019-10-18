@@ -3,10 +3,14 @@ import random
 import string
 
 import requests
+import sys
 
 #This file exists as a way to use and test the REST API without using Postman or cURL
 #Commands that can be used are 'new', 'travel', 'status', 'player', 'ship', 'randnew'
 #(cont): 'buy', 'sell'
+
+post_id = '5da4c878027e0696aca6bd80'
+print(post_id)
 
 DIFFICULTIES = ['easy', 'medium', 'hard']
 PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
@@ -17,9 +21,6 @@ while True:
     print('Type \"new\" to start a new game, \"travel\" to travel \
 somewhere, or \"status\" to view the current game state. CTRL+C to quit.')
     command = input().lower()
-    if command == 'load':
-        url = 'http://127.0.0.1:5000/Space-Traders'
-        
 
     if command == 'new':    #generate new game state with some input validation
         url = 'http://127.0.0.1:5000/Space-Traders'
@@ -153,7 +154,9 @@ input is improperly formatted. (likely the \"attributes\" field!)')
             print('Successful request.')
         else:
             print('Error in request with status code', r.status_code)
-
+    elif command == 'load':
+        url = 'http://127.0.0.1:5000/Space-Traders/load/' + post_id
+        
     elif command == 'unsafe':   #turns on unsafe commands for testing purposes
         unsafe = not unsafe
         print('unsafe mode set to', unsafe)
