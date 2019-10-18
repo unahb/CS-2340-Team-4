@@ -89,7 +89,7 @@ class Game:
             planet_price = self._player.get_region_market_adjusted_prices()[item]['Buy']
             amount = planet_price * int(item_amount)
             self._player.transaction(amount*-1)
-            self._player.get_ship().add_cargo(item, int(item_amount), planet_price)
+            self._player.get_ship().add_cargo(item, int(item_amount))
         else:
             planet_price = self._player.get_region_market_adjusted_prices()[item]['Sell']
             amount = planet_price * int(item_amount)
@@ -145,12 +145,11 @@ class Player:
         for item in self._region.get_market():
             price = item_cost_helper(self._region.get_market()[item], self._attributes['Merchant'])
             self._region_market_adjusted_prices[item] = {'Buy' : price, 'Sell' : price}
-            self._ship.update_price(item, price)
         for item, price in self._ship.get_cargo().items():
             if not item in self._region_market_adjusted_prices:
                 price = item_cost_helper(random.randint(10, 50), self._attributes['Merchant'],
                                          buy=False)
-                self._ship.update_price(item, price)
+                self._region_market_adjusted_prices[item] = {'Sell' : price}
 
     # getters
     def get_region(self):
@@ -190,29 +189,23 @@ class Ship:
         self._current_health = ship['health']
         self._current_cargo = 0
 
-    def add_cargo(self, item, amount=1, price=0):
+    def add_cargo(self, item, amount=1):
         if item in self._cargo:
-            self._cargo[item]['quantity'] += amount
+            self._cargo[item] += amount
         else:
-            self._cargo[item] = {}
-            self._cargo[item]['quantity'] = amount
-            self._cargo[item]['price'] = price
+            self._cargo[item] = amount
 
         self._current_cargo += amount
 
     def remove_cargo(self, item, amount=1):
-        self._cargo[item]['quantity'] -= amount
-        if self._cargo[item]['quantity'] <= 0:
+        self._cargo[item] -= amount
+        if self._cargo[item] <= 0:
             del self._cargo[item]   #delete entry if no more item of type
 
         self._current_cargo -= amount
 
     def remove_fuel(self, amount):
         self._current_fuel -= amount
-
-    def update_price(self, item, price):
-        if item in self._cargo:
-            self._cargo[item]['price'] = price
 
     def get_type(self):
         return self._ship_type
