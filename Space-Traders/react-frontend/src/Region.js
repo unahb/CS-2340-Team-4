@@ -71,7 +71,11 @@ class Region extends React.Component {
         const row =
           <tr class="invenTr">
             <td class="invenTd">
-              <button type="button" class="sellButton">{invenItem}: {invenQuantity.quantity}</button>
+              <button type="button" class="sellButton" onClick={(event) => {
+                transaction.good = invenItem;
+                transaction.isBuy = false;
+                customConfirm("Please Confirm", "Sell 0 " + invenItem +"(s) for 0 Credits");
+              }}>{invenItem}: {invenQuantity.quantity}</button>
             </td>
           </tr>
         invenTable.push(row)
@@ -84,33 +88,21 @@ class Region extends React.Component {
             <td class="MarkTd">{name}</td>
 						<td class="MarkTd">
 							<button type="button" class="buyButton" onClick={(event) => {
-								if (document.getElementById(name + "inp").value <= 0 || document.getElementById(name + "inp").value > ship.max_cargo_space - ship.current_cargo) {
-									customAlert("Buying Error", "Cannot buy " + document.getElementById(name + "inp").value + " of " + name + "(s)")
-								} else if (prices.Buy * document.getElementById(name + "inp").value > player.credits) {
-									customAlert("Insufficient Credits", "Cannot buy "+ document.getElementById(name + "inp").value + " " + name + "(s)")
-								} else {
-                  customConfirm("Please Confirm", "Buy " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Buy * document.getElementById(name + "inp").value + " Credits");
-                  transaction.good = name;
-                  transaction.quant = document.getElementById(name + "inp").value;
-                  transaction.isBuy = true;
-								}
+                transaction.good = name;
+                transaction.isBuy = true;
+                customConfirm("Please Confirm", "Buy 0 " + name +"(s) for 0 Credits");
 							}}>{prices.Buy}</button>
 						</td>
             <td class="MarkTd">
 							<button type="button" class="sellButton" onClick={(event) => {
-                console.log(document.getElementById(name + "inp").value > ship.cargo[name])
-								if (document.getElementById(name + "inp").value <= 0 || ship.cargo[name] == undefined || document.getElementById(name + "inp").value > ship.cargo[name].quantity) {
-									customAlert("Selling Error", "Cannot sell " + document.getElementById(name + "inp").value + " of " + name + "(s)")
-								} else {
-                  customConfirm("Please Confirm", "Sell " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Sell * document.getElementById(name + "inp").value + " Credits");
+                if (ship.cargo[name] == undefined) {
+                  customAlert("Selling Error", "Cannot sell items you do not own")
+                } else {
                   transaction.good = name;
-                  transaction.quant = document.getElementById(name + "inp").value;
                   transaction.isBuy = false;
-								}
+                  customConfirm("Please Confirm", "Sell 0 " + name +"(s) for 0 Credits");
+                }
 							}}>{prices.Sell}</button>
-						</td>
-						<td class="MarkTd">
-							<input type="number" class="quantityInput" id={name + "inp"} defaultValue="0" min="0" max={ship.max_cargo_space}></input>
 						</td>
           </tr>
         table.push(row)
@@ -145,7 +137,6 @@ class Region extends React.Component {
               <th class="MarkTh" style={styles.blue}>Items</th>
               <th class="MarkTh" style={styles.yellow}>Buy</th>
               <th class="MarkTh" style={styles.yellow}>Sell</th>
-							<th class="MarkTh" style={styles.yellow}>Quantity</th>
             </tr>
             {table}
           </table>
@@ -169,17 +160,49 @@ class Region extends React.Component {
 						<div id="alertMes"></div>
             <br></br>
 						<button id="alertBut" onClick={(event) => {
-							document.getElementById("customAlert").hidden = true;
+              document.getElementById("customAlert").hidden = true;
+              document.getElementById("customConfirm").style.zIndex = 1;
 						}}>Ok</button>
 					</div>
 
 					<div id="customConfirm" hidden="true">
 						<h1 id="confirmHead"></h1>
 						<div id="confirmMes"></div>
+					  <input type="number" class="quantityInput" id="inp" defaultValue="0" min="0" max={ship.max_cargo_space} onChange={(event) => {
+              if (transaction.isBuy) {
+                transaction.quant = document.getElementById("inp").value;
+                document.getElementById("confirmMes").innerText = "Buy " + document.getElementById("inp").value * 1 + " " + transaction.good +"(s) for " + player.region.market[transaction.good].Buy * document.getElementById("inp").value + " Credits"
+              } else {
+                transaction.quant = document.getElementById("inp").value;
+                document.getElementById("confirmMes").innerText = "Sell " + document.getElementById("inp").value * 1 + " " + transaction.good +"(s) for " + ship.cargo[transaction.good].price * document.getElementById("inp").value + " Credits"
+              }
+            }}></input>
 						<button id="confirmCancel" onClick={(event) => {
-							document.getElementById("customConfirm").hidden = true;
+              document.getElementById("customConfirm").hidden = true;
+              document.getElementById("inp").value = 0;
 						}}>Cancel</button>
-						<button id="confirmSubmit" onClick={(event) => this.buySellItem(transaction)}>Submit</button>
+						<button id="confirmSubmit" onClick={(event) => {
+              if (transaction.isBuy) {
+                if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.max_cargo_space - ship.current_cargo) {
+                  document.getElementById("customConfirm").style.zIndex = 0;
+									customAlert("Buying Error", "Cannot buy " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
+								} else if (player.region.market[transaction.good].Buy * document.getElementById("inp").value > player.credits) {
+                  document.getElementById("customConfirm").style.zIndex = 0;
+									customAlert("Insufficient Credits", "Cannot buy "+ document.getElementById("inp").value * 1 + " " + transaction.good + "(s)")
+								} else {
+                  this.buySellItem(transaction)
+                  document.getElementById("inp").value = 0;
+                }
+              } else {
+                if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.cargo[transaction.good].quantity) {
+                  document.getElementById("customConfirm").style.zIndex = 0;
+                  customAlert("Selling Error", "Cannot sell " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
+								} else {
+                  this.buySellItem(transaction)
+                  document.getElementById("inp").value = 0;
+								}
+              }
+            }}>Submit</button>
 					</div>
         </div>
       );
