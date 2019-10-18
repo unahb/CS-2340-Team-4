@@ -54,7 +54,7 @@ class PlayerStats extends React.Component {
               <br></br>
               <text id="eLevel">Engineer Level: <span style={styles.blue}>{player.skills.Engineer}</span></text>
               <br></br>
-              <text id="credits">Credits: <span style={styles.blue}>{player.credits}</span></text>
+              <text id="creditsStat">Credits: <span style={styles.blue}>{player.credits}</span></text>
               <br></br>
               <Link 
                 to={{

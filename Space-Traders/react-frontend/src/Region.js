@@ -37,7 +37,8 @@ class Region extends React.Component {
       const region = this.state.region
       const market = this.state.player.region.market
 			const ship = this.state.ship
-			const player = this.state.player
+      const player = this.state.player
+      let transaction = {good: null, quant: null, dec: null}
 
       console.log(ship)
 
@@ -54,7 +55,10 @@ class Region extends React.Component {
 								} else if (prices.Buy * document.getElementById(name + "inp").value > player.credits) {
 									customAlert("Insufficient Credits", "Cannot buy "+ document.getElementById(name + "inp").value + " " + name + "(s)")
 								} else {
-									customConfirm("Please Confirm", "Buy " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Buy * document.getElementById(name + "inp").value + " Credits");
+                  customConfirm("Please Confirm", "Buy " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Buy * document.getElementById(name + "inp").value + " Credits");
+                  transaction.good = name;
+                  transaction.quant = document.getElementById(name + "inp").value;
+                  transaction.dec = true;
 								}
 							}}>{prices.Buy}</button>
 						</td>
@@ -63,7 +67,10 @@ class Region extends React.Component {
 								if (document.getElementById(name + "inp").value <= 0) {
 									customAlert("Selling Error", "Cannot sell " + document.getElementById(name + "inp").value + " of " + name + "(s)")
 								} else {
-									customConfirm("Please Confirm", "Sell " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Sell * document.getElementById(name + "inp").value + " Credits");
+                  customConfirm("Please Confirm", "Sell " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Sell * document.getElementById(name + "inp").value + " Credits");
+                  transaction.good = name;
+                  transaction.quant = document.getElementById(name + "inp").value;
+                  transaction.dec = false;
 								}
 							}}>{prices.Sell}</button>
 						</td>
@@ -121,7 +128,7 @@ class Region extends React.Component {
 					<div id="customAlert" hidden="true">
 						<h1 id="alertHead"></h1>
 						<div id="alertMes"></div>
-						<br></br>
+            <br></br>
 						<button id="alertBut" onClick={(event) => {
 							document.getElementById("customAlert").hidden = true;
 						}}>Ok</button>
