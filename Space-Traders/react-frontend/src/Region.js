@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import spaceship from './resources/spaceship.png';
 import './Region.css';
-import { get, put } from './requests';
+import { get, put, putTypes } from './requests';
 
 class Region extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class Region extends React.Component {
 
   componentWillMount() {
     console.log(this.props)
-    put(this.props.location.region.name, () => {
+    put(putTypes.TRAVEL, this.props.location.region.name, () => {
       get((item) => {
         this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
       })
@@ -32,19 +32,33 @@ class Region extends React.Component {
     }
   }
 
+  buySellItem(transaction) {
+    document.getElementById("customConfirm").hidden = true;
+    if (transaction.isBuy) {
+      put(putTypes.BUY, transaction, () => {
+        console.log('BUY SUCCESS')
+        get((item) => {
+          this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
+        })
+        console.log(this.state)
+      })
+    } else {
+      put(putTypes.SELL, transaction, () => { console.log('SELL SUCCESS') })  
+    }
+  }
+
   render() {
     if (Object.entries(this.state.player).length !== 0) {
       const region = this.state.region
       const market = this.state.player.region.market
 			const ship = this.state.ship
       const player = this.state.player
-      let transaction = {good: null, quant: null, dec: null}
+      let transaction = {good: null, quant: null, isBuy: null}
 
       console.log(ship)
 
       let table = []
       for (let [name, prices] of Object.entries(market)) {
-        console.log(prices)
         const row =
           <tr class="MarkTr">
             <td class="MarkTd">{name}</td>
@@ -58,7 +72,7 @@ class Region extends React.Component {
                   customConfirm("Please Confirm", "Buy " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Buy * document.getElementById(name + "inp").value + " Credits");
                   transaction.good = name;
                   transaction.quant = document.getElementById(name + "inp").value;
-                  transaction.dec = true;
+                  transaction.isBuy = true;
 								}
 							}}>{prices.Buy}</button>
 						</td>
@@ -70,7 +84,7 @@ class Region extends React.Component {
                   customConfirm("Please Confirm", "Sell " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Sell * document.getElementById(name + "inp").value + " Credits");
                   transaction.good = name;
                   transaction.quant = document.getElementById(name + "inp").value;
-                  transaction.dec = false;
+                  transaction.isBuy = false;
 								}
 							}}>{prices.Sell}</button>
 						</td>
@@ -98,8 +112,6 @@ class Region extends React.Component {
               </div>
             </button>
           </div>
-
-
 
           <table id="table" align="center">
             <tr class="MarkTr">
@@ -139,9 +151,7 @@ class Region extends React.Component {
 						<button id="confirmCancel" onClick={(event) => {
 							document.getElementById("customConfirm").hidden = true;
 						}}>Cancel</button>
-						<button id="confirmSubmit" onClick={(event) => {
-							document.getElementById("customConfirm").hidden = true;
-						}}>Submit</button>
+						<button id="confirmSubmit" onClick={(event) => this.buySellItem(transaction)}>Submit</button>
 					</div>
         </div>
       );

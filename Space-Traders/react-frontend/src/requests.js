@@ -31,7 +31,7 @@ function post(value, location, callback) {
 }
 
 // PUT request and return updated data
-function put(location, callback) {
+function put(type, props, callback) {
   var xhrPUT = new XMLHttpRequest()
   // get a callback when the server responds to PUT request
   xhrPUT.addEventListener('load', () => {
@@ -42,8 +42,21 @@ function put(location, callback) {
   })
 
   // open and send PUT request to update player data
-  xhrPUT.open('PUT', "/Space-Traders/travel/" + location)
+  if (type === putTypes.TRAVEL) {
+    xhrPUT.open('PUT', "/Space-Traders/travel/" + props)
+  } else if (type === putTypes.BUY) {
+    xhrPUT.open('PUT', "/Space-Traders/buy/" + props.good + "/" + props.quant)
+  } else if (type === putTypes.SELL) {
+    xhrPUT.open('PUT', "/Space-Traders/sell/" + props.good + "/" + props.quant)
+  }
+  
   xhrPUT.send()
 }
 
-export { get, post, put }
+const putTypes = {
+  TRAVEL: 'travel',
+  BUY: 'buy',
+  SELL: 'sell'
+}
+
+export { get, post, put, putTypes }

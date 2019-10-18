@@ -38,7 +38,8 @@ def get_json(game):
         'max_health' : ship.get_max_health(),
         'cargo' : ship.get_cargo(),
         'current_fuel' : ship.get_current_fuel(),
-        'current_health' : ship.get_current_health()
+        'current_health' : ship.get_current_health(),
+        'current_cargo' : ship.get_current_cargo()
     }
 
     planets_dict = {}
