@@ -41,7 +41,7 @@ class Region extends React.Component {
           this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
         })
         console.log(this.state)
-        document.getElementById(transaction.good + "inp").value = 0;
+        document.getElementById("inp").value = 0;
       })
     } else {
       put(putTypes.SELL, transaction, () => {
@@ -50,7 +50,7 @@ class Region extends React.Component {
           this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
         })
         console.log(this.state)
-        document.getElementById(transaction.good + "inp").value = 0;
+        document.getElementById("inp").value = 0;
       })  
     }
   }
@@ -191,7 +191,6 @@ class Region extends React.Component {
 									customAlert("Insufficient Credits", "Cannot buy "+ document.getElementById("inp").value * 1 + " " + transaction.good + "(s)")
 								} else {
                   this.buySellItem(transaction)
-                  document.getElementById("inp").value = 0;
                 }
               } else {
                 if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.cargo[transaction.good].quantity) {
@@ -199,7 +198,6 @@ class Region extends React.Component {
                   customAlert("Selling Error", "Cannot sell " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
 								} else {
                   this.buySellItem(transaction)
-                  document.getElementById("inp").value = 0;
 								}
               }
             }}>Submit</button>
