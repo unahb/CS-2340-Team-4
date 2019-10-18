@@ -50,8 +50,10 @@
     overflow: hidden;
 }
 
-#planetFuel,
-#fuelLeft {
+#shipType,
+#fuelLeft,
+#cargoSpace,
+#shipHealth {
     font-family: 'Press Start 2P', cursive;
     color: white;
     font-size: 3vh;
@@ -64,10 +66,11 @@
 #planetName,
 #planetTech,
 #planetLoc,
-#planetDist {
+#planetDist,
+#planetFuel {
     font-family: 'Press Start 2P', cursive;
     color: white;
-    font-size: 3vh;
+    font-size: 2vh;
     position: relative;
     top: 1vh;
     left: 1vw;
