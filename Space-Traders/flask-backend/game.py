@@ -94,11 +94,19 @@ class Game:
             self._player.get_ship().add_cargo(item, int(item_amount), planet_price)
             self._player.calculate_market_costs(single_item=item, amount=item_amount)
         else:
-            planet_price = self._player.get_region_market_adjusted_prices()[item]['sell']
-            amount = planet_price * int(item_amount)
-            self._player.transaction(amount)
-            self._player.get_ship().remove_cargo(item, int(item_amount))
-            self._player.calculate_market_costs(single_item=item, buy=False)
+            if item in self._player.get_region_market_adjusted_prices():
+                planet_price = self._player.get_region_market_adjusted_prices()[item]['sell']
+                amount = planet_price * int(item_amount)
+                self._player.transaction(amount)
+                self._player.get_ship().remove_cargo(item, int(item_amount))
+                self._player.calculate_market_costs(single_item=item, buy=False)
+            else:   #for when selling from cargo
+                planet_price = self._player.get_ship().get_cargo()[item]['price']
+                amount = planet_price * int(item_amount)
+                self._player.transaction(amount)
+                self._player.get_ship().remove_cargo(item, int(item_amount))
+                self._player.calculate_market_costs(single_item=item, buy=False)
+
         print('Successful transaction of ' + str(item_amount) + ' ' + item + ' on ' + region)
         print('Planet item price: ' + str(planet_price) + ' Transaction amount: ' + str(amount))
         return amount
@@ -151,8 +159,8 @@ class Player:
                 self._region_market_adjusted_prices[single_item] = {'buy' : price, 'sell' : price, 'quantity' : quantity}
                 self._ship.update_price(single_item, price)
             else:
-                quantity = self._ship.get_cargo[single_item]['quantity']
-                price = item_cost_helper(random.randint(10, 50), self._attributes['Merchant'],
+                quantity = 0
+                price = item_cost_helper(random.randint(10, 50), 0, self._attributes['Merchant'],
                                          buy=False)
                 self._ship.update_price(single_item, price) 
         else:
