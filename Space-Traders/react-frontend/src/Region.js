@@ -44,7 +44,14 @@ class Region extends React.Component {
         document.getElementById(transaction.good + "inp").value = 0;
       })
     } else {
-      put(putTypes.SELL, transaction, () => { console.log('SELL SUCCESS') })  
+      put(putTypes.SELL, transaction, () => {
+        console.log('SELL SUCCESS')
+        get((item) => {
+          this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
+        })
+        console.log(this.state)
+        document.getElementById(transaction.good + "inp").value = 0;
+      })  
     }
   }
 
@@ -54,8 +61,9 @@ class Region extends React.Component {
       const market = this.state.player.region.market
 			const ship = this.state.ship
       const player = this.state.player
-      let transaction = {good: null, quant: null, isBuy: null}
+      let transaction = { good: null, quant: null, isBuy: null }
 
+      console.log(player)
       console.log(ship)
 
       let invenTable = []
@@ -108,10 +116,12 @@ class Region extends React.Component {
       return (
         <div id="Main">
           <div id="sidebar" hidden={true} style={styles.sidebar}>
-            <h1 id="pixelFont" style={{ fontSize: "2.5vw", 'text-decoration': "underline" }}>Inventory</h1>
-            <h1 id="pixelFont" style={{ fontSize: "0.9vw", }}>Remaining Cargo Space: {ship.max_cargo_space - ship.current_cargo}</h1>
+            <h1 id="pixelFont" style={{ fontSize: "2vw", 'text-decoration': "underline" }}>Inventory</h1>
+            <h1 id="pixelFont" style={{ fontSize: "0.9vw", }}>Remaining Cargo Space:
+              <h1 style={{ fontSize: "1.5vw", color: "blue" }}>{ship.max_cargo_space - ship.current_cargo}</h1>
+            </h1>
             <div id="itemContents">
-              Hello Bitch ;-)
+              Hello Bitch ;-))))))
               {invenTable}
             </div>
           </div>
@@ -201,7 +211,7 @@ const styles = {
   spaceshipButton: {
     position: 'absolute',
     top: '2vh',
-    right: '3vh',
+    right: '2vw',
     backgroundColor: 'transparent',
     borderWidth: 0,
   },
@@ -214,7 +224,7 @@ const styles = {
     bottom: 0,
     right: 0,
     height: '84vh',
-    width: '45vh',
+    width: '22vw',
     'align-content': 'center',
     backgroundColor: 'white',
     borderRadius: 5,
