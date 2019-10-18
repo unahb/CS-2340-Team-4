@@ -103,6 +103,15 @@
     border: 1px solid white;
 }
 
+#itemContents {
+    position: absolute;
+    height: 75vh;
+    width: 45vh;
+    align-content: center;
+    opacity: 0.8;
+    overflow-y: auto;
+}
+
 #spaceship-static {
     height: 10vh;
     transform: rotate(-90deg);
@@ -110,12 +119,14 @@
 
 #pixelFont {
     font-family: 'Press Start 2P', cursive;
-    font-size: 4vh;
 }
 
 .MarkTh,
 .MarkTd,
-.MarkTr {
+.MarkTr,
+.invenTd,
+.invenTr {
+    font-family: 'Press Start 2P', cursive;
     height: 4vh;
     border: 1px solid white;
 }

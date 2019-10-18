@@ -41,6 +41,7 @@ class Region extends React.Component {
           this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
         })
         console.log(this.state)
+        document.getElementById(transaction.good + "inp").value = 0;
       })
     } else {
       put(putTypes.SELL, transaction, () => { console.log('SELL SUCCESS') })  
@@ -56,6 +57,15 @@ class Region extends React.Component {
       let transaction = {good: null, quant: null, isBuy: null}
 
       console.log(ship)
+
+      let invenTable = []
+      for (let [invenItem, invenQuantity] of Object.entries(ship.cargo)) {
+        const row =
+          <tr class="invenTr">
+            <td class="invenTd" style={{left: "1vw"}}>{invenItem}: {invenQuantity}</td>
+          </tr>
+        invenTable.push(row)
+      }
 
       let table = []
       for (let [name, prices] of Object.entries(market)) {
@@ -98,7 +108,12 @@ class Region extends React.Component {
       return (
         <div id="Main">
           <div id="sidebar" hidden={true} style={styles.sidebar}>
-            <h1 id="pixelFont">Inventory</h1>
+            <h1 id="pixelFont" style={{ fontSize: "2.5vw", 'text-decoration': "underline" }}>Inventory</h1>
+            <h1 id="pixelFont" style={{ fontSize: "0.9vw", }}>Remaining Cargo Space: {ship.max_cargo_space - ship.current_cargo}</h1>
+            <div id="itemContents">
+              Hello Bitch ;-)
+              {invenTable}
+            </div>
           </div>
 
           <div id="banner" style={{ flexDirection: 'row' }}>
@@ -145,6 +160,7 @@ class Region extends React.Component {
 							document.getElementById("customAlert").hidden = true;
 						}}>Ok</button>
 					</div>
+
 					<div id="customConfirm" hidden="true">
 						<h1 id="confirmHead"></h1>
 						<div id="confirmMes"></div>
