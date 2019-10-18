@@ -44,20 +44,25 @@ class TravelMap extends React.Component {
     }
 
     const region = this.state.currRegion
+    const ship = this.state.ship
     return (
       <div id="mainMap">
         <div id="mapBack">
           {buttons}
         </div>
-        <div id="planetInfo">
-          <label id="planetName">Name: </label> {/*These should be initialized to the player's current location*/}
-          <br></br>
-          <label id="planetTech">Technology: </label>
-          <br></br>
-          <label id="planetLoc">Location: </label>
-          <br></br>
-          <label id="planetDist">Distance: </label>
-          <br></br>
+        <div id="planetInfo" style={{ flexDirection: 'row' }}>
+          <div>
+            <label id="planetName">Name: </label> {/*These should be initialized to the player's current location*/}
+            <br></br>
+            <label id="planetTech">Technology: </label>
+          </div>
+          <div>
+            <label id="planetLoc">Location: </label>
+            <br></br>
+            <label id="planetDist">Distance: </label>
+            <br></br>
+            <label id="planetFuel">Fuel Cost: </label>
+          </div>
 
           <Link to={{
             pathname: '/Region',
@@ -68,9 +73,18 @@ class TravelMap extends React.Component {
           </Link>
         </div>
         <div id="travelInfo">
-          <label id="fuelLeft">Fuel Left:</label>
+          <label id="shipType">Ship Type: {ship.type}</label>
           <br></br>
-          <label id="planetFuel">Fuel Cost:</label>
+          <br></br>
+          <br></br>
+          <label id="fuelLeft">Fuel:</label>
+          <br></br>
+          <br></br>
+          <label id="cargoSpace">Cargo Space: {ship.max_cargo_space - ship.current_cargo} / {ship.max_cargo_space}</label>
+          <br></br>
+          <br></br>
+          <br></br>
+          <label id="shipHealth">Ship Health: {ship.current_health} / {ship.max_health}</label>
         </div>
       </div>
     )
@@ -92,8 +106,8 @@ function displayPlanet(planet, player, ship) {
   document.getElementById("planetTech").innerText = "Technology: " + planet.tech_level;
   document.getElementById("planetLoc").innerText = "Location: (" + planet.x_coordinate + ", " + planet.y_coordinate + ")";
   document.getElementById("planetDist").innerText = planet.distance ? "Distance: " + planet.distance : "Distance: " + 0;
-  document.getElementById("fuelLeft").innerText = "Fuel Left:\n" + ship.current_fuel + "\n";
-  document.getElementById("planetFuel").innerText = planet.fuel_cost ? "Fuel Cost:\n" + planet.fuel_cost : "Fuel Cost:\n" + 0;
+  document.getElementById("fuelLeft").innerText = "Fuel:\n" + ship.current_fuel + " / " + ship.max_fuel_capacity + "\n";
+  document.getElementById("planetFuel").innerText = planet.fuel_cost ? "Fuel Cost: " + planet.fuel_cost : "Fuel Cost: " + 0;
 }
 
 export default TravelMap

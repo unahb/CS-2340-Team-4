@@ -35,11 +35,13 @@ def fuel_cost_helper(distance, pilot_attribute):
     pilot_attribute += 2
     return int(distance / (1 + math.log(pilot_attribute)))
 
-def item_cost_helper(base_cost, merchant_attribute, buy=True):
+def item_cost_helper(base_cost, merchant_attribute, quantity, buy=True):
     merchant_attribute += 2
     if buy:
-        return int(base_cost / (1 + math.log(merchant_attribute)))
-    return int(base_cost * math.log(merchant_attribute) * 1.1)
+        multiplier = 1.5 - quantity/100
+        return int(multiplier * (base_cost / (1 + math.log(merchant_attribute))))
+    mult = 1.0 - quantity/100
+    return int(mult * (base_cost * math.log(merchant_attribute) * 1.1))
 
 class Game:
     def __init__(self, difficulty='easy', attributes=None, name='John Doe'):
@@ -86,15 +88,17 @@ class Game:
     #buy/sell when api asks to. item is added to ship and credits subtracted
     def transaction(self, region, item, item_amount, buy=True):
         if buy:
-            planet_price = self._player.get_region_market_adjusted_prices()[item]['Buy']
+            planet_price = self._player.get_region_market_adjusted_prices()[item]['buy']
             amount = planet_price * int(item_amount)
             self._player.transaction(amount*-1)
             self._player.get_ship().add_cargo(item, int(item_amount), planet_price)
+            self._player.calculate_market_costs(single_item=item, amount=item_amount)
         else:
-            planet_price = self._player.get_region_market_adjusted_prices()[item]['Sell']
+            planet_price = self._player.get_region_market_adjusted_prices()[item]['sell']
             amount = planet_price * int(item_amount)
             self._player.transaction(amount)
             self._player.get_ship().remove_cargo(item, int(item_amount))
+            self._player.calculate_market_costs(single_item=item, buy=False)
         print('Successful transaction of ' + str(item_amount) + ' ' + item + ' on ' + region)
         print('Planet item price: ' + str(planet_price) + ' Transaction amount: ' + str(amount))
         return amount
@@ -139,18 +143,33 @@ class Player:
             self._fuel_costs[conn_region] = fuel_cost_helper(region_distances[conn_region],
                                                              self._attributes['Pilot'])
 
-    def calculate_market_costs(self):
-        self._region_market_adjusted_prices = {}
-        #generate the market for the planet the player is on, taking into account merchant skill
-        for item in self._region.get_market():
-            price = item_cost_helper(self._region.get_market()[item], self._attributes['Merchant'])
-            self._region_market_adjusted_prices[item] = {'Buy' : price, 'Sell' : price}
-            self._ship.update_price(item, price)
-        for item, price in self._ship.get_cargo().items():
-            if not item in self._region_market_adjusted_prices:
+    def calculate_market_costs(self, single_item=None, buy=True, amount=0):
+        if not single_item == None:
+            if buy:
+                quantity = int(self._region_market_adjusted_prices[single_item]['quantity']) - int(amount)
+                price = item_cost_helper(self._region.get_market()[single_item], quantity, self._attributes['Merchant'])
+                self._region_market_adjusted_prices[single_item] = {'buy' : price, 'sell' : price, 'quantity' : quantity}
+                self._ship.update_price(single_item, price)
+            else:
+                quantity = self._ship.get_cargo[single_item]['quantity']
                 price = item_cost_helper(random.randint(10, 50), self._attributes['Merchant'],
                                          buy=False)
+                self._ship.update_price(single_item, price) 
+        else:
+            self._region_market_adjusted_prices = {}
+            #generate the market for the planet the player is on, taking into account merchant skill
+            for item in self._region.get_market():
+                quantity = random.randint(0,100)
+                price = item_cost_helper(self._region.get_market()[item], quantity, self._attributes['Merchant'])
+                self._region_market_adjusted_prices[item] = {'buy' : price, 'sell' : price, 'quantity' : quantity}
                 self._ship.update_price(item, price)
+            for item, price in self._ship.get_cargo().items():
+                if not item in self._region_market_adjusted_prices:
+                    quantity = 0
+                    price = item_cost_helper(random.randint(10, 50), quantity,
+                                             self._attributes['Merchant'],
+                                             buy=False)
+                    self._ship.update_price(item, price)
 
     # getters
     def get_region(self):
