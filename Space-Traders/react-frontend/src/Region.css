@@ -105,11 +105,13 @@
 
 #itemContents {
     position: absolute;
-    height: 75vh;
-    width: 45vh;
+    height: 65vh;
+    width: 22vw;
+    margin: 1;
     align-content: center;
     opacity: 0.8;
     overflow-y: auto;
+    border: 1px solid black;
 }
 
 #spaceship-static {

@@ -82,7 +82,7 @@ class Region extends React.Component {
             <td class="MarkTd">{name}</td>
 						<td class="MarkTd">
 							<button type="button" class="buyButton" onClick={(event) => {
-								if (document.getElementById(name + "inp").value <= 0) {
+								if (document.getElementById(name + "inp").value <= 0 || document.getElementById(name + "inp").value > ship.max_cargo_space - ship.current_cargo) {
 									customAlert("Buying Error", "Cannot buy " + document.getElementById(name + "inp").value + " of " + name + "(s)")
 								} else if (prices.Buy * document.getElementById(name + "inp").value > player.credits) {
 									customAlert("Insufficient Credits", "Cannot buy "+ document.getElementById(name + "inp").value + " " + name + "(s)")
@@ -96,7 +96,8 @@ class Region extends React.Component {
 						</td>
             <td class="MarkTd">
 							<button type="button" class="sellButton" onClick={(event) => {
-								if (document.getElementById(name + "inp").value <= 0) {
+                console.log(document.getElementById(name + "inp").value > ship.cargo[name])
+								if (document.getElementById(name + "inp").value <= 0 || ship.cargo[name] == undefined || document.getElementById(name + "inp").value > ship.cargo[name]) {
 									customAlert("Selling Error", "Cannot sell " + document.getElementById(name + "inp").value + " of " + name + "(s)")
 								} else {
                   customConfirm("Please Confirm", "Sell " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Sell * document.getElementById(name + "inp").value + " Credits");
@@ -107,7 +108,7 @@ class Region extends React.Component {
 							}}>{prices.Sell}</button>
 						</td>
 						<td class="MarkTd">
-							<input type="number" class="quantityInput" id={name + "inp"} defaultValue="0" min="0"></input>
+							<input type="number" class="quantityInput" id={name + "inp"} defaultValue="0" min="0" max={ship.max_cargo_space}></input>
 						</td>
           </tr>
         table.push(row)
@@ -121,7 +122,7 @@ class Region extends React.Component {
               <h1 style={{ fontSize: "1.5vw", color: "blue" }}>{ship.max_cargo_space - ship.current_cargo}</h1>
             </h1>
             <div id="itemContents">
-              Hello Bitch ;-))))))
+              Hello Bitch :P
               {invenTable}
             </div>
           </div>
@@ -221,8 +222,8 @@ const styles = {
   },
   sidebar: {
     position: 'absolute',
+    right: '1px',
     bottom: 0,
-    right: 0,
     height: '84vh',
     width: '22vw',
     'align-content': 'center',
