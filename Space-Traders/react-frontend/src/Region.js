@@ -91,7 +91,7 @@ class Region extends React.Component {
                 transaction.good = name;
                 transaction.isBuy = true;
                 customConfirm("Please Confirm", "Buy 0 " + name +"(s) for 0 Credits");
-							}}>{prices.Buy}</button>
+							}}>{prices.buy}</button>
 						</td>
             <td class="MarkTd">
 							<button type="button" class="sellButton" onClick={(event) => {
@@ -102,7 +102,7 @@ class Region extends React.Component {
                   transaction.isBuy = false;
                   customConfirm("Please Confirm", "Sell 0 " + name +"(s) for 0 Credits");
                 }
-							}}>{prices.Sell}</button>
+							}}>{prices.sell}</button>
 						</td>
           </tr>
         table.push(row)
@@ -171,7 +171,7 @@ class Region extends React.Component {
 					  <input type="number" class="quantityInput" id="inp" defaultValue="0" min="0" max={ship.max_cargo_space} onChange={(event) => {
               if (transaction.isBuy) {
                 transaction.quant = document.getElementById("inp").value;
-                document.getElementById("confirmMes").innerText = "Buy " + document.getElementById("inp").value * 1 + " " + transaction.good +"(s) for " + player.region.market[transaction.good].Buy * document.getElementById("inp").value + " Credits"
+                document.getElementById("confirmMes").innerText = "Buy " + document.getElementById("inp").value * 1 + " " + transaction.good +"(s) for " + player.region.market[transaction.good].buy * document.getElementById("inp").value + " Credits"
               } else {
                 transaction.quant = document.getElementById("inp").value;
                 document.getElementById("confirmMes").innerText = "Sell " + document.getElementById("inp").value * 1 + " " + transaction.good +"(s) for " + ship.cargo[transaction.good].price * document.getElementById("inp").value + " Credits"
@@ -186,7 +186,7 @@ class Region extends React.Component {
                 if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.max_cargo_space - ship.current_cargo) {
                   document.getElementById("customConfirm").style.zIndex = 0;
 									customAlert("Buying Error", "Cannot buy " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
-								} else if (player.region.market[transaction.good].Buy * document.getElementById("inp").value > player.credits) {
+								} else if (player.region.market[transaction.good].buy * document.getElementById("inp").value > player.credits) {
                   document.getElementById("customConfirm").style.zIndex = 0;
 									customAlert("Insufficient Credits", "Cannot buy "+ document.getElementById("inp").value * 1 + " " + transaction.good + "(s)")
 								} else {
