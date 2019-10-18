@@ -97,7 +97,7 @@ class Buy(Resource):
             return {'message': message}, 200
         except KeyError:
             region = SpaceTradersContainer.space_traders.get_player().get_region().get_name()
-            amount = SpaceTradersContainer.space_traders.transaction(item_id, region, item_amount)
+            amount = SpaceTradersContainer.space_traders.transaction(region, item_id, item_amount)
             print(region, amount)
             message = 'Unknown or invalid item'
             print(message)
