@@ -70,7 +70,9 @@ class Region extends React.Component {
       for (let [invenItem, invenQuantity] of Object.entries(ship.cargo)) {
         const row =
           <tr class="invenTr">
-            <td class="invenTd" style={{left: "1vw"}}>{invenItem}: {invenQuantity}</td>
+            <td class="invenTd">
+              <button type="button" class="sellButton">{invenItem}: {invenQuantity.quantity}</button>
+            </td>
           </tr>
         invenTable.push(row)
       }
@@ -97,7 +99,7 @@ class Region extends React.Component {
             <td class="MarkTd">
 							<button type="button" class="sellButton" onClick={(event) => {
                 console.log(document.getElementById(name + "inp").value > ship.cargo[name])
-								if (document.getElementById(name + "inp").value <= 0 || ship.cargo[name] == undefined || document.getElementById(name + "inp").value > ship.cargo[name]) {
+								if (document.getElementById(name + "inp").value <= 0 || ship.cargo[name] == undefined || document.getElementById(name + "inp").value > ship.cargo[name].quantity) {
 									customAlert("Selling Error", "Cannot sell " + document.getElementById(name + "inp").value + " of " + name + "(s)")
 								} else {
                   customConfirm("Please Confirm", "Sell " + document.getElementById(name + "inp").value + " " + name +"(s) for " + prices.Sell * document.getElementById(name + "inp").value + " Credits");
@@ -122,7 +124,6 @@ class Region extends React.Component {
               <h1 style={{ fontSize: "1.5vw", color: "blue" }}>{ship.max_cargo_space - ship.current_cargo}</h1>
             </h1>
             <div id="itemContents">
-              Hello Bitch :P
               {invenTable}
             </div>
           </div>

@@ -63,8 +63,9 @@
 #alertBut {
     font-family: 'Press Start 2P', cursive;
     height: 3vh;
-    width: 4vw;
+    min-width: 4vw;
     font-size: 2vh;
+    margin: 1px;
     position: relative;
     color: #FFFFFF;
     background-color: #666666;
@@ -105,13 +106,14 @@
 
 #itemContents {
     position: absolute;
-    height: 65vh;
+    height: 55vh;
     width: 22vw;
     margin: 1;
     align-content: center;
     opacity: 0.8;
     overflow-y: auto;
     border: 1px solid black;
+    border-radius: 5;
 }
 
 #spaceship-static {
@@ -125,10 +127,17 @@
 
 .MarkTh,
 .MarkTd,
-.MarkTr,
+.MarkTr {
+    font-family: 'Press Start 2P', cursive;
+    height: 4vh;
+    border: 1px solid white;
+}
+
 .invenTd,
 .invenTr {
     font-family: 'Press Start 2P', cursive;
     height: 4vh;
     border: 1px solid white;
+    align-self: left;
+    text-align: left;
 }
