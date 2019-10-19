@@ -71,7 +71,7 @@ class Region extends React.Component {
         const row =
           <tr class="invenTr">
             <td class="invenTd">
-              <button type="button" class="sellButton" onClick={(event) => {
+              <button type="button" class="sellButton" style={{"text-align": "left", fontSize: "1.75vh"}} onClick={(event) => {
                 transaction.good = invenItem;
                 transaction.isBuy = false;
                 customConfirm("Please Confirm", "Sell 0 " + invenItem +"(s) for 0 Credits");
@@ -104,6 +104,7 @@ class Region extends React.Component {
                 }
 							}}>{prices.sell}</button>
 						</td>
+            <td class="MarkTd">{prices.quantity}</td>
           </tr>
         table.push(row)
       }
@@ -137,6 +138,7 @@ class Region extends React.Component {
               <th class="MarkTh" style={styles.blue}>Items</th>
               <th class="MarkTh" style={styles.yellow}>Buy</th>
               <th class="MarkTh" style={styles.yellow}>Sell</th>
+              <th class="MarkTh" style={styles.yellow}>Stock</th>
             </tr>
             {table}
           </table>
@@ -183,7 +185,7 @@ class Region extends React.Component {
 						}}>Cancel</button>
 						<button id="confirmSubmit" onClick={(event) => {
               if (transaction.isBuy) {
-                if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.max_cargo_space - ship.current_cargo) {
+                if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.max_cargo_space - ship.current_cargo || document.getElementById("inp").value > player.region.market[transaction.good].quantity) {
                   document.getElementById("customConfirm").style.zIndex = 0;
 									customAlert("Buying Error", "Cannot buy " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
 								} else if (player.region.market[transaction.good].buy * document.getElementById("inp").value > player.credits) {
@@ -200,7 +202,7 @@ class Region extends React.Component {
                   this.buySellItem(transaction)
 								}
               }
-            }}>Submit</button>
+            }}>Confirm</button>
 					</div>
         </div>
       );
