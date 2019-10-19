@@ -25,11 +25,7 @@ class Region extends React.Component {
   }
 
   toggleSidebar() {
-    if (document.getElementById("sidebar").hidden) {
-      document.getElementById("sidebar").hidden = false;
-    } else {
-      document.getElementById("sidebar").hidden = true;
-    }
+    document.getElementById("sidebar").hidden = !document.getElementById("sidebar").hidden
   }
 
   buySellItem(transaction) {
