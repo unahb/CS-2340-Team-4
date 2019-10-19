@@ -216,6 +216,8 @@ class Ship:
         self._current_fuel = ship['fuel']
         self._current_health = ship['health']
         self._current_cargo = 0
+        # ship value calculated using fuel + health + cargo value
+        self._current_value = self._current_fuel + self._current_health
 
     def add_cargo(self, item, amount=1, price=0):
         if item in self._cargo:
@@ -226,6 +228,7 @@ class Ship:
             self._cargo[item]['price'] = price
 
         self._current_cargo += amount
+        self._current_value += (price * amount)
 
     def remove_cargo(self, item, amount=1):
         self._cargo[item]['quantity'] -= amount
@@ -233,13 +236,16 @@ class Ship:
             del self._cargo[item]   #delete entry if no more item of type
 
         self._current_cargo -= amount
+        self._current_value -= (self._cargo[item]['price'] * amount)
 
     def remove_fuel(self, amount):
         self._current_fuel -= amount
+        self._current_value -= amount
 
     def update_price(self, item, price):
         if item in self._cargo:
             self._cargo[item]['price'] = price
+            self._current_value += self._cargo[item]['quantity'] * (price - self._cargo[item]['price'])
 
     def get_type(self):
         return self._ship_type
@@ -257,6 +263,8 @@ class Ship:
         return self._current_health
     def get_current_cargo(self):
         return self._current_cargo
+    def get_current_value(self):
+        return self._current_value
 
 class Universe:
     __instance = None

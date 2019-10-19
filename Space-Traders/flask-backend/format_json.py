@@ -39,7 +39,8 @@ def get_json(game):
         'cargo' : ship.get_cargo(),
         'current_fuel' : ship.get_current_fuel(),
         'current_health' : ship.get_current_health(),
-        'current_cargo' : ship.get_current_cargo()
+        'current_cargo' : ship.get_current_cargo(),
+        'current_value' : ship.get_current_value()
     }
 
     planets_dict = {}
