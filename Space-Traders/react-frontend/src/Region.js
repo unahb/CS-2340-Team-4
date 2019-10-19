@@ -73,6 +73,7 @@ class Region extends React.Component {
             <td class="invenTd">
               <button type="button" class="sellButton" style={{"text-align": "left", fontSize: "1.75vh"}} onClick={(event) => {
                 transaction.good = invenItem;
+                transaction.quant = 1;
                 transaction.isBuy = false;
                 customConfirm("Please Confirm", "Sell 0 " + invenItem +"(s) for 0 Credits");
               }}>{invenItem}: {invenQuantity.quantity}, {invenQuantity.price}</button>
@@ -89,6 +90,7 @@ class Region extends React.Component {
 						<td class="MarkTd">
 							<button type="button" class="buyButton" onClick={(event) => {
                 transaction.good = name;
+                transaction.quant = 1;
                 transaction.isBuy = true;
                 customConfirm("Please Confirm", "Buy 1 " + name + "(s) for " + player.region.market[transaction.good].buy * 1 + " Credits");
 							}}>{prices.buy}</button>
@@ -99,6 +101,7 @@ class Region extends React.Component {
                   customAlert("Selling Error", "Cannot sell items you do not own")
                 } else {
                   transaction.good = name;
+                  transaction.quant = 1;
                   transaction.isBuy = false;
                   customConfirm("Please Confirm", "Sell 1 " + name +"(s) for " + ship.cargo[name].price * 1 + " Credits");
                 }
