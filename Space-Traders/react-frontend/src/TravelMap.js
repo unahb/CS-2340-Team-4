@@ -85,6 +85,10 @@ class TravelMap extends React.Component {
           <br></br>
           <br></br>
           <label id="shipHealth">Ship Health: {ship.current_health} / {ship.max_health}</label>
+          <br></br>
+          <br></br>
+          <br></br>
+          <label id="shipValue">Ship Value: {ship.current_value}</label>
         </div>
       </div>
     )

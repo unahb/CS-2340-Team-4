@@ -41,7 +41,7 @@ class Region extends React.Component {
           this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
         })
         console.log(this.state)
-        document.getElementById("inp").value = 0;
+        document.getElementById("inp").value = 1;
       })
     } else {
       put(putTypes.SELL, transaction, () => {
@@ -50,7 +50,7 @@ class Region extends React.Component {
           this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
         })
         console.log(this.state)
-        document.getElementById("inp").value = 0;
+        document.getElementById("inp").value = 1;
       })  
     }
   }
@@ -75,7 +75,7 @@ class Region extends React.Component {
                 transaction.good = invenItem;
                 transaction.isBuy = false;
                 customConfirm("Please Confirm", "Sell 0 " + invenItem +"(s) for 0 Credits");
-              }}>{invenItem}: {invenQuantity.quantity}</button>
+              }}>{invenItem}: {invenQuantity.quantity}, {invenQuantity.price}</button>
             </td>
           </tr>
         invenTable.push(row)
@@ -90,7 +90,7 @@ class Region extends React.Component {
 							<button type="button" class="buyButton" onClick={(event) => {
                 transaction.good = name;
                 transaction.isBuy = true;
-                customConfirm("Please Confirm", "Buy 0 " + name +"(s) for 0 Credits");
+                customConfirm("Please Confirm", "Buy 1 " + name + "(s) for " + player.region.market[transaction.good].buy * 1 + " Credits");
 							}}>{prices.buy}</button>
 						</td>
             <td class="MarkTd">
@@ -100,7 +100,7 @@ class Region extends React.Component {
                 } else {
                   transaction.good = name;
                   transaction.isBuy = false;
-                  customConfirm("Please Confirm", "Sell 0 " + name +"(s) for 0 Credits");
+                  customConfirm("Please Confirm", "Sell 1 " + name +"(s) for " + ship.cargo[name].price * 1 + " Credits");
                 }
 							}}>{prices.sell}</button>
 						</td>
@@ -116,6 +116,7 @@ class Region extends React.Component {
             <h1 id="pixelFont" style={{ fontSize: "0.9vw", }}>Remaining Cargo Space:
               <h1 style={{ fontSize: "1.5vw", color: "blue" }}>{ship.max_cargo_space - ship.current_cargo}</h1>
             </h1>
+            <div id="pixelFont" style={{ fontSize: "0.8vw", margin: "1px" }}>Item: Quantity, Unit Value</div>
             <div id="itemContents">
               {invenTable}
             </div>
@@ -170,7 +171,7 @@ class Region extends React.Component {
 					<div id="customConfirm" hidden="true">
 						<h1 id="confirmHead"></h1>
 						<div id="confirmMes"></div>
-					  <input type="number" class="quantityInput" id="inp" defaultValue="0" min="0" max={ship.max_cargo_space} onChange={(event) => {
+					  <input type="number" class="quantityInput" id="inp" defaultValue="1" min="0" max={ship.max_cargo_space} onChange={(event) => {
               if (transaction.isBuy) {
                 transaction.quant = document.getElementById("inp").value;
                 document.getElementById("confirmMes").innerText = "Buy " + document.getElementById("inp").value * 1 + " " + transaction.good +"(s) for " + player.region.market[transaction.good].buy * document.getElementById("inp").value + " Credits"
@@ -181,7 +182,7 @@ class Region extends React.Component {
             }}></input>
 						<button id="confirmCancel" onClick={(event) => {
               document.getElementById("customConfirm").hidden = true;
-              document.getElementById("inp").value = 0;
+              document.getElementById("inp").value = 1;
 						}}>Cancel</button>
 						<button id="confirmSubmit" onClick={(event) => {
               if (transaction.isBuy) {

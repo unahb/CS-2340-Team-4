@@ -62,7 +62,7 @@
 .quantityInput,
 #alertBut {
     font-family: 'Press Start 2P', cursive;
-    height: 3vh;
+    min-height: 3vh;
     min-width: 4vw;
     font-size: 2vh;
     margin: 1px;
