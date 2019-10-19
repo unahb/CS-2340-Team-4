@@ -75,7 +75,7 @@ class Region extends React.Component {
                 transaction.good = invenItem;
                 transaction.quant = 1;
                 transaction.isBuy = false;
-                customConfirm("Please Confirm", "Sell 0 " + invenItem +"(s) for 0 Credits");
+                customConfirm("Please Confirm", "Sell 1 " + invenItem +"(s) for " + ship.cargo[invenItem].price * 1 + " Credits");
               }}>{invenItem}: {invenQuantity.quantity}, {invenQuantity.price}</button>
             </td>
           </tr>
