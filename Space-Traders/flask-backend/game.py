@@ -234,11 +234,12 @@ class Ship:
 
     def remove_cargo(self, item, amount=1):
         self._cargo[item]['quantity'] -= amount
+        price = self._cargo[item]['price']
         if self._cargo[item]['quantity'] <= 0:
             del self._cargo[item]   #delete entry if no more item of type
 
         self._current_cargo -= amount
-        self._current_value -= (self._cargo[item]['price'] * amount)
+        self._current_value -= price * amount
 
     def remove_fuel(self, amount):
         self._current_fuel -= amount
