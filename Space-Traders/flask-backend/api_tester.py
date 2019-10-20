@@ -67,7 +67,7 @@ def travel():   #PUT request to travel with input validation
 def buy():  #PUT request to buy item, no input validation (yet)
     print('Enter item:')
     command = input()
-    command = command[0].upper() + command[1:]
+    command = command.title() #capitalize each word
     url_builder = command
     print('Enter amount:')
     command = input()
@@ -82,7 +82,7 @@ def buy():  #PUT request to buy item, no input validation (yet)
 def sell(): #PUT request to sell item, no input validation (yet)
     print('Enter item:')
     command = input()
-    command = command[0].upper() + command[1:]
+    command = command.title() #capitalize each word
     url_builder = command
     print('Enter amount:')
     command = input()
