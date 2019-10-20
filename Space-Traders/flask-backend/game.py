@@ -247,8 +247,9 @@ class Ship:
 
     def update_price(self, item, price):
         if item in self._cargo:
-            self._cargo[item]['price'] = price
             self._current_value += self._cargo[item]['quantity'] * (price - self._cargo[item]['price'])
+            print(self._cargo[item]['quantity'] * (price - self._cargo[item]['price']))
+            self._cargo[item]['price'] = price
 
     def get_type(self):
         return self._ship_type
