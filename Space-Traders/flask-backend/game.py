@@ -78,6 +78,8 @@ class Game:
         print('Universe Configuration: ', str(self._universe))
 
     def travel(self, region):   #travel when the api is called to do so. fuel costs subtracted
+        if self._player.get_region().get_name() == region:
+            return
         cost = self._player.get_fuel_costs()[region]
         self._player.get_ship().remove_fuel(cost)
         self._player.set_region(self._universe.get_game_regions()[region])
