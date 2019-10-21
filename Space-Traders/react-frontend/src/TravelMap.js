@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import './App.css'
+import './TravelMap.css'
 import { get } from './requests';
 
 class TravelMap extends React.Component {
@@ -10,85 +10,108 @@ class TravelMap extends React.Component {
     this.state = {
       player: {},
       currRegion: {},
-      regions: [],
+      regions: {},
+      ship: {},
     }
   }
 
   componentWillMount() {
     get((item) => {
-      this.setState({ player: item[0], regions: item.slice(1, 11) })
-      const player = this.state.player
-      console.log(player)
-      const currRegion = 
-        { name: player.region_name,
-          tech_level: player.region_tech_level,
-          x_coordinate: player.region_x_coordinate,
-          y_coordinate: player.region_y_coordinate,
-          distance: 0
-        }
-      this.setState({ currRegion: currRegion })
-      displayPlanet(currRegion)
-      const distances = this.state.regions.map((region) => {
-        const distance = calculateDistance(player.region_x_coordinate, player.region_y_coordinate, region.x_coordinate, region.y_coordinate)
-        region.distance = distance
-        return region
-      })
-      console.log(distances)
+      this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship })
+      const currRegion = item.Player.region
+      displayPlanet(currRegion, this.state.player, this.state.ship)
     })
   }
 
   render() {
-    const buttons = this.state.regions.map((region) =>
-      <button 
-        id={region.name.toLowerCase()} 
-        class="circle mercuryButt" 
-        style={{ left: new String(((region.x_coordinate + 200) / 400.0) * 92) + "vw",
-          top: new String(81 - (((region.y_coordinate + 200) / 400.0) * 81)) + "vh" }}
-        onClick={(e) => {
-          displayPlanet(region)
-          this.setState({ currRegion: region })
-        }}>
-        {region.name}
-      </button>)
+    let buttons = []
+    for (let [key, planet] of Object.entries(this.state.regions)) {
+      const button =
+        <button
+          id={planet.name.toLowerCase()}
+          class="circle"
+          style={{
+            left: new String(((planet.x_coordinate + 200) / 400.0) * 72) + "vw",
+            top: new String(81 - (((planet.y_coordinate + 200) / 400.0) * 81)) + "vh"
+          }}
+          onClick={(e) => {
+            displayPlanet(planet, null, this.state.ship)
+            this.setState({ currRegion: planet })
+          }}>
+          {planet.name}
+        </button>
+        buttons.push(button)
+    }
 
-    const currRegion = this.state.currRegion
+    const region = this.state.currRegion
+    const ship = this.state.ship
     return (
       <div id="mainMap">
         <div id="mapBack">
           {buttons}
         </div>
-        <div id="planetInfo">
-          <label id="planetName">Name: </label> {/*These should be initialized to the player's current location*/}
-          <br></br>
-          <label id="planetTech">Technology: </label>
-          <br></br>
-          <label id="planetLoc">Location: </label>
-          <br></br>
-          <label id="planetDist">Distance: </label>
+        <div id="planetInfo" style={{ flexDirection: 'row' }}>
+          <div>
+            <label id="planetName">Name: </label> {/*These should be initialized to the player's current location*/}
+            <br></br>
+            <label id="planetTech">Technology: </label>
+          </div>
+          <div>
+            <label id="planetLoc">Location: </label>
+            <br></br>
+            <label id="planetDist">Distance: </label>
+            <br></br>
+            <label id="planetFuel">Fuel Cost: </label>
+          </div>
+
           <Link to={{
             pathname: '/Region',
-            currRegion
+            region
           }}
             className="nav-link">
             <button type="button" id="travelTo" align="right">Travel</button>
           </Link>
+        </div>
+        <div id="travelInfo">
+          <label id="shipType">Ship Type: {ship.type}</label>
+          <br></br>
+          <br></br>
+          <br></br>
+          <label id="fuelLeft">Fuel:</label>
+          <br></br>
+          <br></br>
+          <label id="cargoSpace">Cargo Space: {ship.max_cargo_space - ship.current_cargo} / {ship.max_cargo_space}</label>
+          <br></br>
+          <br></br>
+          <br></br>
+          <label id="shipHealth">Ship Health: {ship.current_health} / {ship.max_health}</label>
+          <br></br>
+          <br></br>
+          <br></br>
+          <label id="shipValue">Ship Value: {ship.current_value}</label>
         </div>
       </div>
     )
   }
 }
 
-// Calculate distance between current and planet location
-function calculateDistance(playerX, playerY, regionX, regionY) {
-  const distance = Math.sqrt(Math.pow((playerX - regionX), 2) + Math.pow((playerY - regionY), 2))
-  return distance
-}
-
-function displayPlanet(planet) {
+function displayPlanet(planet, player, ship) {
+  if (player != null && planet.name == player.region.name) {
+    document.getElementById(planet.name.toLowerCase()).style.backgroundColor = "#FF0000"
+  }
+  if (player != null || (ship != null && ship.current_fuel >= planet.fuel_cost)) {
+    document.getElementById("travelTo").disabled = false;
+    document.getElementById("travelTo").innerText = "Travel"
+  } else {
+    document.getElementById("travelTo").disabled = true;
+    document.getElementById("travelTo").innerText = "Insufficient Fuel"
+  }
   document.getElementById("planetName").innerText = "Name: " + planet.name;
   document.getElementById("planetTech").innerText = "Technology: " + planet.tech_level;
   document.getElementById("planetLoc").innerText = "Location: (" + planet.x_coordinate + ", " + planet.y_coordinate + ")";
-  document.getElementById("planetDist").innerText = "Distance: " + planet.distance;
+  document.getElementById("planetDist").innerText = planet.distance ? "Distance: " + planet.distance : "Distance: " + 0;
+  document.getElementById("fuelLeft").innerText = "Fuel:\n" + ship.current_fuel + " / " + ship.max_fuel_capacity + "\n";
+  document.getElementById("planetFuel").innerText = planet.fuel_cost ? "Fuel Cost: " + planet.fuel_cost : "Fuel Cost: " + 0;
 }
 
 export default TravelMap

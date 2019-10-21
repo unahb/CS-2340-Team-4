@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import spaceship from './resources/spaceship.png'
-import './App.css'
+import './PlayerStats.css'
 import { post, get } from './requests';
 
 class PlayerStats extends React.Component {
@@ -9,8 +9,7 @@ class PlayerStats extends React.Component {
     super(props)
 
     this.state = {
-      player: {},
-      regions:[],
+      player: {}
     }
   }
 
@@ -25,18 +24,20 @@ class PlayerStats extends React.Component {
   // Make GET request when POST complete
   getRegionCoordinates() {
     get((item) => {
-      this.setState({ player: item[0], regions: item.slice(1, 11) })
+      console.log(item)
+      this.setState({ player: item.Player })
     })
   }
 
   render() {
     console.log(this.state)
     const player = this.state.player
+    const region = this.state.player.region
     if (Object.entries(player).length !== 0) {
       return (
         <div id="Main">
           <div id="stars">
-            <header id="Welcome-header">
+            <header id="Hi-header">
               <h1>Hi <span style={styles.green}>{player.name.toUpperCase()}!</span></h1>
             </header>
             <div>
@@ -45,20 +46,20 @@ class PlayerStats extends React.Component {
             <div>
               <text id="statsDifficulty">Difficulty: <span style={styles.blue}>{player.difficulty.toUpperCase()}</span></text>
               <br></br>
-              <text id="pLevel">Pilot Level: <span style={styles.blue}>{player.skills[0]}</span></text>
+              <text id="pLevel">Pilot Level: <span style={styles.blue}>{player.skills.Pilot}</span></text>
               <br></br>
-              <text id="fLevel">Fighter Level: <span style={styles.blue}>{player.skills[1]}</span></text>
+              <text id="fLevel">Fighter Level: <span style={styles.blue}>{player.skills.Fighter}</span></text>
               <br></br>
-              <text id="mLevel">Merchant Level: <span style={styles.blue}>{player.skills[2]}</span></text>
+              <text id="mLevel">Merchant Level: <span style={styles.blue}>{player.skills.Merchant}</span></text>
               <br></br>
-              <text id="eLevel">Engineer Level: <span style={styles.blue}>{player.skills[3]}</span></text>
+              <text id="eLevel">Engineer Level: <span style={styles.blue}>{player.skills.Engineer}</span></text>
               <br></br>
-              <text id="credits">Credits: <span style={styles.blue}>{player.credits}</span></text>
+              <text id="creditsStat">Credits: <span style={styles.blue}>{player.credits}</span></text>
               <br></br>
               <Link 
                 to={{
                   pathname: '/Region',
-                  player
+                  region
                 }}
                 className="nav-link" 
               >

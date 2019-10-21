@@ -1,0 +1,93 @@
+@import "./App.css";
+
+.circle {
+    background-color: #003399;
+    font-family: 'Press Start 2P', cursive;
+    text-indent: 2vw;
+    color: white;
+    border: none;
+    position: absolute;
+    width: 2vw;
+    height: 2vw;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    z-index: 0;
+}
+  
+.circle:hover {
+    background-color: #003366;
+    cursor: pointer;
+}
+
+#mainMap {
+    background-color: #000000;
+    overflow: hidden;
+    height: 100vh;
+}
+
+#mapBack {
+    background-image: url(./resources/mapBack.png);
+    background-size: 100vw;
+    height: 85vh;
+}
+
+#planetInfo {
+    background-color: #333333;
+    position: relative;
+    width: 100vw;
+    height: 15vh;
+    overflow: hidden;
+}
+
+#travelInfo {
+    background-color: #333333;
+    position: absolute;
+    top: 0vh;
+    left: 80vw;
+    width: 20vw;
+    height: 85vh;
+    overflow: hidden;
+}
+
+#shipType,
+#fuelLeft,
+#cargoSpace,
+#shipHealth,
+#shipValue {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    font-size: 3vh;
+    position: relative;
+    top: 1vh;
+    left: 1vw;
+    width: 20vw;
+}
+  
+#planetName,
+#planetTech,
+#planetLoc,
+#planetDist,
+#planetFuel {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    font-size: 2vh;
+    position: relative;
+    top: 1vh;
+    left: 1vw;
+}
+
+#travelTo {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3vh;
+    position: absolute;
+    top: 0vh;
+    right: 0vw;
+    height: 15vh;
+    width: 20vw;
+}
+  
+#travelTo:hover {
+    background-color: #CCCCCC;
+    cursor: pointer;
+}

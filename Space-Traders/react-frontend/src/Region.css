@@ -1,0 +1,143 @@
+@import "App.css";
+
+#Region-header {
+    font-family: 'Press Start 2P', cursive;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(5px + 2vmin);
+    color: white;
+    padding-top: 0.2vh;
+}
+
+#banner {
+    height: 15vh;
+    background-color: grey;
+    margin-bottom: 10vh;
+}
+
+#credits {
+    font-family: 'Press Start 2P', cursive;
+    position: relative;
+    left: 2vw;
+    top: 3vh;
+    font-size: 4vh;
+    color: white;
+}
+
+#mapButton {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8vh;
+    position: relative;
+    top: 5vh;
+    left: 15vw;
+    color: #400080;
+}
+
+#customAlert,
+#customConfirm {
+    position: absolute;
+    width: 40vw;
+    height: 25vh;
+    top: 40vh;
+    left: 30vw;
+}
+
+#customAlert,
+#alertHead,
+#alertMes,
+#customConfirm,
+#confirmHead,
+#confirmMes  {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3vh;
+    color: #FFFFFF;
+    background-color: #171B1F;
+    z-index: 1;
+    border: 1vh;
+}
+
+.buyButton,
+.sellButton,
+.quantityInput,
+#alertBut {
+    font-family: 'Press Start 2P', cursive;
+    min-height: 3vh;
+    min-width: 4vw;
+    font-size: 2vh;
+    margin: 1px;
+    position: relative;
+    color: #FFFFFF;
+    background-color: #666666;
+    text-align: center;
+}
+
+#confirmSubmit,
+#confirmCancel {
+    font-family: 'Press Start 2P', cursive;
+    height: 3vh;
+    width: 8vw;
+    margin: 1vw;
+    font-size: 2vh;
+    position: relative;
+    color: #FFFFFF;
+    background-color: #666666;
+    text-align: center;
+}
+
+.buyButton:hover,
+.sellButton:hover,
+#alertBut:hover,
+#confirmSubmit:hover,
+#confirmCancel:hover {
+    background-color: #333333;
+}
+
+#table {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    width: 50vw;
+    height: 40vh;
+    justify-content: right;
+    position: relative;
+    border-collapse: collapse;
+    border: 1px solid white;
+}
+
+#itemContents {
+    position: absolute;
+    height: 55vh;
+    width: 22vw;
+    margin: 1;
+    align-content: center;
+    opacity: 0.8;
+    overflow-y: auto;
+    border: 1px solid black;
+    border-radius: 5;
+}
+
+#spaceship-static {
+    height: 10vh;
+    transform: rotate(-90deg);
+}
+
+#pixelFont {
+    font-family: 'Press Start 2P', cursive;
+}
+
+.MarkTh,
+.MarkTd,
+.MarkTr {
+    font-family: 'Press Start 2P', cursive;
+    height: 4vh;
+    border: 1px solid white;
+}
+
+.invenTd,
+.invenTr {
+    font-family: 'Press Start 2P', cursive;
+    height: 4vh;
+    border: 1px solid white;
+    align-self: left;
+    text-align: left;
+}
