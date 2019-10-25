@@ -50,17 +50,15 @@ class TravelMap extends React.Component {
         <div id="mapBack">
           {buttons}
         </div>
-        <div id="planetInfo" style={{ flexDirection: 'row' }}>
-          <div>
+        <div id="planetInfo" style={{ display: 'flex', flexDirection: 'row' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', marginRight: '4vw' }}>
             <label id="planetName">Name: </label> {/*These should be initialized to the player's current location*/}
             <br></br>
             <label id="planetTech">Technology: </label>
           </div>
-          <div>
-            <label id="planetLoc">Location: </label>
-            <br></br>
-            <label id="planetDist">Distance: </label>
-            <br></br>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch'}}>
+            <label id="planetLoc" style={{ marginBottom: '2vh' }}>Location: </label>
+            <label id="planetDist" style={{ marginBottom: '2vh' }}>Distance: </label>
             <label id="planetFuel">Fuel Cost: </label>
           </div>
 
