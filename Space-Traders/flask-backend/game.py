@@ -35,13 +35,16 @@ MARKET_ITEMS = {
     }
 
 #encounter rate is encoded as numbers that can be rolled out of 10. For example,
-#on easy difficulty, rolling a 1 will yield a bandit encounter, a 2 will yield 
-#a bandit encounter, and 3 or 4 will both yield traders. Higher chances can be 
+#on easy difficulty, rolling a 1 will yield a bandit encounter, a 5 will yield 
+#a police encounter, and 8 or 9 will both yield traders. Higher chances can be 
 #added by increasing the mappings of numbers from 1-10 that will get that encounter.
+#Bandits always start on number 1, Police always start on 5, and Traders always start on 8
+#the above information allows for easy testing by changing the random number generator in travel()
+#to a fixed number that always produces the start number of the desired encounter
 NPC_ENCOUNTER_RATES = {
-    'easy': {1: 'Bandits', 2: 'Police', 3: 'Traders', 4: 'Traders'},
-    'medium': {1: 'Bandits', 2: 'Bandits', 3: 'Police', 4: 'Traders', 5: 'Traders'},
-    'hard': {1: 'Bandits', 2: 'Bandits', 3: 'Bandits', 4: 'Police', 5: 'Traders'}
+    'easy': {1: 'Bandits', 5: 'Police', 8: 'Traders', 9: 'Traders'},
+    'medium': {1: 'Bandits', 2: 'Bandits', 5: 'Police', 8: 'Traders', 9: 'Traders'},
+    'hard': {1: 'Bandits', 2: 'Bandits', 3: 'Bandits', 5: 'Police', 8: 'Traders'}
     }
 
 def fuel_cost_helper(distance, pilot_attribute):
@@ -92,6 +95,7 @@ class Game:
 
     def travel(self, region):   #travel when the api is called to do so. fuel costs subtracted
         if self._player.get_region().get_name() == region:
+            print('tried to travel to planet player is already at')
             return
         old_region = self._player.get_region()
         old_market = self._player.get_region_market_adjusted_prices()
@@ -102,7 +106,12 @@ class Game:
         distances = self._universe.get_region_distances().get_distances(player_region_name)
         self._player.calc_fuel_costs(PLANET_NAMES, distances)
 
-        encounter_roll = random.randint(1, 10) #encounter an NPC, taking into account difficulty
+        #encounter_roll determines the NPC you will get (if applicable)
+        #you can test individual encounters by setting it to:
+        #1 for bandits, 5 for police, 8 for traders
+        #when set to those, you will get an encounter of that type on every travel
+        encounter_roll = random.randint(1, 10)
+        #encounter_roll = 1 #uncomment to test a specific roll. remember to comment out when done
         encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
         print(encounter_roll, encounter)
         if encounter == 'Bandits':
@@ -110,10 +119,13 @@ class Game:
             print('bandit encountered')
         elif encounter == 'Traders':
             self._player.set_encounter(TraderEncounter())
+            print('trader encounterd')
         elif encounter == 'Police' and self._player.get_ship().get_current_cargo():
-            contraband_name = random.choice(self._player.get_ship().get_cargo())
-            contraband_amount = self._player.get_ship().get_cargo()[contraband]['quantity'] // 2
-            contraband = {'item': contraband_name, 'amount': contraband_amount}
+            print('police encountered')
+            contraband_name = random.choice(list(self._player.get_ship().get_cargo().keys()))
+            print('contraband:', contraband_name)
+            contraband_num = self._player.get_ship().get_cargo()[contraband_name]['quantity'] // 2
+            contraband = {'item': contraband_name, 'amount': contraband_num}
             self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
 
     #buy/sell when api asks to. item is added to ship and credits subtracted
@@ -147,9 +159,10 @@ class Game:
         encounter = self._player.get_encounter()
         if encounter is None or action not in encounter.get_json()['actions']:
             return 'illegal'
-        done = self._player.encounter_action(action)
+        done, message = self._player.encounter_action(action)
         if done:
             self._player.set_encounter(None)
+        return message
 
     def get_player(self):
         return self._player
@@ -232,38 +245,45 @@ class Player:
     #an action is taken.
     def encounter_action(self, action):
         encounter_type = self._encounter.get_json()['type']
-        damage_amount = -50 #change this number to balance the game
+        damage_amount = -5 #change this number to balance the game
 
         #all actions associated with the bandit encounter
         if encounter_type == 'Bandits':
             if action == 'pay':
                 success, credit_change = self._encounter.pay(self._credits)
                 if success:
+                    message = 'successfully paid bandits'
                     self._credits -= credit_change
                 else:
-                    if not self._ship.get_cargo():
+                    if self._ship.get_cargo():
+                        message = 'failed to pay and bandits took cargo'
                         self._ship.remove_all_cargo()
                     else:
+                        message = 'failed to pay and took damage'
                         self._ship.update_health(damage_amount)
-                return True
+                return (True, message)
 
             elif action == 'flee':
                 success, dest, old_market = self._encounter.flee(self._attributes['Pilot'])
                 self._region = dest
                 self._region_market_adjusted_prices = old_market
+                message = 'got back to origin successfully'
                 if not success:
+                    message = 'failed to flee. bandits took money and ship took damage'
                     self._credits = 0
                     self._ship.update_health(damage_amount)
-                return True
+                return (True, message)
 
             elif action == 'fight':
                 success, credit_change = self._encounter.fight(self._attributes['Fighter'])
                 if success:
-                    self._credits += credit+change
+                    message = 'fought off the bandits and took their money'
+                    self._credits += credit_change
                 else:
+                    message = 'failed to fight off the bandits. they took money and credits'
                     self._credits = 0
                     self._ship.update_health(damage_amount)
-                return True
+                return (True, message)
 
         #all actions associated with the trader encounter
         elif encounter_type == 'Trader':
@@ -271,54 +291,62 @@ class Player:
             goods_price = self._encounter.get_goods_price()
             if action == 'buy':
                 if self._credits > goods_price:
+                    message = 'bought the goods off the trader'
+                    self._credits -= goods_price
                     item, amount = self._encounter.buy()
                     self._ship.add_cargo(item, amount, price)
-                    return True
-                return False
+                    return (True, message)
+                return (False, 'didn\'t have enough credits to buy from the trader.')
 
             elif action == 'ignore':
-                return True
+                return (True, 'ignored the trader and moved on to destination')
 
             elif action == 'rob':
-                success, item, amount = self._encounter.fight(self._attributes['Fighter'])
+                success, item, amount = self._encounter.rob(self._attributes['Fighter'])
                 if success:
+                    message = 'successfully robbed the trader. got their goods as a reward'
                     self._ship.add_cargo(item, amount, price)
                 else:
+                    message = 'failed to rob the trader. took damage'
                     self._ship.update_health(damage_amount)
-                return True
+                return (True, message)
 
             elif action == 'negotiate':
                 self._encounter.negotiate(self._attributes['Merchant'])
-                return False
+                return (False, 'attempted to negotiate with the trader')
 
         #all actions associated with the police encounter
         elif encounter_type == 'Police':
             if action == 'forfeit':
                 item, amount = self._encounter.forfeit()
                 self._ship.remove_cargo(item, amount)
-                return True
+                return (True, 'gave up the contraband and moved to destination')
 
             elif action == 'flee':
                 success, item, num, dest, om, fine = self._encounter.flee(self._attributes['Pilot'])
                 self._region = dest
                 self._region_market_adjusted_prices = om
+                message = 'got back to origin successfully'
                 if not success:
+                    message = 'failed to flee. bandits took money and ship took damage'
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
-                return True
+                return (True, message)
 
             elif action == 'fight':
                 success, item, num, dest, om, fine = self._encounter.flee(self._attributes['Pilot'])
+                message = 'successfully fought off the police'
                 if not success:
+                    message = 'failed to fight off the police. took damage, money, and goods'
                     self._region = dest
                     self._region_market_adjusted_prices = om
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
-                return True
+                return (True, message)
 
-        return False #do nothing on unrecognized command
+        return (False, 'unrecognized action') #do nothing on unrecognized action
 
 
 
@@ -508,8 +536,11 @@ class RegionDistances:  #RegionDistances class to handle fuel costs and distance
     def get_all_distances(self):
         return self._distances
 
+#very messy code to handle the encounters of the game
 #Encounter classes all have the property get_json()
 #besides that they have different constructors and functions so no base class was made
+#be very careful when editing and make sure you pay attention to the implementation in Player.
+#all actions have a comment next to them on each outcome and what it means in plain english
 class BanditEncounter: #options are to pay, flee, or fight
     def __init__(self, old_region, old_region_market):
         self.old_region = old_region #store previous region info so player can return
@@ -519,7 +550,7 @@ class BanditEncounter: #options are to pay, flee, or fight
     def pay(self, money): #returns (success, credit change)
         if money > self.cost: #success, no modification
             return (True, self.cost)
-        return (False, 0)
+        return (False, 0) #failure, player didn't have enough and will take damage
 
     def flee(self, pilot): #returns (success, where to go, market)
         if random.randint(0, 10) < pilot: #success, go back to region
@@ -527,9 +558,9 @@ class BanditEncounter: #options are to pay, flee, or fight
         return (False, self.old_region, self.old_region_market) #failure, go back damaged
 
     def fight(self, fighter): #returns (success, credit change)
-        if random.randint(0, 10) < fighter: #success, get bandit's nice
+        if random.randint(0, 10) < fighter: #success, get bandit's money
             return (True, self.cost)
-        return (False, 0)
+        return (False, 0) #failure, don't get any money and go back damaged
 
     def get_json(self):
         json = {
@@ -547,15 +578,15 @@ class TraderEncounter: #options are buy, ignore, rob, or negotiate. ignore is im
         self.negotiated = False
 
     def buy(self):
-        return (self.goods['item'], self.goods['quantity'])
+        return (self.goods['item'], self.goods['quantity']) #pretty simple, player buys the stuff
 
     def rob(self, fighter):
         if random.randint(0, 10) < fighter: #success, get some of the goods
             return (True, self.goods['item'], self.goods['quantity'] // 2 + 1)
-        return (False, None, 0)
+        return (False, None, 0) #failure, don't get anything and get damaged
 
     def negotiate(self, merchant):
-        if not self.negotiated:
+        if not self.negotiated: #can only be attempted once
             if random.randint(0, 10) < merchant: #success, lower prices
                 self.goods['price'] = self.goods['price'] // 3
             else: #failure, raise prices
@@ -581,14 +612,15 @@ class PoliceEncounter: #options are forfeit, flee, fight.
         self.old_region_market = old_region_market
 
     def forfeit(self):
-        return (self.contraband['item'], self.contraband['amount'])
+        return (self.contraband['item'], self.contraband['amount']) #player just gives up the item
 
     def flee(self, pilot):
         fine = random.randint(500, 1000)
-        if random.randint(0, 10) < pilot: #success, don't loss anything but go back to old region
-            return (True, None, 0, self.old_region, orm, 0)
         old_region = self.old_region #for pylint
         orm = self.old_region_market #for pylint
+        if random.randint(0, 10) < pilot: #success, don't loss anything but go back to old region
+            return (True, None, 0, self.old_region, orm, 0)
+        #on failure, seize items, return to old region, and take fine.
         return (False, self.contraband['item'], self.contraband['amount'], old_region, orm, fine)
 
     def fight(self, fighter):
