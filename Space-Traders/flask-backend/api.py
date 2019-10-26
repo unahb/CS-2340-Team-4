@@ -71,19 +71,19 @@ class SpaceTraders(Resource):
 #travel to a planet. KeyError produced upon invalid planet
 class Travel(Resource):
     def put(self, planet_id):
-        #try:
-        SpaceTradersContainer.space_traders.travel(planet_id)
-        message = 'Traveled to ' + planet_id
-        print(message)
-        return {'message': message}, 200
-        #except KeyError:
-        #    message = 'Unknown region'
-        #    print(message)
-        #    return {'message': message}, 405
-        #else:
-        #    message = 'Unknown error'
-        #    print(message)
-        #    return {'message': message}, 400
+        try:
+            SpaceTradersContainer.space_traders.travel(planet_id)
+            message = 'Traveled to ' + planet_id
+            print(message)
+            return {'message': message}, 200
+        except KeyError:
+            message = 'Unknown region'
+            print(message)
+            return {'message': message}, 405
+        else:
+            message = 'Unknown error'
+            print(message)
+            return {'message': message}, 400
 
 #buy an item. region is fetched from current game. KeyError produced upon invalid item
 class Buy(Resource):
