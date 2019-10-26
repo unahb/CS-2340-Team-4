@@ -127,6 +127,12 @@ class Sell(Resource):
             print(message)
             return {'message': message}, 400
 
+#perform <action> on the current encounter. error handling not yet added
+class Encounter(Resource):
+    def put(self, action):
+        SpaceTradersContainer.space_traders.encounter_action(action)
+        return {'message': 'message not yet implemented'}, 200
+
 ##
 # Actually setup the API resource routing here
 ##
@@ -134,6 +140,7 @@ api.add_resource(SpaceTraders, '/Space-Traders')
 api.add_resource(Travel, '/Space-Traders/travel/<planet_id>')
 api.add_resource(Buy, '/Space-Traders/buy/<item_id>/<item_amount>')
 api.add_resource(Sell, '/Space-Traders/sell/<item_id>/<item_amount>')
+api.add_resource(Encounter, '/Space-Traders/encounter/<action>')
 
 
 if __name__ == '__main__':

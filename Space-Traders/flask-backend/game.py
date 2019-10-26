@@ -9,27 +9,40 @@ TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
 
 CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
 
-SPACESHIP_TYPES = {'Starship' : {'name': 'Starship', 'cargo_space':50, 'fuel':1000, 'health':15},
-                   'Jet' : {'name': 'Jet', 'cargo_space' : 70, 'fuel': 2000, 'health': 12},
-                   'Wasp' : {'name': 'Wasp', 'cargo_space': 70, 'fuel': 1000, 'health': 20},
-                   'Ladybug' : {'name': 'Ladybug', 'cargo_space': 70, 'fuel': 1200, 'health': 18}}
+SPACESHIP_TYPES = {
+    'Starship': {'name': 'Starship', 'cargo_space':50, 'fuel':1000, 'health':15},
+    'Jet': {'name': 'Jet', 'cargo_space' : 70, 'fuel': 2000, 'health': 12},
+    'Wasp': {'name': 'Wasp', 'cargo_space': 70, 'fuel': 1000, 'health': 20},
+    'Ladybug': {'name': 'Ladybug', 'cargo_space': 70, 'fuel': 1200, 'health': 18}
+    }
 
-MARKET_ITEMS = {'PRE-AG' : ['Wood', 'Water', 'Deer', 'Bear', 'Cooked Bear', 'Cooked Deer',
-                            'Mystery Meat', 'Cooked Mystery Meat', 'Cow', 'Cooked Cow'],
-                'AGRICULTURE' : ['Wood', 'Water', 'Corn', 'Tomatoes', 'Soybean',
-                                 'Wheat', 'Sugar', 'Potatoes', 'Walnuts', 'Yams'],
-                'MEDIEVAL' : ['Water', 'Iron Platebody', 'Iron Full Helm', 'Iron Platelegs',
-                              'Iron Plateskirt', 'Iron Sword', 'Steel Platebody', 'Steel Full Helm',
-                              'Steel Platelegs', 'Steel Plateskirt', 'Steel Sword'],
-                'RENAISSANCE' : ['Water', 'Shirt', 'Pants', 'Skirt', 'Ruby', 'Emerald',
-                                 'Sapphire', 'Necklace', 'Ring', 'Steel Sword'],
-                'INDUSTRIAL' : ['Shirt', 'Pants', 'Fancy Shirt', 'Fancy Pants', 'Fancy Skirt',
-                                'Ruby', 'Emerald', 'Necklace', 'Ring', 'Water'],
-                'MODERN' : ['Water', 'Computer', 'Phone', 'Laptop', 'Fortnite', 'XBOX',
-                            'PS4', 'TV', 'Water Bottle', 'Video Game'],
-                'FUTURISTIC' : ['Computer', 'Phone', 'Laptop', 'Fancy Phone', 'Fancy Laptop',
-                                'Glasses', 'Virtual Food', 'Virtual Water', 'Virtual Money',
-                                'Virtual Sword']}
+MARKET_ITEMS = {
+    'PRE-AG': ['Wood', 'Water', 'Deer', 'Bear', 'Cooked Bear', 'Cooked Deer',
+               'Mystery Meat', 'Cooked Mystery Meat', 'Cow', 'Cooked Cow'],
+    'AGRICULTURE': ['Wood', 'Water', 'Corn', 'Tomatoes', 'Soybean',
+                    'Wheat', 'Sugar', 'Potatoes', 'Walnuts', 'Yams'],
+    'MEDIEVAL': ['Water', 'Iron Platebody', 'Iron Full Helm', 'Iron Platelegs',
+                 'Iron Plateskirt', 'Iron Sword', 'Steel Platebody', 'Steel Full Helm',
+                 'Steel Platelegs', 'Steel Plateskirt', 'Steel Sword'],
+    'RENAISSANCE': ['Water', 'Shirt', 'Pants', 'Skirt', 'Ruby', 'Emerald',
+                    'Sapphire', 'Necklace', 'Ring', 'Steel Sword'],
+    'INDUSTRIAL': ['Shirt', 'Pants', 'Fancy Shirt', 'Fancy Pants', 'Fancy Skirt',
+                   'Ruby', 'Emerald', 'Necklace', 'Ring', 'Water'],
+    'MODERN': ['Water', 'Computer', 'Phone', 'Laptop', 'Fortnite', 'XBOX',
+               'PS4', 'TV', 'Water Bottle', 'Video Game'],
+    'FUTURISTIC': ['Computer', 'Phone', 'Laptop', 'Fancy Phone', 'Fancy Laptop', 'Glasses',
+                   'Virtual Food', 'Virtual Water', 'Virtual Money', 'Virtual Sword']
+    }
+
+#encounter rate is encoded as numbers that can be rolled out of 10. For example,
+#on easy difficulty, rolling a 1 will yield a bandit encounter, a 2 will yield 
+#a bandit encounter, and 3 or 4 will both yield traders. Higher chances can be 
+#added by increasing the mappings of numbers from 1-10 that will get that encounter.
+NPC_ENCOUNTER_RATES = {
+    'easy': {1: 'Bandits', 2: 'Police', 3: 'Traders', 4: 'Traders'},
+    'medium': {1: 'Bandits', 2: 'Bandits', 3: 'Police', 4: 'Traders', 5: 'Traders'},
+    'hard': {1: 'Bandits', 2: 'Bandits', 3: 'Bandits', 4: 'Police', 5: 'Traders'}
+    }
 
 def fuel_cost_helper(distance, pilot_attribute):
     pilot_attribute += 2
@@ -80,12 +93,28 @@ class Game:
     def travel(self, region):   #travel when the api is called to do so. fuel costs subtracted
         if self._player.get_region().get_name() == region:
             return
+        old_region = self._player.get_region()
+        old_market = self._player.get_region_market_adjusted_prices()
         cost = self._player.get_fuel_costs()[region]
         self._player.get_ship().remove_fuel(cost)
         self._player.set_region(self._universe.get_game_regions()[region])
         player_region_name = self._player.get_region().get_name()
         distances = self._universe.get_region_distances().get_distances(player_region_name)
         self._player.calc_fuel_costs(PLANET_NAMES, distances)
+
+        encounter_roll = random.randint(1, 10) #encounter an NPC, taking into account difficulty
+        encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
+        print(encounter_roll, encounter)
+        if encounter == 'Bandits':
+            self._player.set_encounter(BanditEncounter(old_region, old_market))
+            print('bandit encountered')
+        elif encounter == 'Traders':
+            self._player.set_encounter(TraderEncounter())
+        elif encounter == 'Police' and self._player.get_ship().get_current_cargo():
+            contraband_name = random.choice(self._player.get_ship().get_cargo())
+            contraband_amount = self._player.get_ship().get_cargo()[contraband]['quantity'] // 2
+            contraband = {'item': contraband_name, 'amount': contraband_amount}
+            self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
 
     #buy/sell when api asks to. item is added to ship and credits subtracted
     def transaction(self, region, item, item_amount, buy=True):
@@ -112,6 +141,15 @@ class Game:
         print('Successful transaction of ' + str(item_amount) + ' ' + item + ' on ' + region)
         print('Planet item price: ' + str(planet_price) + ' Transaction amount: ' + str(amount))
         return amount
+
+    #do (action) with NPC. Will return 'illegal' if action if not allowed
+    def encounter_action(self, action):
+        encounter = self._player.get_encounter()
+        if encounter is None or action not in encounter.get_json()['actions']:
+            return 'illegal'
+        done = self._player.encounter_action(action)
+        if done:
+            self._player.set_encounter(None)
 
     def get_player(self):
         return self._player
@@ -143,6 +181,7 @@ class Player:
         self.calculate_market_costs()
         #expect that fuel costs will be updated using the calculate function
         self._fuel_costs = {}
+        self._encounter = None
 
     def transaction(self, monetary_value):
         self._credits += int(monetary_value)
@@ -188,6 +227,102 @@ class Player:
                                              buy=False)
                     self._ship.update_price(item, price)
 
+    #interact with the NPC encounter. returns True if the encounter is ended as a result
+    #look at the encounter classes to see what happens in each encounter and what is returned when
+    #an action is taken.
+    def encounter_action(self, action):
+        encounter_type = self._encounter.get_json()['type']
+        damage_amount = -50 #change this number to balance the game
+
+        #all actions associated with the bandit encounter
+        if encounter_type == 'Bandits':
+            if action == 'pay':
+                success, credit_change = self._encounter.pay(self._credits)
+                if success:
+                    self._credits -= credit_change
+                else:
+                    if not self._ship.get_cargo():
+                        self._ship.remove_all_cargo()
+                    else:
+                        self._ship.update_health(damage_amount)
+                return True
+
+            elif action == 'flee':
+                success, dest, old_market = self._encounter.flee(self._attributes['Pilot'])
+                self._region = dest
+                self._region_market_adjusted_prices = old_market
+                if not success:
+                    self._credits = 0
+                    self._ship.update_health(damage_amount)
+                return True
+
+            elif action == 'fight':
+                success, credit_change = self._encounter.fight(self._attributes['Fighter'])
+                if success:
+                    self._credits += credit+change
+                else:
+                    self._credits = 0
+                    self._ship.update_health(damage_amount)
+                return True
+
+        #all actions associated with the trader encounter
+        elif encounter_type == 'Trader':
+            price = 25 #just some random amount for add_cargo(). probably should change to a random
+            goods_price = self._encounter.get_goods_price()
+            if action == 'buy':
+                if self._credits > goods_price:
+                    item, amount = self._encounter.buy()
+                    self._ship.add_cargo(item, amount, price)
+                    return True
+                return False
+
+            elif action == 'ignore':
+                return True
+
+            elif action == 'rob':
+                success, item, amount = self._encounter.fight(self._attributes['Fighter'])
+                if success:
+                    self._ship.add_cargo(item, amount, price)
+                else:
+                    self._ship.update_health(damage_amount)
+                return True
+
+            elif action == 'negotiate':
+                self._encounter.negotiate(self._attributes['Merchant'])
+                return False
+
+        #all actions associated with the police encounter
+        elif encounter_type == 'Police':
+            if action == 'forfeit':
+                item, amount = self._encounter.forfeit()
+                self._ship.remove_cargo(item, amount)
+                return True
+
+            elif action == 'flee':
+                success, item, num, dest, om, fine = self._encounter.flee(self._attributes['Pilot'])
+                self._region = dest
+                self._region_market_adjusted_prices = om
+                if not success:
+                    self._ship.remove_cargo(item, num)
+                    self._ship.update_health(damage_amount)
+                    self._credits = max(self._credits - fine, 0)
+                return True
+
+            elif action == 'fight':
+                success, item, num, dest, om, fine = self._encounter.flee(self._attributes['Pilot'])
+                if not success:
+                    self._region = dest
+                    self._region_market_adjusted_prices = om
+                    self._ship.remove_cargo(item, num)
+                    self._ship.update_health(damage_amount)
+                    self._credits = max(self._credits - fine, 0)
+                return True
+
+        return False #do nothing on unrecognized command
+
+
+
+
     # getters
     def get_region(self):
         return self._region
@@ -203,6 +338,8 @@ class Player:
         return self._ship
     def get_fuel_costs(self):
         return self._fuel_costs
+    def get_encounter(self):
+        return self._encounter
 
     # setters
     def set_region(self, region):
@@ -210,6 +347,8 @@ class Player:
         self.calculate_market_costs()
     def set_credits(self, money):
         self._credits = money
+    def set_encounter(self, encounter):
+        self._encounter = encounter
 
     def __str__(self):
         builder = ''
@@ -237,7 +376,7 @@ class Ship:
             self._cargo[item]['price'] = price
 
         self._current_cargo += amount
-        self._current_value += (price * amount)
+        self._current_value += (self._cargo[item]['price'] * amount)
 
     def remove_cargo(self, item, amount=1):
         self._cargo[item]['quantity'] -= amount
@@ -258,6 +397,12 @@ class Ship:
             self._current_value += item_quantity * (price - self._cargo[item]['price'])
             print(self._cargo[item]['quantity'] * (price - self._cargo[item]['price']))
             self._cargo[item]['price'] = price
+
+    def update_health(self, amount):
+        self._current_health += amount
+
+    def remove_all_cargo(self): #basically a setter but more limited
+        self._cargo = {}
 
     def get_type(self):
         return self._ship_type
@@ -362,3 +507,103 @@ class RegionDistances:  #RegionDistances class to handle fuel costs and distance
 
     def get_all_distances(self):
         return self._distances
+
+#Encounter classes all have the property get_json()
+#besides that they have different constructors and functions so no base class was made
+class BanditEncounter: #options are to pay, flee, or fight
+    def __init__(self, old_region, old_region_market):
+        self.old_region = old_region #store previous region info so player can return
+        self.old_region_market = old_region_market #again, for restoring
+        self.cost = random.randint(500, 1000) #cost to escape and amount rewarded on fighting
+
+    def pay(self, money): #returns (success, credit change)
+        if money > self.cost: #success, no modification
+            return (True, self.cost)
+        return (False, 0)
+
+    def flee(self, pilot): #returns (success, where to go, market)
+        if random.randint(0, 10) < pilot: #success, go back to region
+            return (True, self.old_region, self.old_region_market)
+        return (False, self.old_region, self.old_region_market) #failure, go back damaged
+
+    def fight(self, fighter): #returns (success, credit change)
+        if random.randint(0, 10) < fighter: #success, get bandit's nice
+            return (True, self.cost)
+        return (False, 0)
+
+    def get_json(self):
+        json = {
+            'type': 'Bandits',
+            'cost': self.cost,
+            'actions': ['pay', 'flee', 'fight']
+        }
+        return json
+
+class TraderEncounter: #options are buy, ignore, rob, or negotiate. ignore is implemented in player
+    def __init__(self):
+        self.goods = {'item': random.choice(MARKET_ITEMS[random.choice(TECH_LEVELS)]),
+                      'quantity': random.randint(3, 6),
+                      'price': random.randint(60, 180)}
+        self.negotiated = False
+
+    def buy(self):
+        return (self.goods['item'], self.goods['quantity'])
+
+    def rob(self, fighter):
+        if random.randint(0, 10) < fighter: #success, get some of the goods
+            return (True, self.goods['item'], self.goods['quantity'] // 2 + 1)
+        return (False, None, 0)
+
+    def negotiate(self, merchant):
+        if not self.negotiated:
+            if random.randint(0, 10) < merchant: #success, lower prices
+                self.goods['price'] = self.goods['price'] // 3
+            else: #failure, raise prices
+                self.goods['price'] = self.goods['price'] * 3
+            self.negotiated = True
+
+    def get_goods_price(self):
+        return self.goods['price']
+
+    def get_json(self):
+        json = {
+            'type': 'Trader',
+            'goods': self.goods,
+            'negotiated': self.negotiated,
+            'actions': ['buy', 'ignore', 'rob', 'negotiate']
+        }
+        return json
+
+class PoliceEncounter: #options are forfeit, flee, fight.
+    def __init__(self, old_region, old_region_market, identified_goods):
+        self.contraband = identified_goods #form of {'item': name, 'amount', #}
+        self.old_region = old_region
+        self.old_region_market = old_region_market
+
+    def forfeit(self):
+        return (self.contraband['item'], self.contraband['amount'])
+
+    def flee(self, pilot):
+        fine = random.randint(500, 1000)
+        if random.randint(0, 10) < pilot: #success, don't loss anything but go back to old region
+            return (True, None, 0, self.old_region, orm, 0)
+        old_region = self.old_region #for pylint
+        orm = self.old_region_market #for pylint
+        return (False, self.contraband['item'], self.contraband['amount'], old_region, orm, fine)
+
+    def fight(self, fighter):
+        fine = random.randint(500, 1000)
+        if random.randint(0, 10) < fighter: #success, travel to region and keep items
+            return (True, None, 0, None, 0)
+        #on failure, seize items, return to old region, and take fine.
+        old_region = self.old_region #for pylint
+        orm = self.old_region_market #for pylint
+        return (False, self.contraband['item'], self.contraband['amount'], old_region, orm, fine)
+
+    def get_json(self):
+        json = {
+            'type': 'Police',
+            'identified_goods': self.contraband,
+            'actions': ['forfeit', 'flee', 'fight']
+        }
+        return json
