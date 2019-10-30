@@ -6,6 +6,7 @@ import PlayerSetup from './PlayerSetup';
 import PlayerStats from './PlayerStats';
 import TravelMap from './TravelMap';
 import Region from './Region';
+import Npc from './NPC';
 
 class App extends Component {
   render() {
@@ -26,6 +27,7 @@ class App extends Component {
               <Route path='/PlayerStats' component={PlayerStats} />
               <Route path='/TravelMap' component={TravelMap} />
               <Route path='/Region' component={Region} />
+              <Route path='/NPC' component={Npc} />
           </Switch>
         </div>
       </Router>

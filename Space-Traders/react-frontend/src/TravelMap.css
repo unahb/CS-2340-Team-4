@@ -91,3 +91,28 @@
     background-color: #CCCCCC;
     cursor: pointer;
 }
+
+#customAlert,
+#customConfirm {
+    position: absolute;
+    width: 40vw;
+    height: 25vh;
+    top: 40vh;
+    left: 30vw;
+    text-align: center;
+}
+
+#customAlert,
+#alertHead,
+#alertMes,
+#customConfirm,
+#confirmHead,
+#confirmMes  {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3vh;
+    color: #FFFFFF;
+    background-color: #171B1F;
+    z-index: 1;
+    border: 1vh;
+    margin: 1vw;
+}
