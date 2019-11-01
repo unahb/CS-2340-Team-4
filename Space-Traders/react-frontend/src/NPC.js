@@ -14,11 +14,12 @@ class NPC extends React.Component {
       ship: {},
       npcType: 'bandit',
     }
+
+    this.previousRegion = this.props.location.previousRegion;
+    this.nextRegion = this.props.location.nextRegion;
   }
 
   componentWillMount() {
-    console.log(this.props.location.nextRegion)
-    console.log(this.props.location.previousRegion)
     // get((item) => {
     //   this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship })
     //   const currRegion = item.Player.region

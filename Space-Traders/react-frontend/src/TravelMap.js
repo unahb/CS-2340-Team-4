@@ -12,12 +12,13 @@ class TravelMap extends React.Component {
       currRegion: {},
       regions: {},
       ship: {},
-      npc: true,
+      npc: false,
     }
   }
 
   componentWillMount() {
     get((item) => {
+      console.log(item)
       this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship })
       const currRegion = item.Player.region
       displayPlanet(currRegion, this.state.player, this.state.ship)
@@ -25,6 +26,7 @@ class TravelMap extends React.Component {
   }
 
   renderConfirmButton(nextRegion, previousRegion) {
+    const region = nextRegion;
     if (this.state.npc) {
       return (
         <Link to={{
@@ -41,7 +43,7 @@ class TravelMap extends React.Component {
       return (
         <Link to={{
           pathname: '/Region',
-          nextRegion
+          region
         }}>
           <button id="confirmSubmit">
             Confirm
