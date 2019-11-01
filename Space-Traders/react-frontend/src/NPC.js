@@ -70,6 +70,7 @@ class NPC extends React.Component {
       <div id="encounter">
         <img src={trader}></img>
         <button id="button_format">buy</button>
+        <button id="button_format">rob</button>
         <button id="button_format">ignore</button>
         <button id="button_format">negotiate</button>
       </div>
