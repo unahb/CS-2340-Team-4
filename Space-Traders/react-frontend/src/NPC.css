@@ -2,6 +2,11 @@
   display: flex;
   height: 60vh;
   width: 80vw;
-  background-color: red;
   align-self: center;
+  align-content: space-around;
+}
+
+#button_format {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8vh;
 }
