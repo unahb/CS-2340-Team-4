@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import spaceship from './resources/spaceship.png';
 import './Region.css';
 import { get, put, putTypes } from './requests';
@@ -11,15 +11,20 @@ class Region extends React.Component {
     this.state = {
       player: {},
       region: {},
+      encounter: null,
       ship: {},
     }
   }
 
   componentWillMount() {
-    console.log(this.props)
     put(putTypes.TRAVEL, this.props.location.region.name, () => {
       get((item) => {
-        this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
+        console.log(item)
+        if (item.Player.region) {
+          this.setState({ player: item.Player, ship: item.Ship, region: item.Player.region })
+        } else if (item.Player.encounter) {
+          this.setState({ player: item.Player, ship: item.Ship, encounter: item.Player.encounter })
+        }
       })
     })
   }
@@ -47,31 +52,33 @@ class Region extends React.Component {
         })
         console.log(this.state)
         document.getElementById("inp").value = 1;
-      })  
+      })
     }
   }
 
   render() {
-    if (Object.entries(this.state.player).length !== 0) {
+    const previousRegion = this.props.location.previousRegion;
+    const nextRegion = this.props.location.region;
+    if (this.state.encounter) {
+      return (<Redirect to={{ pathname: '/NPC', previousRegion, nextRegion }} />);
+    } else if (Object.entries(this.state.player).length !== 0) {
+      console.log(this.state)
       const region = this.state.region
       const market = this.state.player.region.market
-			const ship = this.state.ship
+      const ship = this.state.ship
       const player = this.state.player
       let transaction = { good: null, quant: null, isBuy: null }
-
-      console.log(player)
-      console.log(ship)
 
       let invenTable = []
       for (let [invenItem, invenQuantity] of Object.entries(ship.cargo)) {
         const row =
           <tr class="invenTr">
             <td class="invenTd">
-              <button type="button" class="sellButton" style={{"text-align": "left", fontSize: "1.75vh"}} onClick={(event) => {
+              <button type="button" class="sellButton" style={{ "text-align": "left", fontSize: "1.75vh" }} onClick={(event) => {
                 transaction.good = invenItem;
                 transaction.quant = 1;
                 transaction.isBuy = false;
-                customConfirm("Please Confirm", "Sell 1 " + invenItem +"(s) for " + ship.cargo[invenItem].price * 1 + " Credits");
+                customConfirm("Please Confirm", "Sell 1 " + invenItem + "(s) for " + ship.cargo[invenItem].price * 1 + " Credits");
               }}>{invenItem}: {invenQuantity.quantity}, {invenQuantity.price}</button>
             </td>
           </tr>
@@ -83,26 +90,26 @@ class Region extends React.Component {
         const row =
           <tr class="MarkTr">
             <td class="MarkTd">{name}</td>
-						<td class="MarkTd">
-							<button type="button" class="buyButton" onClick={(event) => {
+            <td class="MarkTd">
+              <button type="button" class="buyButton" onClick={(event) => {
                 transaction.good = name;
                 transaction.quant = 1;
                 transaction.isBuy = true;
                 customConfirm("Please Confirm", "Buy 1 " + name + "(s) for " + player.region.market[transaction.good].buy * 1 + " Credits");
-							}}>{prices.buy}</button>
-						</td>
+              }}>{prices.buy}</button>
+            </td>
             <td class="MarkTd">
-							<button type="button" class="sellButton" onClick={(event) => {
+              <button type="button" class="sellButton" onClick={(event) => {
                 if (ship.cargo[name] == undefined) {
                   customAlert("Selling Error", "Cannot sell items you do not own")
                 } else {
                   transaction.good = name;
                   transaction.quant = 1;
                   transaction.isBuy = false;
-                  customConfirm("Please Confirm", "Sell 1 " + name +"(s) for " + ship.cargo[name].price * 1 + " Credits");
+                  customConfirm("Please Confirm", "Sell 1 " + name + "(s) for " + ship.cargo[name].price * 1 + " Credits");
                 }
-							}}>{prices.sell}</button>
-						</td>
+              }}>{prices.sell}</button>
+            </td>
             <td class="MarkTd">{prices.quantity}</td>
           </tr>
         table.push(row)
@@ -113,7 +120,7 @@ class Region extends React.Component {
           <div id="sidebar" hidden={true} style={styles.sidebar}>
             <h1 id="pixelFont" style={{ fontSize: "2vw", 'text-decoration': "underline" }}>Inventory</h1>
             <h1 id="pixelFont" style={{ fontSize: "0.9vw", }}>Remaining Cargo Space:
-              <h1 style={{ fontSize: "1.5vw", color: "blue" }}>{ship.max_cargo_space - ship.current_cargo}</h1>
+                <h1 style={{ fontSize: "1.5vw", color: "blue" }}>{ship.max_cargo_space - ship.current_cargo}</h1>
             </h1>
             <div id="pixelFont" style={{ fontSize: "0.8vw", margin: "1px" }}>Item: Quantity, Unit Value</div>
             <div id="itemContents">
@@ -128,7 +135,7 @@ class Region extends React.Component {
             </header>
             <button type="button" style={styles.spaceshipButton} onClick={() => this.toggleSidebar()}>
               <div style={styles.spaceshipContainer}>
-                <img src={spaceship} id="spaceship-static"/>
+                <img src={spaceship} id="spaceship-static" />
               </div>
             </button>
           </div>
@@ -143,8 +150,8 @@ class Region extends React.Component {
             {table}
           </table>
 
-					<br></br>
-					<div id="credits" align="left">Credits: {player.credits}</div>
+          <br></br>
+          <div id="credits" align="left">Credits: {player.credits}</div>
 
           <Link
             to={{
@@ -154,56 +161,56 @@ class Region extends React.Component {
           >
             <button type="button" id="mapButton">
               Map
-            </button>
+              </button>
           </Link>
 
-					<div id="customAlert" hidden="true">
-						<h1 id="alertHead"></h1>
-						<div id="alertMes"></div>
+          <div id="customAlert" hidden="true">
+            <h1 id="alertHead"></h1>
+            <div id="alertMes"></div>
             <br></br>
-						<button id="alertBut" onClick={(event) => {
+            <button id="alertBut" onClick={(event) => {
               document.getElementById("customAlert").hidden = true;
               document.getElementById("customConfirm").style.zIndex = 1;
-						}}>Ok</button>
-					</div>
+            }}>Ok</button>
+          </div>
 
-					<div id="customConfirm" hidden="true">
-						<h1 id="confirmHead"></h1>
-						<div id="confirmMes"></div>
-					  <input type="number" class="quantityInput" id="inp" defaultValue="1" min="0" max={ship.max_cargo_space} onChange={(event) => {
+          <div id="customConfirm" hidden="true">
+            <h1 id="confirmHead"></h1>
+            <div id="confirmMes"></div>
+            <input type="number" class="quantityInput" id="inp" defaultValue="1" min="0" max={ship.max_cargo_space} onChange={(event) => {
               if (transaction.isBuy) {
                 transaction.quant = document.getElementById("inp").value;
-                document.getElementById("confirmMes").innerText = "Buy " + document.getElementById("inp").value * 1 + " " + transaction.good +"(s) for " + player.region.market[transaction.good].buy * document.getElementById("inp").value + " Credits"
+                document.getElementById("confirmMes").innerText = "Buy " + document.getElementById("inp").value * 1 + " " + transaction.good + "(s) for " + player.region.market[transaction.good].buy * document.getElementById("inp").value + " Credits"
               } else {
                 transaction.quant = document.getElementById("inp").value;
-                document.getElementById("confirmMes").innerText = "Sell " + document.getElementById("inp").value * 1 + " " + transaction.good +"(s) for " + ship.cargo[transaction.good].price * document.getElementById("inp").value + " Credits"
+                document.getElementById("confirmMes").innerText = "Sell " + document.getElementById("inp").value * 1 + " " + transaction.good + "(s) for " + ship.cargo[transaction.good].price * document.getElementById("inp").value + " Credits"
               }
             }}></input>
-						<button id="confirmCancel" onClick={(event) => {
+            <button id="confirmCancel" onClick={(event) => {
               document.getElementById("customConfirm").hidden = true;
               document.getElementById("inp").value = 1;
-						}}>Cancel</button>
-						<button id="confirmSubmit" onClick={(event) => {
+            }}>Cancel</button>
+            <button id="confirmSubmit" onClick={(event) => {
               if (transaction.isBuy) {
                 if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.max_cargo_space - ship.current_cargo || document.getElementById("inp").value > player.region.market[transaction.good].quantity) {
                   document.getElementById("customConfirm").style.zIndex = 0;
-									customAlert("Buying Error", "Cannot buy " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
-								} else if (player.region.market[transaction.good].buy * document.getElementById("inp").value > player.credits) {
+                  customAlert("Buying Error", "Cannot buy " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
+                } else if (player.region.market[transaction.good].buy * document.getElementById("inp").value > player.credits) {
                   document.getElementById("customConfirm").style.zIndex = 0;
-									customAlert("Insufficient Credits", "Cannot buy "+ document.getElementById("inp").value * 1 + " " + transaction.good + "(s)")
-								} else {
+                  customAlert("Insufficient Credits", "Cannot buy " + document.getElementById("inp").value * 1 + " " + transaction.good + "(s)")
+                } else {
                   this.buySellItem(transaction)
                 }
               } else {
                 if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.cargo[transaction.good].quantity) {
                   document.getElementById("customConfirm").style.zIndex = 0;
                   customAlert("Selling Error", "Cannot sell " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
-								} else {
+                } else {
                   this.buySellItem(transaction)
-								}
+                }
               }
             }}>Confirm</button>
-					</div>
+          </div>
         </div>
       );
     } else {
@@ -213,17 +220,17 @@ class Region extends React.Component {
 }
 
 function customAlert(title, message) {
-	document.getElementById("customAlert").hidden = false;
-	document.getElementById("alertHead").innerText = title;
-	document.getElementById("alertMes").innerText = message;
-	document.getElementById("customAlert").style.zIndex = 1;
+  document.getElementById("customAlert").hidden = false;
+  document.getElementById("alertHead").innerText = title;
+  document.getElementById("alertMes").innerText = message;
+  document.getElementById("customAlert").style.zIndex = 1;
 }
 
 function customConfirm(title, message) {
-	document.getElementById("customConfirm").hidden = false;
-	document.getElementById("confirmHead").innerText = title;
-	document.getElementById("confirmMes").innerText = message;
-	document.getElementById("customConfirm").style.zIndex = 1;
+  document.getElementById("customConfirm").hidden = false;
+  document.getElementById("confirmHead").innerText = title;
+  document.getElementById("confirmMes").innerText = message;
+  document.getElementById("customConfirm").style.zIndex = 1;
 }
 
 const styles = {

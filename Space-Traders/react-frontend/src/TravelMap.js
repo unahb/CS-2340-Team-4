@@ -12,7 +12,6 @@ class TravelMap extends React.Component {
       currRegion: {},
       regions: {},
       ship: {},
-      npc: false,
     }
   }
 
@@ -23,34 +22,6 @@ class TravelMap extends React.Component {
       const currRegion = item.Player.region
       displayPlanet(currRegion, this.state.player, this.state.ship)
     })
-  }
-
-  renderConfirmButton(nextRegion, previousRegion) {
-    const region = nextRegion;
-    if (this.state.npc) {
-      return (
-        <Link to={{
-          pathname: '/NPC',
-          nextRegion,
-          previousRegion
-        }}>
-          <button id="confirmSubmit">
-            Confirm
-          </button>
-        </Link>
-      );
-    } else {
-      return (
-        <Link to={{
-          pathname: '/Region',
-          region
-        }}>
-          <button id="confirmSubmit">
-            Confirm
-          </button>
-        </Link>
-      );
-    }
   }
 
   render() {
@@ -70,26 +41,37 @@ class TravelMap extends React.Component {
           }}>
           {planet.name}
         </button>
-        buttons.push(button)
+      buttons.push(button)
     }
 
-    const region = this.state.currRegion
-    const ship = this.state.ship
+    const region = this.state.currRegion;
+    const previousRegion = this.state.player.region;
+    const ship = this.state.ship;
     return (
       <div id="mainMap">
         <div id="customConfirm" hidden="true">
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <h1 id="confirmHead">Please Confirm</h1>
-              <div id="confirmMes"></div>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <button id="confirmCancel" onClick={() => {
-                  document.getElementById("customConfirm").hidden = true;
-                }}>Cancel
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <h1 id="confirmHead">Please Confirm</h1>
+            <div id="confirmMes"></div>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <button id="confirmCancel" onClick={() => {
+                document.getElementById("customConfirm").hidden = true;
+              }}>Cancel
                 </button>
-                {this.renderConfirmButton(region, this.state.player.region)}
-              </div>
+
+              <Link to={{
+                pathname: '/Region',
+                previousRegion,
+                region
+              }}>
+                <button id="confirmSubmit">
+                  Confirm
+                </button>
+              </Link>
+
             </div>
           </div>
+        </div>
         <div id="mapBack">
           {buttons}
         </div>
@@ -99,18 +81,17 @@ class TravelMap extends React.Component {
             <br></br>
             <label id="planetTech">Technology: </label>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch'}}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
             <label id="planetLoc" style={{ marginBottom: '2vh' }}>Location: </label>
             <label id="planetDist" style={{ marginBottom: '2vh' }}>Distance: </label>
             <label id="planetFuel">Fuel Cost: </label>
           </div>
 
           <button type="button" id="travelTo" align="right" onClick={() => {
-              const fuelCost = this.state.currRegion.fuel_cost ? this.state.currRegion.fuel_cost : 0;
-              document.getElementById("customConfirm").hidden = false;
-              document.getElementById("confirmMes").innerText = 
-                "Travel to " + this.state.currRegion.name + " for " + fuelCost + " fuel";
-              // Update npc state value ?
+            const fuelCost = this.state.currRegion.fuel_cost ? this.state.currRegion.fuel_cost : 0;
+            document.getElementById("customConfirm").hidden = false;
+            document.getElementById("confirmMes").innerText =
+              "Travel to " + this.state.currRegion.name + " for " + fuelCost + " fuel";
           }}>Travel</button>
 
         </div>
