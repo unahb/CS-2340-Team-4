@@ -1,7 +1,12 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import './NPC.css'
-import { get } from './requests';
+import { get } from './requests'
+import bandit from './resources/bandit.png'
+import trader from './resources/trader.png'
+import police from './resources/police.png'
+
+
 
 class NPC extends React.Component {
   constructor(props) {
@@ -12,11 +17,11 @@ class NPC extends React.Component {
       currRegion: {},
       regions: {},
       ship: {},
-      npcType: 'bandit',
+      npcType: 'bandit'
     }
 
-    this.previousRegion = this.props.location.previousRegion;
-    this.nextRegion = this.props.location.nextRegion;
+    this.previousRegion = this.props.location.previousRegion
+    this.nextRegion = this.props.location.nextRegion
   }
 
   componentWillMount() {
@@ -28,42 +33,59 @@ class NPC extends React.Component {
   }
 
   render() {
-    const { npcType } = this.state;
-    let encounter = '';
+    const { npcType } = this.state
+    let encounter = ''
     if (npcType == 'bandit') {
-      encounter = this.renderBandit();
+      encounter = this.renderBandit()
     } else if (npcType == 'trader') {
-      encounter = this.renderTrader();
+      encounter = this.renderBandit()
     } else {
-      encounter = this.renderPolice();
+      encounter = this.renderBandit()
     }
     return (
       <div id="Welcome">
-      <div id="stars">
-        <header id="Welcome-header">
-          <h1>BANDIT ENCOUNTERED!</h1>
-        </header>
-        {encounter}
+        <div id="stars">
+          <header id="Welcome-header">
+            <h1>BANDIT ENCOUNTERED!</h1>
+          </header>
+          {encounter}
+        </div>
       </div>
-    </div>
     )
   }
 
   renderBandit() {
     return (
       <div id="encounter">
-        
+        <img src={bandit}></img>
+        <button id="button_format">pay</button>
+        <button id="button_format">flee</button>
+        <button id="button_format">fight</button>
       </div>
-    );
+    )
   }
 
-  // renderTrader() {
-  //   return ();
-  // }
+  renderTrader() {
+    return (
+      <div id="encounter">
+        <img src={trader}></img>
+        <button id="button_format">buy</button>
+        <button id="button_format">ignore</button>
+        <button id="button_format">negotiate</button>
+      </div>
+    )
+  }
 
-  // renderPolice() {
-  //   return ();
-  // }
+  renderPolice() {
+    return (
+      <div id="encounter">
+        <img src={police}></img>
+        <button id="button_format">forfeit</button>
+        <button id="button_format">flee</button>
+        <button id="button_format"> fight</button>
+      </div>
+    )
+  }
 }
 
-export default NPC;
+export default NPC
