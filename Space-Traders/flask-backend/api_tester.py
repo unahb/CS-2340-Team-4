@@ -94,6 +94,17 @@ def sell(): #PUT request to sell item, no input validation (yet)
     else:
         print('Error in request with status code', req.status_code)
 
+def encounter(): #encounter action
+    print('Action name:')
+    command = input().lower()
+    url = 'http://127.0.0.1:5000/Space-Traders/encounter/' + command
+    req = requests.put(url)
+    if req.status_code == 200:
+        print(req.json())
+    else:
+        print('Error in request with status code', req.status_code)
+
+
 def status():  #print full json dump received from GET request
     url = 'http://127.0.0.1:5000/Space-Traders'
     req = requests.get(url)
@@ -154,7 +165,9 @@ def commands(command):    #super pythonic way to handle a switch statement with 
             'player' : player,
             'ship' : ship,
             'cargo' : ship,
-            'randnew' : randnew
+            'randnew' : randnew,
+            'encounter' : encounter,
+            'action' : encounter
            }.get(command, 'Not recognized')
 
 if __name__ == '__main__':

@@ -28,8 +28,11 @@ def get_json(game):
         'difficulty' : game.get_difficulty(),
         'credits' : player.get_credits(),
         'skills' : player.get_attributes(),
-        'region' : player_region
     }
+    if player.get_encounter() is None:
+        player_item['region'] = player_region
+    else:
+        player_item['encounter'] = player.get_encounter().get_json()
 
     ship_item = {
         'type' : ship.get_type(),
