@@ -132,7 +132,7 @@ function displayPlanet(planet, player, ship) {
   document.getElementById("planetName").innerText = "Name: " + planet.name;
   document.getElementById("planetTech").innerText = "Technology: " + planet.tech_level;
   document.getElementById("planetLoc").innerText = "Location: (" + planet.x_coordinate + ", " + planet.y_coordinate + ")";
-  document.getElementById("planetDist").innerText = planet.distance ? "Distance: " + planet.distance : "Distance: " + 0;
+  document.getElementById("planetDist").innerText = planet.distance ? "Distance: " + Math.round(planet.distance) : "Distance: " + 0;
   document.getElementById("fuelLeft").innerText = "Fuel:\n" + ship.current_fuel + " / " + ship.max_fuel_capacity + "\n";
   document.getElementById("planetFuel").innerText = planet.fuel_cost ? "Fuel Cost: " + planet.fuel_cost : "Fuel Cost: " + 0;
 }

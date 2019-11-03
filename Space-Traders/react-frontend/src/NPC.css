@@ -1,3 +1,5 @@
+@import "./App.css";
+
 #encounter {
   display: flex;
   height: 60vh;
@@ -8,5 +10,11 @@
 
 #button_format {
   font-family: 'Press Start 2P', cursive;
-  font-size: 8vh;
+  font-size: 4vh;
+}
+
+#encounter_image {
+  animation: moveUpDown infinite 5s ease-in-out;
+  height: 40vh;
+  animation-delay: 1s;
 }

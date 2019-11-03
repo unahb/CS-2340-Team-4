@@ -27,27 +27,30 @@ class NPC extends React.Component {
 
   componentWillMount() {
     get((item) => {
-      this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship, npcType: item.Player.encounter })
-      const currRegion = item.Player.region
-      // displayPlanet(currRegion, this.state.player, this.state.ship)
+      this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship, npcType: item.Player.encounter.type })
     })
   }
 
   render() {
-    const { npcType } = this.state
+    console.log(this.state)
+    const npcType = this.state.npcType
     let encounter = ''
-    if (npcType == 'bandit') {
+    let header = ""
+    if (npcType == 'Bandits') {
       encounter = this.renderBandit()
-    } else if (npcType == 'trader') {
-      encounter = this.renderBandit()
+      header = "BANDIT"
+    } else if (npcType == 'Trader') {
+      encounter = this.renderTrader()
+      header = "TRADER"
     } else {
-      encounter = this.renderBandit()
+      encounter = this.renderPolice()
+      header = "POLICE"
     }
     return (
       <div id="Welcome">
         <div id="stars">
           <header id="Welcome-header">
-            <h1>BANDIT ENCOUNTERED!</h1>
+            <h1>{header} ENCOUNTERED!</h1>
           </header>
           <div>
             <img src={spaceship} id="spaceship" align="left"/>
@@ -61,10 +64,10 @@ class NPC extends React.Component {
   renderBandit() {
     return (
       <div id="encounter">
-        <img src={bandit}></img>
         <button id="button_format">pay</button>
         <button id="button_format">flee</button>
         <button id="button_format">fight</button>
+        <img id="encounter_image" src={bandit} align="right"></img>
       </div>
     )
   }
@@ -72,11 +75,11 @@ class NPC extends React.Component {
   renderTrader() {
     return (
       <div id="encounter">
-        <img src={trader}></img>
         <button id="button_format">buy</button>
         <button id="button_format">rob</button>
         <button id="button_format">ignore</button>
         <button id="button_format">negotiate</button>
+        <img id="encounter_image" src={trader} align="right"></img>
       </div>
     )
   }
@@ -84,10 +87,10 @@ class NPC extends React.Component {
   renderPolice() {
     return (
       <div id="encounter">
-        <img src={police}></img>
         <button id="button_format">forfeit</button>
         <button id="button_format">flee</button>
         <button id="button_format"> fight</button>
+        <img id="encounter_image" src={police} align="right"></img>
       </div>
     )
   }
