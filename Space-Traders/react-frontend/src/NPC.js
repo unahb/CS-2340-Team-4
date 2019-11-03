@@ -5,6 +5,7 @@ import { get } from './requests'
 import bandit from './resources/bandit.png'
 import trader from './resources/trader.png'
 import police from './resources/police.png'
+import spaceship from './resources/spaceship.png';
 
 
 
@@ -17,7 +18,7 @@ class NPC extends React.Component {
       currRegion: {},
       regions: {},
       ship: {},
-      npcType: 'bandit'
+      npcType: null
     }
 
     this.previousRegion = this.props.location.previousRegion
@@ -25,11 +26,11 @@ class NPC extends React.Component {
   }
 
   componentWillMount() {
-    // get((item) => {
-    //   this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship })
-    //   const currRegion = item.Player.region
-    //   displayPlanet(currRegion, this.state.player, this.state.ship)
-    // })
+    get((item) => {
+      this.setState({ player: item.Player, currRegion: item.Player.region, regions: item.Planets, ship: item.Ship, npcType: item.Player.encounter })
+      const currRegion = item.Player.region
+      // displayPlanet(currRegion, this.state.player, this.state.ship)
+    })
   }
 
   render() {
@@ -48,6 +49,9 @@ class NPC extends React.Component {
           <header id="Welcome-header">
             <h1>BANDIT ENCOUNTERED!</h1>
           </header>
+          <div>
+            <img src={spaceship} id="spaceship" align="left"/>
+          </div>
           {encounter}
         </div>
       </div>
