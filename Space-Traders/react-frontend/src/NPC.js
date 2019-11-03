@@ -71,7 +71,9 @@ class NPC extends React.Component {
     return (
       <div id="encounter">
         <button id="button_format" onClick={() => {
-
+          if (true) {
+            return
+          }
         }}>Pay: {this.state.player.encounter.cost}</button>
         <button id="button_format">Flee</button>
         <button id="button_format">Fight</button>
