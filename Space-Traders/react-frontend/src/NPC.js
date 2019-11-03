@@ -79,9 +79,9 @@ class NPC extends React.Component {
   renderBandit() {
     return (
       <div id="encounter">
-        <button id="button_format">pay</button>
-        <button id="button_format">flee</button>
-        <button id="button_format">fight</button>
+        <button id="button_format">Pay: {this.state.player.encounter.cost}</button>
+        <button id="button_format">Flee</button>
+        <button id="button_format">Fight</button>
       </div>
     )
   }
@@ -90,10 +90,10 @@ class NPC extends React.Component {
     
     return (
       <div id="encounter">
-        <button id="button_format">buy</button>
-        <button id="button_format">rob</button>
-        <button id="button_format">ignore</button>
-        <button id="button_format">negotiate</button>
+        <button id="button_format">Buy</button>
+        <button id="button_format">Rob</button>
+        <button id="button_format">Ignore</button>
+        <button id="button_format">Negotiate</button>
       </div>
     )
   }
@@ -101,9 +101,9 @@ class NPC extends React.Component {
   renderPolice() {
     return (
       <div id="encounter">
-        <button id="button_format">forfeit</button>
-        <button id="button_format">flee</button>
-        <button id="button_format"> fight</button>
+        <button id="button_format">Forfeit</button>
+        <button id="button_format">Flee</button>
+        <button id="button_format">Fight</button>
       </div>
     )
   }
