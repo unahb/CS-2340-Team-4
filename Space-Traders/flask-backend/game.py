@@ -128,6 +128,16 @@ class Game:
             contraband = {'item': contraband_name, 'amount': contraband_num}
             self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
 
+    # travel for free!
+    def freeTravel(self, region):
+        if self._player.get_region().get_name() == region:
+            print('tried to travel to planet player is already at')
+            return
+        self._player.set_region(self._universe.get_game_regions()[region])
+        player_region_name = self._player.get_region().get_name()
+        distances = self._universe.get_region_distances().get_distances(player_region_name)
+        self._player.calc_fuel_costs(PLANET_NAMES, distances)
+
     #buy/sell when api asks to. item is added to ship and credits subtracted
     def transaction(self, region, item, item_amount, buy=True):
         if buy:
