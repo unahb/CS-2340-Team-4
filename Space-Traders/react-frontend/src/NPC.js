@@ -49,17 +49,15 @@ class NPC extends React.Component {
       return (
         <div id="Welcome">
           <div id="stars">
-            <div>
-              <header id="Welcome-header">
-                <h1>{npcType} ENCOUNTERED!</h1>
-              </header>
-              <div id="content">
-                <div>
-                  <img src={spaceship} id="spaceship" align="left" />
-                </div>
-                {encounter}
-                <img id="encounter_image" src={bandit} align="right"></img>
+            <header id="Welcome-header">
+              <h1>{npcType} ENCOUNTERED!</h1>
+            </header>
+            <div id="content">
+              <div>
+                <img src={spaceship} id="spaceship" align="left" />
               </div>
+              {encounter}
+              <img id="encounter_image" src={bandit} align="right"></img>
             </div>
           </div>
         </div>
@@ -72,7 +70,9 @@ class NPC extends React.Component {
   renderBandit() {
     return (
       <div id="encounter">
-        <button id="button_format">Pay: {this.state.player.encounter.cost}</button>
+        <button id="button_format" onClick={() => {
+
+        }}>Pay: {this.state.player.encounter.cost}</button>
         <button id="button_format">Flee</button>
         <button id="button_format">Fight</button>
       </div>
