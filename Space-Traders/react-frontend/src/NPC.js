@@ -33,85 +33,69 @@ class NPC extends React.Component {
 
   render() {
     console.log(this.state)
-    const npcType = this.state.npcType
+    let npcType = this.state.npcType
     let encounter = ''
-    encounter = this.renderBandit();
-    // if (npcType == 'Bandits') {
-    //   encounter = this.renderBandit()
-    // } else if (npcType == 'Trader') {
-    //   encounter = this.renderTrader()
-    // } else {
-    //   encounter = this.renderPolice()
-    // }
-    return (
-      <div id="Welcome">
-        <div id="stars">
-          {encounter}
+    if (npcType == 'Bandits') {
+      npcType = 'BANDIT';
+      encounter = this.renderBandit()
+    } else if (npcType == 'Trader') {
+      npcType = 'TRADER';
+      encounter = this.renderTrader()
+    } else {
+      npcType = 'POLICE';
+      encounter = this.renderPolice()
+    }
+    if (npcType) {
+      return (
+        <div id="Welcome">
+          <div id="stars">
+            <div>
+              <header id="Welcome-header">
+                <h1>{npcType} ENCOUNTERED!</h1>
+              </header>
+              <div id="content">
+                <div>
+                  <img src={spaceship} id="spaceship" align="left" />
+                </div>
+                {encounter}
+                <img id="encounter_image" src={bandit} align="right"></img>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    )
+      )
+    } else {
+      return (<div></div>);
+    }
   }
 
   renderBandit() {
     return (
-      <div>
-        <header id="Welcome-header">
-          <h1>BANDIT ENCOUNTERED!</h1>
-        </header>
-        <div id="content">
-          <div>
-            <img src={spaceship} id="spaceship" align="left"/>
-          </div>
-          <div id="encounter">
-            <button id="button_format">pay</button>
-            <button id="button_format">flee</button>
-            <button id="button_format">fight</button>
-          </div>
-          <img id="encounter_image" src={bandit} align="right"></img>
-        </div>
+      <div id="encounter">
+        <button id="button_format">pay</button>
+        <button id="button_format">flee</button>
+        <button id="button_format">fight</button>
       </div>
     )
   }
 
   renderTrader() {
     return (
-      <div>
-        <header id="Welcome-header">
-          <h1>TRADER ENCOUNTERED!</h1>
-        </header>
-        <div id="content">
-          <div>
-            <img src={spaceship} id="spaceship" align="left"/>
-          </div>
-          <div id="encounter">
-            <button id="button_format">buy</button>
-            <button id="button_format">rob</button>
-            <button id="button_format">ignore</button>
-            <button id="button_format">negotiate</button>
-          </div>
-          <img id="encounter_image" src={trader} align="right"></img>
-        </div>
+      <div id="encounter">
+        <button id="button_format">buy</button>
+        <button id="button_format">rob</button>
+        <button id="button_format">ignore</button>
+        <button id="button_format">negotiate</button>
       </div>
     )
   }
 
   renderPolice() {
     return (
-      <div>
-        <header id="Welcome-header">
-          <h1>POLICE ENCOUNTERED!</h1>
-        </header>
-        <div id="content">
-          <div>
-            <img src={spaceship} id="spaceship" align="left"/>
-          </div>
-          <div id="encounter">
-            <button id="button_format">forfeit</button>
-            <button id="button_format">flee</button>
-            <button id="button_format"> fight</button>
-          </div>
-          <img id="encounter_image" src={police} align="right"></img>
-        </div>
+      <div id="encounter">
+        <button id="button_format">forfeit</button>
+        <button id="button_format">flee</button>
+        <button id="button_format"> fight</button>
       </div>
     )
   }
