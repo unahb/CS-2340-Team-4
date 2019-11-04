@@ -63,7 +63,23 @@ class Region extends React.Component {
     }
   }
 
+  responseText() {
+    if (this.props.location.response) {
+      return (
+        <div id="customAlert">
+          <h1 id="alertHead">{this.props.location.response}</h1>
+          <div id="alertMes"></div>
+          <br></br>
+          <button id="alertBut" onClick={(event) => {
+            document.getElementById("customAlert").hidden = true;
+          }}>Ok</button>
+        </div>
+      );
+    }
+  }
+
   render() {
+    console.log("render")
     if (this.state.encounter) {
       return (<Redirect to={{ pathname: '/NPC' }} />);
     } else if (Object.entries(this.state.player).length !== 0) {
@@ -89,10 +105,6 @@ class Region extends React.Component {
           </tr>
         invenTable.push(row)
       }
-
-      // if (this.props.location.response) {
-      //   customAlert(this.props.location.response, null)
-      // }
 
       let table = []
       for (let [name, prices] of Object.entries(market)) {
@@ -172,7 +184,7 @@ class Region extends React.Component {
               Map
               </button>
           </Link>
-
+          
           <div id="customAlert" hidden="true">
             <h1 id="alertHead"></h1>
             <div id="alertMes"></div>
@@ -182,6 +194,8 @@ class Region extends React.Component {
               document.getElementById("customConfirm").style.zIndex = 1;
             }}>Ok</button>
           </div>
+
+          {this.responseText()}
 
           <div id="customConfirm" hidden="true">
             <h1 id="confirmHead"></h1>
