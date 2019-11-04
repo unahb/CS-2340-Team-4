@@ -17,7 +17,7 @@
 }
 
 #button_format {
-  height: 10vh;
+  height: min-content;
   width: min-content;
   min-width: 20vw;
   margin: 1vh;

@@ -63,19 +63,25 @@ class Region extends React.Component {
     }
   }
 
-  responseText() {
-    if (this.props.location.response) {
-      return (
-        <div id="customAlert">
-          <h1 id="alertHead">{this.props.location.response}</h1>
-          <div id="alertMes"></div>
-          <br></br>
-          <button id="alertBut" onClick={(event) => {
-            document.getElementById("customAlert").hidden = true;
-          }}>Ok</button>
-        </div>
-      );
-    }
+  customAlert(title, message) {
+    document.getElementById("customAlert").hidden = false;
+    document.getElementById("alertHead").innerText = title;
+    document.getElementById("alertMes").innerText = message;
+    document.getElementById("customAlert").style.zIndex = 1;
+  }
+
+  cAlert(title, message) {
+    return(
+      <div id="customAlert" hidden={title == "" ? true : false}>
+        <h1 id="alertHead">{title}</h1>
+        <div id="alertMes">{message}</div>
+        <br></br>
+        <button id="alertBut" onClick={(event) => {
+          document.getElementById("customAlert").hidden = true;
+          document.getElementById("customConfirm").style.zIndex = 1;
+        }}>Ok</button>
+      </div>
+    );
   }
 
   render() {
@@ -122,7 +128,7 @@ class Region extends React.Component {
             <td class="MarkTd">
               <button type="button" class="sellButton" onClick={(event) => {
                 if (ship.cargo[name] == undefined) {
-                  customAlert("Selling Error", "Cannot sell items you do not own")
+                  this.customAlert("Selling Error", "Cannot sell items you do not own")
                 } else {
                   transaction.good = name;
                   transaction.quant = 1;
@@ -134,6 +140,14 @@ class Region extends React.Component {
             <td class="MarkTd">{prices.quantity}</td>
           </tr>
         table.push(row)
+      }
+
+      let customAlert = null;
+      if (this.props.location.response) {
+        customAlert = this.cAlert("Encounter Result", this.props.location.response.message)
+        this.props.location.response = null;
+      } else {
+        customAlert = this.cAlert("", "")
       }
 
       return (
@@ -185,17 +199,7 @@ class Region extends React.Component {
               </button>
           </Link>
           
-          <div id="customAlert" hidden="true">
-            <h1 id="alertHead"></h1>
-            <div id="alertMes"></div>
-            <br></br>
-            <button id="alertBut" onClick={(event) => {
-              document.getElementById("customAlert").hidden = true;
-              document.getElementById("customConfirm").style.zIndex = 1;
-            }}>Ok</button>
-          </div>
-
-          {this.responseText()}
+          {customAlert}
 
           <div id="customConfirm" hidden="true">
             <h1 id="confirmHead"></h1>
@@ -217,17 +221,17 @@ class Region extends React.Component {
               if (transaction.isBuy) {
                 if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.max_cargo_space - ship.current_cargo || document.getElementById("inp").value > player.region.market[transaction.good].quantity) {
                   document.getElementById("customConfirm").style.zIndex = 0;
-                  customAlert("Buying Error", "Cannot buy " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
+                  this.customAlert("Buying Error", "Cannot buy " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
                 } else if (player.region.market[transaction.good].buy * document.getElementById("inp").value > player.credits) {
                   document.getElementById("customConfirm").style.zIndex = 0;
-                  customAlert("Insufficient Credits", "Cannot buy " + document.getElementById("inp").value * 1 + " " + transaction.good + "(s)")
+                  this.customAlert("Insufficient Credits", "Cannot buy " + document.getElementById("inp").value * 1 + " " + transaction.good + "(s)")
                 } else {
                   this.buySellItem(transaction)
                 }
               } else {
                 if (document.getElementById("inp").value <= 0 || document.getElementById("inp").value > ship.cargo[transaction.good].quantity) {
                   document.getElementById("customConfirm").style.zIndex = 0;
-                  customAlert("Selling Error", "Cannot sell " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
+                  this.customAlert("Selling Error", "Cannot sell " + document.getElementById("inp").value * 1 + " of " + transaction.good + "(s)")
                 } else {
                   this.buySellItem(transaction)
                 }
@@ -240,13 +244,6 @@ class Region extends React.Component {
       return (<div></div>)
     }
   }
-}
-
-function customAlert(title, message) {
-  document.getElementById("customAlert").hidden = false;
-  document.getElementById("alertHead").innerText = title;
-  document.getElementById("alertMes").innerText = message;
-  document.getElementById("customAlert").style.zIndex = 1;
 }
 
 function customConfirm(title, message) {
