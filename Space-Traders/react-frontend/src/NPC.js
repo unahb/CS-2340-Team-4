@@ -112,7 +112,7 @@ class NPC extends React.Component {
     const actions = encounter.actions;
     return (
       <div id="encounter">
-        <button id="button_format" onClick={() => this.putRequest(actions[0])}>{actions[0]}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[0])}>{actions[0]}: {encounter.identified_goods.amount} {encounter.identified_goods.item}</button>
         <button id="button_format" onClick={() => this.putRequest(actions[1])}>{actions[1]}</button>
         <button id="button_format" onClick={() => this.putRequest(actions[2])}>{actions[2]}</button>
       </div>

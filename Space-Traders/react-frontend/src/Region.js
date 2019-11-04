@@ -72,7 +72,7 @@ class Region extends React.Component {
 
   cAlert(title, message) {
     return(
-      <div id="customAlert" hidden={title == "" ? true : false}>
+      <div id="customAlert" hidden={this.props.location.response ? false : true}>
         <h1 id="alertHead">{title}</h1>
         <div id="alertMes">{message}</div>
         <br></br>
@@ -85,7 +85,6 @@ class Region extends React.Component {
   }
 
   render() {
-    console.log("render")
     if (this.state.encounter) {
       return (<Redirect to={{ pathname: '/NPC' }} />);
     } else if (Object.entries(this.state.player).length !== 0) {
@@ -144,7 +143,7 @@ class Region extends React.Component {
 
       let customAlert = null;
       if (this.props.location.response) {
-        customAlert = this.cAlert("Encounter Result", this.props.location.response.message)
+        customAlert = this.cAlert("Encounter Result", this.props.location.response.substring(18, this.props.location.response.length - 4))
         this.props.location.response = null;
       } else {
         customAlert = this.cAlert("", "")
@@ -241,7 +240,14 @@ class Region extends React.Component {
         </div>
       );
     } else {
-      return (<div></div>)
+      return (
+        <div id="Welcome">
+          <div id="stars">
+            <div id="Welcome-header">Traveling to Planet...</div>
+            <img src={spaceship} id="spaceship" align="left"/>
+          </div>
+        </div>
+      );
     }
   }
 }

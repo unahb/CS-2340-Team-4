@@ -111,7 +111,7 @@ class Game:
         #1 for bandits, 5 for police, 8 for traders
         #when set to those, you will get an encounter of that type on every travel
         encounter_roll = random.randint(1, 10)
-        #encounter_roll = 1 #uncomment to test a specific roll. remember to comment out when done
+        #encounter_roll = 8 #uncomment to test a specific roll. remember to comment out when done
         encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
         print(encounter_roll, encounter)
         if encounter == 'Bandits':
@@ -124,7 +124,7 @@ class Game:
             print('police encountered')
             contraband_name = random.choice(list(self._player.get_ship().get_cargo().keys()))
             print('contraband:', contraband_name)
-            contraband_num = self._player.get_ship().get_cargo()[contraband_name]['quantity'] // 2
+            contraband_num = math.ceil(self._player.get_ship().get_cargo()[contraband_name]['quantity'] / 2.0)
             contraband = {'item': contraband_name, 'amount': contraband_num}
             self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
 
@@ -269,14 +269,14 @@ class Player:
                 done = True
                 success, credit_change = self._encounter.pay(self._credits)
                 if success:
-                    message = 'successfully paid bandits'
+                    message = 'Successfully paid bandits'
                     self._credits -= credit_change
                 else:
                     if self._ship.get_cargo():
-                        message = 'failed to pay and bandits took cargo'
+                        message = 'Failed to pay the bandits and bandits took cargo'
                         self._ship.remove_all_cargo()
                     else:
-                        message = 'failed to pay and took damage'
+                        message = 'Failed to pay the bandits and ship took damage'
                         self._ship.update_health(damage_amount)
 
             elif action == 'flee':
@@ -285,9 +285,9 @@ class Player:
                 self._region = dest
                 self._region_market_adjusted_prices = old_market
 
-                message = 'got back to origin successfully'
+                message = 'Returned back to origin successfully'
                 if not success:
-                    message = 'failed to flee. bandits took money and ship took damage'
+                    message = 'Failed to flee. Bandits stole credits and ship took damage'
                     self._credits = 0
                     self._ship.update_health(damage_amount)
 
@@ -295,10 +295,10 @@ class Player:
                 done = True
                 success, credit_change = self._encounter.fight(self._attributes['Fighter'])
                 if success:
-                    message = 'fought off the bandits and took their money'
+                    message = 'Fought off the bandits and stole their money'
                     self._credits += credit_change
                 else:
-                    message = 'failed to fight off the bandits. they took money and credits'
+                    message = 'Failed to fight off the bandits. Bandits stole credits and ship took damage'
                     self._credits = 0
                     self._ship.update_health(damage_amount)
 
@@ -310,38 +310,38 @@ class Player:
             if action == 'buy':
                 if self._credits > goods_price:
                     done = True
-                    message = 'bought the goods off the trader'
+                    message = 'Bought the goods off the trader'
                     self._credits -= goods_price
                     item, amount = self._encounter.buy()
                     self._ship.add_cargo(item, amount, price)
                 else:
-                    message = 'didn\'t have enough credits to buy from the trader.'
+                    message = 'Didn\'t have enough credits to buy from the trader.'
                     done = False
 
             elif action == 'ignore':
                 done = True
-                message = 'ignored the trader and moved on to destination'
+                message = 'Ignored the trader and moved on to destination'
 
             elif action == 'rob':
                 done = True
                 success, item, amount = self._encounter.rob(self._attributes['Fighter'])
                 if success:
-                    message = 'successfully robbed the trader. got their goods as a reward'
+                    message = 'Successfully robbed the trader. Stole their goods as a reward'
                     self._ship.add_cargo(item, amount, price)
                 else:
-                    message = 'failed to rob the trader. took damage'
+                    message = 'Failed to rob the trader. Ship took damage'
                     self._ship.update_health(damage_amount)
 
             elif action == 'negotiate':
                 done = False
-                message = 'attempted to negotiate with the trader'
+                message = 'Attempted to negotiate with the trader'
                 self._encounter.negotiate(self._attributes['Merchant'])
 
         #all actions associated with the police encounter
         elif encounter_type == 'Police':
             if action == 'forfeit':
                 done = True
-                message = 'gave up the contraband and moved to destination'
+                message = 'Gave up the contraband and moved to destination'
                 item, amount = self._encounter.forfeit()
                 self._ship.remove_cargo(item, amount)
 
@@ -350,9 +350,9 @@ class Player:
                 success, item, num, des, o_m, fine = self._encounter.flee(self._attributes['Pilot'])
                 self._region = des
                 self._region_market_adjusted_prices = o_m
-                message = 'got back to origin successfully'
+                message = 'Got back to origin successfully'
                 if not success:
-                    message = 'failed to flee. bandits took money and ship took damage'
+                    message = 'Failed to flee. Police took contraband, ship took damage, and fined for evading'
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
@@ -360,9 +360,9 @@ class Player:
             elif action == 'fight':
                 done = True
                 success, item, num, des, o_m, fine = self._encounter.flee(self._attributes['Pilot'])
-                message = 'successfully fought off the police'
+                message = 'Successfully fought off the police'
                 if not success:
-                    message = 'failed to fight off the police. took damage, money, and goods'
+                    message = 'Failed to fight off the police. Police took contraband, ship took damage, and fined for evading'
                     self._region = des
                     self._region_market_adjusted_prices = o_m
                     self._ship.remove_cargo(item, num)
@@ -628,7 +628,7 @@ class TraderEncounter: #options are buy, ignore, rob, or negotiate. ignore is im
 
 class PoliceEncounter: #options are forfeit, flee, fight.
     def __init__(self, old_region, old_region_market, identified_goods):
-        self.contraband = identified_goods #form of {'item': name, 'amount', #}
+        self.contraband = identified_goods #form of {'item': name, 'amount': #}
         self.old_region = old_region
         self.old_region_market = old_region_market
 

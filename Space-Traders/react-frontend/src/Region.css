@@ -38,7 +38,8 @@
 #customConfirm {
     position: absolute;
     width: 40vw;
-    height: 25vh;
+    height: min-content;
+    min-height: 25vh;
     top: 40vh;
     left: 30vw;
 }
