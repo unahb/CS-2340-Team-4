@@ -16,6 +16,7 @@
   align-content: center;
 }
 
+#negotiate_button,
 #button_format {
   height: 10vh;
   width: min-content;
@@ -23,6 +24,7 @@
   margin: 1vh;
   font-family: 'Press Start 2P', cursive;
   font-size: 4vh;
+  overflow: auto;
 }
 
 #encounter_image {
