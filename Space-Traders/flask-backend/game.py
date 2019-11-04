@@ -111,7 +111,7 @@ class Game:
         #1 for bandits, 5 for police, 8 for traders
         #when set to those, you will get an encounter of that type on every travel
         encounter_roll = random.randint(1, 10)
-        #encounter_roll = 8 #uncomment to test a specific roll. remember to comment out when done
+        #encounter_roll = 1 #uncomment to test a specific roll. remember to comment out when done
         encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
         print(encounter_roll, encounter)
         if encounter == 'Bandits':
@@ -119,7 +119,7 @@ class Game:
             print('bandit encountered')
         elif encounter == 'Traders':
             self._player.set_encounter(TraderEncounter())
-            print('trader encounterd')
+            print('trader encountered')
         elif encounter == 'Police' and self._player.get_ship().get_current_cargo():
             print('police encountered')
             contraband_name = random.choice(list(self._player.get_ship().get_cargo().keys()))
@@ -453,6 +453,10 @@ class Ship:
     def remove_all_cargo(self): #basically a setter but more limited
         self._cargo = {}
         self._current_cargo = 0
+<<<<<<< Updated upstream
+=======
+        self._current_value = self._current_fuel + self._current_health
+>>>>>>> Stashed changes
 
     def get_type(self):
         return self._ship_type
