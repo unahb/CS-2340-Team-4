@@ -452,6 +452,7 @@ class Ship:
 
     def remove_all_cargo(self): #basically a setter but more limited
         self._cargo = {}
+        self._current_cargo = 0
 
     def get_type(self):
         return self._ship_type
