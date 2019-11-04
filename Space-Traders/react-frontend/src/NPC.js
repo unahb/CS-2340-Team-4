@@ -70,6 +70,8 @@ class NPC extends React.Component {
                   <img id="encounter_image" src={image} align="right"></img>
                 </div>
               </div>
+              {encounter}
+              <img id="encounter_image" src={bandit} align="right"></img>
             </div>
           </div>
         )
