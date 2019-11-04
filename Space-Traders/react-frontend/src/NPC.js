@@ -21,6 +21,10 @@ class NPC extends React.Component {
   }
 
   componentWillMount() {
+    this.updateState();
+  }
+
+  updateState() {
     get((item) => {
       this.setState({
         player: item.Player,
@@ -90,12 +94,16 @@ class NPC extends React.Component {
 
   renderTrader(encounter) {
     const actions = encounter.actions;
+    const quantity = encounter.goods.quantity;
+    const good = encounter.goods.item;
+    const price = encounter.goods.price;
+    const item = quantity + ' ' + good + ' for ' + price;
     return (
       <div id="encounter">
-        <button id="button_format" onClick={() => this.putRequest(actions[0])}>{actions[0]}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[0])}>{actions[0]} {item}</button>
         <button id="button_format" onClick={() => this.putRequest(actions[1])}>{actions[1]}</button>
         <button id="button_format" onClick={() => this.putRequest(actions[2])}>{actions[2]}</button>
-        <button id="button_format" onClick={() => this.putRequest(actions[3])}>{actions[3]}</button>
+        <button id="negotiate_button" onClick={() => this.putRequest(actions[3])}>{actions[3]}</button>
       </div>
     )
   }
@@ -113,7 +121,12 @@ class NPC extends React.Component {
 
   putRequest(action) {
     put(putTypes.ENCOUNTER, action, (response) => {
-      this.setState({ goToRegion: response })
+      if (action == 'negotiate') {
+        document.getElementById("negotiate_button").hidden = true;
+        this.updateState();
+      } else {
+        this.setState({ goToRegion: response })
+      }
     })
   }
 }

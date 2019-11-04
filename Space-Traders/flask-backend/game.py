@@ -35,8 +35,8 @@ MARKET_ITEMS = {
     }
 
 #encounter rate is encoded as numbers that can be rolled out of 10. For example,
-#on easy difficulty, rolling a 1 will yield a bandit encounter, a 5 will yield 
-#a police encounter, and 8 or 9 will both yield traders. Higher chances can be 
+#on easy difficulty, rolling a 1 will yield a bandit encounter, a 5 will yield
+#a police encounter, and 8 or 9 will both yield traders. Higher chances can be
 #added by increasing the mappings of numbers from 1-10 that will get that encounter.
 #Bandits always start on number 1, Police always start on 5, and Traders always start on 8
 #the above information allows for easy testing by changing the random number generator in travel()
@@ -117,10 +117,6 @@ class Game:
         if encounter == 'Bandits':
             self._player.set_encounter(BanditEncounter(old_region, old_market))
             print('bandit encountered')
-            # recalc fuel costs in case flee
-            player_region_name = self._player.get_region().get_name()
-            distances = self._universe.get_region_distances().get_distances(player_region_name)
-            self._player.calc_fuel_costs(PLANET_NAMES, distances)
         elif encounter == 'Traders':
             self._player.set_encounter(TraderEncounter())
             print('trader encounterd')
@@ -134,7 +130,7 @@ class Game:
 
 
     # travel for free!
-    def freeTravel(self, region):
+    def free_travel(self, region):
         if self._player.get_region().get_name() == region:
             print('tried to travel to planet player is already at')
             return
@@ -177,6 +173,9 @@ class Game:
         done, message = self._player.encounter_action(action)
         if done:
             self._player.set_encounter(None)
+        player_region_name = self._player.get_region().get_name()
+        distances = self._universe.get_region_distances().get_distances(player_region_name)
+        self._player.calc_fuel_costs(PLANET_NAMES, distances)
         return message
 
     def get_player(self):
@@ -261,10 +260,13 @@ class Player:
     def encounter_action(self, action):
         encounter_type = self._encounter.get_json()['type']
         damage_amount = -5 #change this number to balance the game
+        message = 'unrecognized action'
+        done = False #represents whether the encounter is over
 
         #all actions associated with the bandit encounter
         if encounter_type == 'Bandits':
             if action == 'pay':
+                done = True
                 success, credit_change = self._encounter.pay(self._credits)
                 if success:
                     message = 'successfully paid bandits'
@@ -276,9 +278,9 @@ class Player:
                     else:
                         message = 'failed to pay and took damage'
                         self._ship.update_health(damage_amount)
-                return (True, message)
 
             elif action == 'flee':
+                done = True
                 success, dest, old_market = self._encounter.flee(self._attributes['Pilot'])
                 self._region = dest
                 self._region_market_adjusted_prices = old_market
@@ -288,9 +290,9 @@ class Player:
                     message = 'failed to flee. bandits took money and ship took damage'
                     self._credits = 0
                     self._ship.update_health(damage_amount)
-                return (True, message)
 
             elif action == 'fight':
+                done = True
                 success, credit_change = self._encounter.fight(self._attributes['Fighter'])
                 if success:
                     message = 'fought off the bandits and took their money'
@@ -299,7 +301,6 @@ class Player:
                     message = 'failed to fight off the bandits. they took money and credits'
                     self._credits = 0
                     self._ship.update_health(damage_amount)
-                return (True, message)
 
         #all actions associated with the trader encounter
         elif encounter_type == 'Trader':
@@ -308,18 +309,21 @@ class Player:
             goods_price = self._encounter.get_goods_price()
             if action == 'buy':
                 if self._credits > goods_price:
+                    done = True
                     message = 'bought the goods off the trader'
                     self._credits -= goods_price
                     item, amount = self._encounter.buy()
                     self._ship.add_cargo(item, amount, price)
-                    return (True, message)
-                return (False, 'didn\'t have enough credits to buy from the trader.')
-                
+                else:
+                    message = 'didn\'t have enough credits to buy from the trader.'
+                    done = False
 
             elif action == 'ignore':
-                return (True, 'ignored the trader and moved on to destination')
+                done = True
+                message = 'ignored the trader and moved on to destination'
 
             elif action == 'rob':
+                done = True
                 success, item, amount = self._encounter.rob(self._attributes['Fighter'])
                 if success:
                     message = 'successfully robbed the trader. got their goods as a reward'
@@ -327,46 +331,45 @@ class Player:
                 else:
                     message = 'failed to rob the trader. took damage'
                     self._ship.update_health(damage_amount)
-                return (True, message)
 
             elif action == 'negotiate':
+                done = False
+                message = 'attempted to negotiate with the trader'
                 self._encounter.negotiate(self._attributes['Merchant'])
-                return (False, 'attempted to negotiate with the trader')
 
         #all actions associated with the police encounter
         elif encounter_type == 'Police':
             if action == 'forfeit':
+                done = True
+                message = 'gave up the contraband and moved to destination'
                 item, amount = self._encounter.forfeit()
                 self._ship.remove_cargo(item, amount)
-                return (True, 'gave up the contraband and moved to destination')
 
             elif action == 'flee':
-                success, item, num, dest, om, fine = self._encounter.flee(self._attributes['Pilot'])
-                self._region = dest
-                self._region_market_adjusted_prices = om
+                done = True
+                success, item, num, des, o_m, fine = self._encounter.flee(self._attributes['Pilot'])
+                self._region = des
+                self._region_market_adjusted_prices = o_m
                 message = 'got back to origin successfully'
                 if not success:
                     message = 'failed to flee. bandits took money and ship took damage'
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
-                return (True, message)
 
             elif action == 'fight':
-                success, item, num, dest, om, fine = self._encounter.flee(self._attributes['Pilot'])
+                done = True
+                success, item, num, des, o_m, fine = self._encounter.flee(self._attributes['Pilot'])
                 message = 'successfully fought off the police'
                 if not success:
                     message = 'failed to fight off the police. took damage, money, and goods'
-                    self._region = dest
-                    self._region_market_adjusted_prices = om
+                    self._region = des
+                    self._region_market_adjusted_prices = o_m
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
-                return (True, message)
 
-        return (False, 'unrecognized action') #do nothing on unrecognized action
-
-
+        return (done, message) #do nothing on unrecognized action
 
 
     # getters
