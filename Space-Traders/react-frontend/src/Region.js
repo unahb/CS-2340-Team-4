@@ -17,16 +17,23 @@ class Region extends React.Component {
   }
 
   componentWillMount() {
-    put(putTypes.TRAVEL, this.props.location.region.name, () => {
+    if (this.props.location.response) {
       get((item) => {
         console.log(item)
-        if (item.Player.region) {
-          this.setState({ player: item.Player, ship: item.Ship, region: item.Player.region })
-        } else if (item.Player.encounter) {
-          this.setState({ player: item.Player, ship: item.Ship, encounter: item.Player.encounter })
-        }
+        this.setState({ player: item.Player, ship: item.Ship, region: item.Player.region })
       })
-    })
+    } else {
+      put(putTypes.TRAVEL, this.props.location.region.name, () => {
+        get((item) => {
+          console.log(item)
+          if (item.Player.region) {
+            this.setState({ player: item.Player, ship: item.Ship, region: item.Player.region })
+          } else if (item.Player.encounter) {
+            this.setState({ player: item.Player, ship: item.Ship, encounter: item.Player.encounter })
+          }
+        })
+      })
+    }
   }
 
   toggleSidebar() {
@@ -57,10 +64,8 @@ class Region extends React.Component {
   }
 
   render() {
-    const previousRegion = this.props.location.previousRegion;
-    const nextRegion = this.props.location.region;
     if (this.state.encounter) {
-      return (<Redirect to={{ pathname: '/NPC', previousRegion, nextRegion }} />);
+      return (<Redirect to={{ pathname: '/NPC' }} />);
     } else if (Object.entries(this.state.player).length !== 0) {
       console.log(this.state)
       const region = this.state.region
@@ -84,6 +89,10 @@ class Region extends React.Component {
           </tr>
         invenTable.push(row)
       }
+
+      // if (this.props.location.response) {
+      //   customAlert(this.props.location.response, null)
+      // }
 
       let table = []
       for (let [name, prices] of Object.entries(market)) {

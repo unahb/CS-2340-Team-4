@@ -48,6 +48,8 @@ function put(type, props, callback) {
     xhrPUT.open('PUT', "/Space-Traders/buy/" + props.good + "/" + props.quant)
   } else if (type === putTypes.SELL) {
     xhrPUT.open('PUT', "/Space-Traders/sell/" + props.good + "/" + props.quant)
+  } else if (type === putTypes.ENCOUNTER) {
+    xhrPUT.open('PUT', "/Space-Traders/encounter/" + props)
   }
   
   xhrPUT.send()
@@ -56,7 +58,8 @@ function put(type, props, callback) {
 const putTypes = {
   TRAVEL: 'travel',
   BUY: 'buy',
-  SELL: 'sell'
+  SELL: 'sell',
+  ENCOUNTER: 'encounter'
 }
 
 export { get, post, put, putTypes }

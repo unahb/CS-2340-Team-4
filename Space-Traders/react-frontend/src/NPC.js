@@ -1,7 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom'
 import './NPC.css'
-import { get } from './requests'
+import { get, put, putTypes } from './requests';
 import bandit from './resources/bandit.png'
 import trader from './resources/trader.png'
 import police from './resources/police.png'
@@ -13,14 +13,11 @@ class NPC extends React.Component {
 
     this.state = {
       player: {},
-      currRegion: {},
+      goToRegion: null,
       regions: {},
       ship: {},
       npcType: null
     }
-
-    this.previousRegion = this.props.location.previousRegion
-    this.nextRegion = this.props.location.nextRegion
   }
 
   componentWillMount() {
@@ -30,83 +27,97 @@ class NPC extends React.Component {
         currRegion: item.Player.region,
         regions: item.Planets,
         ship: item.Ship,
-        npcType: item.Player.encounter.type })
+        npcType: item.Player.encounter.type
+      })
     })
   }
 
   render() {
-    console.log(this.state)
-    let npcType = this.state.npcType
-    let image = null;
-    let encounter = ''
-    if (npcType == 'Bandits') {
-      npcType = 'BANDIT';
-      image = bandit;
-      encounter = this.renderBandit()
-    } else if (npcType == 'Trader') {
-      npcType = 'TRADER';
-      image = trader;
-      encounter = this.renderTrader()
+    if (this.state.goToRegion) {
+      const response = this.state.goToRegion
+      return (<Redirect to={{ pathname: '/Region', response }} />);
     } else {
-      npcType = 'POLICE';
-      image = police;
-      encounter = this.renderPolice()
-    }
-    if (npcType) {
-      return (
-        <div id="Welcome">
-          <div id="stars">
-            <div>
-              <header id="Welcome-header">
-                <h1>{npcType} ENCOUNTERED!</h1>
-              </header>
-              <div id="content">
-                <div>
-                  <img src={spaceship} id="spaceship" align="left" />
+      console.log(this.state)
+      let npcType = this.state.npcType
+      let image = null;
+      let encounter = ''
+      if (npcType == 'Bandits') {
+        npcType = 'BANDIT';
+        image = bandit;
+        encounter = this.renderBandit(this.state.player.encounter)
+      } else if (npcType == 'Trader') {
+        npcType = 'TRADER';
+        image = trader;
+        encounter = this.renderTrader(this.state.player.encounter)
+      } else if (npcType == 'Police') {
+        npcType = 'POLICE';
+        image = police;
+        encounter = this.renderPolice(this.state.player.encounter)
+      }
+      if (npcType) {
+        return (
+          <div id="Welcome">
+            <div id="stars">
+              <div>
+                <header id="Welcome-header">
+                  <h1>{npcType} ENCOUNTERED!</h1>
+                </header>
+                <div id="content">
+                  <div>
+                    <img src={spaceship} id="spaceship" align="left" />
+                  </div>
+                  {encounter}
+                  <img id="encounter_image" src={image} align="right"></img>
                 </div>
-                {encounter}
-                <img id="encounter_image" src={image} align="right"></img>
               </div>
             </div>
           </div>
-        </div>
-      )
-    } else {
-      return (<div></div>);
+        )
+      } else {
+        return (<div></div>);
+      }
     }
   }
 
-  renderBandit() {
+  renderBandit(encounter) {
+    const actions = encounter.actions;
     return (
       <div id="encounter">
-        <button id="button_format">Pay: {this.state.player.encounter.cost}</button>
-        <button id="button_format">Flee</button>
-        <button id="button_format">Fight</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[0])}>{actions[0]}: {encounter.cost}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[1])}>{actions[1]}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[2])}>{actions[2]}</button>
       </div>
     )
   }
 
-  renderTrader() {
-    
+  renderTrader(encounter) {
+    const actions = encounter.actions;
     return (
       <div id="encounter">
-        <button id="button_format">Buy</button>
-        <button id="button_format">Rob</button>
-        <button id="button_format">Ignore</button>
-        <button id="button_format">Negotiate</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[0])}>{actions[0]}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[1])}>{actions[1]}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[2])}>{actions[2]}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[3])}>{actions[3]}</button>
       </div>
     )
   }
 
-  renderPolice() {
+  renderPolice(encounter) {
+    const actions = encounter.actions;
     return (
       <div id="encounter">
-        <button id="button_format">Forfeit</button>
-        <button id="button_format">Flee</button>
-        <button id="button_format">Fight</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[0])}>{actions[0]}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[1])}>{actions[1]}</button>
+        <button id="button_format" onClick={() => this.putRequest(actions[2])}>{actions[2]}</button>
       </div>
     )
+  }
+
+  putRequest(action) {
+    put(putTypes.ENCOUNTER, action, (response) => {
+      this.setState({ goToRegion: response })
+    })
   }
 }
 
-export default NPC
+export default NPC;

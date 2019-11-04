@@ -45,7 +45,6 @@ class TravelMap extends React.Component {
     }
 
     const region = this.state.currRegion;
-    const previousRegion = this.state.player.region;
     const ship = this.state.ship;
     return (
       <div id="mainMap">
@@ -61,7 +60,6 @@ class TravelMap extends React.Component {
 
               <Link to={{
                 pathname: '/Region',
-                previousRegion,
                 region
               }}>
                 <button id="confirmSubmit">
