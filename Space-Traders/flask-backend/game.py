@@ -117,6 +117,10 @@ class Game:
         if encounter == 'Bandits':
             self._player.set_encounter(BanditEncounter(old_region, old_market))
             print('bandit encountered')
+            # recalc fuel costs in case flee
+            player_region_name = self._player.get_region().get_name()
+            distances = self._universe.get_region_distances().get_distances(player_region_name)
+            self._player.calc_fuel_costs(PLANET_NAMES, distances)
         elif encounter == 'Traders':
             self._player.set_encounter(TraderEncounter())
             print('trader encounterd')
@@ -127,6 +131,7 @@ class Game:
             contraband_num = self._player.get_ship().get_cargo()[contraband_name]['quantity'] // 2
             contraband = {'item': contraband_name, 'amount': contraband_num}
             self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
+
 
     # travel for free!
     def freeTravel(self, region):
@@ -277,6 +282,7 @@ class Player:
                 success, dest, old_market = self._encounter.flee(self._attributes['Pilot'])
                 self._region = dest
                 self._region_market_adjusted_prices = old_market
+
                 message = 'got back to origin successfully'
                 if not success:
                     message = 'failed to flee. bandits took money and ship took damage'
@@ -297,6 +303,7 @@ class Player:
 
         #all actions associated with the trader encounter
         elif encounter_type == 'Trader':
+            # no check for enough inventory space
             price = 25 #just some random amount for add_cargo(). probably should change to a random
             goods_price = self._encounter.get_goods_price()
             if action == 'buy':
@@ -307,6 +314,7 @@ class Player:
                     self._ship.add_cargo(item, amount, price)
                     return (True, message)
                 return (False, 'didn\'t have enough credits to buy from the trader.')
+                
 
             elif action == 'ignore':
                 return (True, 'ignored the trader and moved on to destination')
