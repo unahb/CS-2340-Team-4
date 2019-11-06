@@ -122,10 +122,10 @@ class Game:
             print('trader encountered')
         elif encounter == 'Police' and self._player.get_ship().get_current_cargo():
             print('police encountered')
-            contraband_name = random.choice(list(self._player.get_ship().get_cargo().keys()))
-            print('contraband:', contraband_name)
-            contraband_num = math.ceil(self._player.get_ship().get_cargo()[contraband_name]['quantity'] / 2.0)
-            contraband = {'item': contraband_name, 'amount': contraband_num}
+            contra_name = random.choice(list(self._player.get_ship().get_cargo().keys()))
+            print('contraband:', contra_name)
+            contra_am = math.ceil(self._player.get_ship().get_cargo()[contra_name]['quantity'] / 2.)
+            contraband = {'item': contra_name, 'amount': contra_am}
             self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
 
 
@@ -298,7 +298,8 @@ class Player:
                     message = 'Fought off the bandits and stole their money'
                     self._credits += credit_change
                 else:
-                    message = 'Failed to fight off the bandits. Bandits stole credits and ship took damage'
+                    message = 'Failed to fight off the bandits. Bandits stole credits ' \
+                              'and ship took damage'
                     self._credits = 0
                     self._ship.update_health(damage_amount)
 
@@ -352,7 +353,8 @@ class Player:
                 self._region_market_adjusted_prices = o_m
                 message = 'Got back to origin successfully'
                 if not success:
-                    message = 'Failed to flee. Police took contraband, ship took damage, and fined for evading'
+                    message = 'Failed to flee. Police took contraband, ship took damage, ' \
+                              'and fined for evading'
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
@@ -362,7 +364,8 @@ class Player:
                 success, item, num, des, o_m, fine = self._encounter.flee(self._attributes['Pilot'])
                 message = 'Successfully fought off the police'
                 if not success:
-                    message = 'Failed to fight off the police. Police took contraband, ship took damage, and fined for evading'
+                    message = 'Failed to fight off the police. Police took contraband, ' \
+                              'ship took damage, and fined for evading'
                     self._region = des
                     self._region_market_adjusted_prices = o_m
                     self._ship.remove_cargo(item, num)
