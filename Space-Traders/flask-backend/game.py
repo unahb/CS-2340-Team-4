@@ -110,8 +110,8 @@ class Game:
         #you can test individual encounters by setting it to:
         #1 for bandits, 5 for police, 8 for traders
         #when set to those, you will get an encounter of that type on every travel
-        encounter_roll = random.randint(1, 10)
-        #encounter_roll = 1 #uncomment to test a specific roll. remember to comment out when done
+        #encounter_roll = random.randint(1, 10)
+        encounter_roll = 8 #uncomment to test a specific roll. remember to comment out when done
         encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
         print(encounter_roll, encounter)
         if encounter == 'Bandits':
@@ -316,7 +316,7 @@ class Player:
                     self._ship.add_cargo(item, amount, price)
                 else:
                     message = 'Didn\'t have enough credits to buy from the trader.'
-                    done = False
+                    done = True
 
             elif action == 'ignore':
                 done = True
@@ -601,6 +601,7 @@ class TraderEncounter: #options are buy, ignore, rob, or negotiate. ignore is im
         self.negotiated = False
 
     def buy(self):
+        ## BUY ERROR
         return (self.goods['item'], self.goods['quantity']) #pretty simple, player buys the stuff
 
     def rob(self, fighter):
