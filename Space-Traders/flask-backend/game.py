@@ -305,7 +305,7 @@ class Player:
                     self._ship.add_cargo(item, amount, price)
                 else:
                     message = 'Didn\'t have enough credits to buy from the trader.'
-                    done = False
+                    done = True
 
             elif action == 'ignore':
                 done = True
@@ -590,6 +590,7 @@ class TraderEncounter: #options are buy, ignore, rob, or negotiate. ignore is im
         self.negotiated = False
 
     def buy(self):
+        ## BUY ERROR
         return (self.goods['item'], self.goods['quantity']) #pretty simple, player buys the stuff
 
     def rob(self, fighter):
