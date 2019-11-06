@@ -111,7 +111,7 @@ class Game:
         #1 for bandits, 5 for police, 8 for traders
         #when set to those, you will get an encounter of that type on every travel
         encounter_roll = random.randint(1, 10)
-        #encounter_roll = 1 #uncomment to test a specific roll. remember to comment out when done
+        #encounter_roll = 8 #uncomment to test a specific roll. remember to comment out when done
         encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
         print(encounter_roll, encounter)
         if encounter == 'Bandits':
@@ -127,17 +127,6 @@ class Game:
             contraband_num = math.ceil(self._player.get_ship().get_cargo()[contraband_name]['quantity'] / 2.0)
             contraband = {'item': contraband_name, 'amount': contraband_num}
             self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
-
-
-    # travel for free!
-    def free_travel(self, region):
-        if self._player.get_region().get_name() == region:
-            print('tried to travel to planet player is already at')
-            return
-        self._player.set_region(self._universe.get_game_regions()[region])
-        player_region_name = self._player.get_region().get_name()
-        distances = self._universe.get_region_distances().get_distances(player_region_name)
-        self._player.calc_fuel_costs(PLANET_NAMES, distances)
 
     #buy/sell when api asks to. item is added to ship and credits subtracted
     def transaction(self, region, item, item_amount, buy=True):

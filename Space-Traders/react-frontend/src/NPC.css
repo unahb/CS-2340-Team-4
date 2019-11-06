@@ -11,7 +11,7 @@
 #content {
   display: flex;
   width: 100vw;
-  height: 70vh;
+  height: 60vh;
   justify-content: center;
   align-content: center;
 }
@@ -31,4 +31,13 @@
   animation: moveUpDown infinite 5s ease-in-out;
   height: 40vh;
   animation-delay: 1s;
+}
+
+#credits {
+  font-family: 'Press Start 2P', cursive;
+  position: relative;
+  left: 2vw;
+  top: 3vh;
+  font-size: 4vh;
+  color: white;
 }

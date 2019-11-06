@@ -72,6 +72,7 @@ class NPC extends React.Component {
                 {encounter}
                 <img id="encounter_image" src={image} align="right"></img>
               </div>
+              <div id="credits">Credits: {this.state.player.credits}</div>
             </div>
           </div>
         )
