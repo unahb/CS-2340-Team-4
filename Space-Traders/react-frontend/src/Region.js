@@ -243,7 +243,9 @@ class Region extends React.Component {
       return (
         <div id="Welcome">
           <div id="stars">
-            <div id="Welcome-header">Traveling to Planet...</div>
+            <header id="Welcome-header">
+              <h1>Traveling to Planet...</h1>
+            </header>
             <img src={spaceship} id="spaceship" align="left"/>
           </div>
         </div>
