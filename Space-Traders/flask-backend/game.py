@@ -378,6 +378,8 @@ class Player:
         return self._fuel_costs
     def get_encounter(self):
         return self._encounter
+    def get_karms(self):
+        return self._karma
 
     # setters
     def set_region(self, region):
