@@ -87,6 +87,8 @@ class Region extends React.Component {
   render() {
     if (this.state.encounter) {
       return (<Redirect to={{ pathname: '/NPC' }} />);
+    } else if (this.state.ship.current_health <= 0) {
+      return (<Redirect to={{ pathname: '/GameOver' }} />); 
     } else if (Object.entries(this.state.player).length !== 0) {
       console.log(this.state)
       const region = this.state.region

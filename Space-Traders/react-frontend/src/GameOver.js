@@ -7,7 +7,8 @@ function GameOver() {
     <div id="Welcome">
       <div id="stars">
         <header id="Welcome-header">
-          <h1 style={{ fontSize: '10vh' }}>Game Over...</h1>
+          <h1 style={{ fontSize: '10vh' }}>Game Over</h1>
+          <h1 style={{ fontSize: '7vh' }}>Ship health has reached 0...</h1>
         </header>
         <div>
           <img src={spaceship} id="spaceship" align="left"/>
