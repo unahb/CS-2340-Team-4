@@ -47,10 +47,15 @@ NPC_ENCOUNTER_RATES = {
     'hard': {1: 'Bandits', 2: 'Bandits', 3: 'Bandits', 5: 'Police', 8: 'Traders'}
     }
 
+#amount of money it should cost to buy the win-the-game item
+VICTORY_COST = 50000
+
+#uses the pilot attribute to determine the fuel cost for traveling between regions
 def fuel_cost_helper(distance, pilot_attribute):
     pilot_attribute += 2
     return int(distance / (1 + math.log(pilot_attribute)))
 
+#uses the merchant attribute for determining item costs in markets
 def item_cost_helper(base_cost, merchant_attribute, quantity, buy=True):
     merchant_attribute += 2
     if buy:
@@ -59,13 +64,17 @@ def item_cost_helper(base_cost, merchant_attribute, quantity, buy=True):
     mult = 1.0 - quantity/100
     return int(mult * (base_cost * math.log(merchant_attribute) * 1.1))
 
+#uses the engineer attribute to determine how much a repair should cost
+def repair_cost_helper(health_to_repair, engineer_attribute):
+    return int(health_to_repair / (1 + math.log(engineer_attribute + 2))) * 100 
+
 class Game:
     def __init__(self, difficulty='easy', attributes=None, name='John Doe'):
         #set parameters to defaults if they aren't correctly formatted
-        if difficulty not in ('easy', 'medium', 'hard'):    #difficulty
+        if difficulty not in ('easy', 'medium', 'hard'): #difficulty
             difficulty = 'easy'
             print('difficulty set to default')
-        if attributes is None or not isinstance(attributes, list):  #attributes
+        if attributes is None or not isinstance(attributes, list): #attributes
             attributes = [1, 1, 1, 1]
             print('attributes set to default')
         if len(attributes) != 4:
@@ -76,7 +85,7 @@ class Game:
                 attributes = [1, 1, 1, 1]
                 print('attributes set to default')
                 break
-        if not isinstance(name, str):   #name
+        if not isinstance(name, str): #name
             name = 'John Doe'
             print('name set to default')
 
@@ -111,7 +120,7 @@ class Game:
         #1 for bandits, 5 for police, 8 for traders
         #when set to those, you will get an encounter of that type on every travel
         encounter_roll = random.randint(1, 10)
-        #encounter_roll = 8 #uncomment to test a specific roll. remember to comment out when done
+        #encounter_roll = 1 #uncomment to test a specific roll. remember to comment out when done
         encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
         print(encounter_roll, encounter)
         if encounter == 'Bandits':
@@ -128,12 +137,24 @@ class Game:
             contraband = {'item': contraband_name, 'amount': contraband_num}
             self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
 
+        #add in refuel and repair if no encounter. if there is one, it will be done later.
+        else:
+            self._player.check_refuel_and_repair()
+
     #buy/sell when api asks to. item is added to ship and credits subtracted
     def transaction(self, region, item, item_amount, buy=True):
         if buy:
             planet_price = self._player.get_region_market_adjusted_prices()[item]['buy']
             amount = planet_price * int(item_amount)
             self._player.transaction(amount*-1)
+            if item == 'Refuel':
+                self._player.get_ship().refuel()
+                print('Ship successfully refueled for', planet_price)
+                return amount
+            if item == 'Repair':
+                self._player.get_ship().repair()
+                print('Ship successfully repaired for', planet_price)
+                return amount
             self._player.get_ship().add_cargo(item, int(item_amount), planet_price)
             self._player.calculate_market_costs(single_item=item, amount=item_amount)
         else:
@@ -162,9 +183,10 @@ class Game:
         done, message = self._player.encounter_action(action)
         if done:
             self._player.set_encounter(None)
-        player_region_name = self._player.get_region().get_name()
-        distances = self._universe.get_region_distances().get_distances(player_region_name)
-        self._player.calc_fuel_costs(PLANET_NAMES, distances)
+            self._player.check_refuel_and_repair()
+            player_region_name = self._player.get_region().get_name()
+            distances = self._universe.get_region_distances().get_distances(player_region_name)
+            self._player.calc_fuel_costs(PLANET_NAMES, distances)
         return message
 
     def get_player(self):
@@ -176,7 +198,7 @@ class Game:
     def get_difficulty(self):
         return self._difficulty
 
-    def __str__(self):  #mostly for debugging
+    def __str__(self): #mostly for debugging
         builder = ''
         builder += 'Player: ' + str(self._player) + '\n'
         builder += str(self._universe)
@@ -184,7 +206,7 @@ class Game:
 
 class Player:
     def __init__(self, attributes, region, money, name):
-        self._attributes = {} # attributes is [Pilot, Fighter, Merchant, Engineer] (all ints)
+        self._attributes = {} #attributes keys are Pilot, Fighter, Merchant, and Engineer
         self._attributes['Pilot'] = attributes[0]
         self._attributes['Fighter'] = attributes[1]
         self._attributes['Merchant'] = attributes[2]
@@ -209,7 +231,7 @@ class Player:
                                                              self._attributes['Pilot'])
 
     def calculate_market_costs(self, single_item=None, buy=True, amount=0):
-        if single_item is not None:
+        if single_item is not None: #only for updating prices when an item is bought/sold
             if buy:
                 item_container = self._region_market_adjusted_prices[single_item]
                 quantity = int(item_container['quantity']) - int(amount)
@@ -224,24 +246,43 @@ class Player:
                 price = item_cost_helper(random.randint(10, 50), 0, self._attributes['Merchant'],
                                          buy=False)
                 self._ship.update_price(single_item, price)
-        else:
-            self._region_market_adjusted_prices = {}
-            #generate the market for the planet the player is on, taking into account merchant skill
-            for item in self._region.get_market():
-                quantity = random.randint(0, 100)
-                price = item_cost_helper(self._region.get_market()[item], quantity,
-                                         self._attributes['Merchant'])
-                self._region_market_adjusted_prices[item] = {'buy' : price,
-                                                             'sell' : price,
-                                                             'quantity' : quantity}
+            return
+
+        self._region_market_adjusted_prices = {}
+        #generate the market for the planet the player is on, taking into account merchant skill
+        for item in self._region.get_market():
+            quantity = random.randint(0, 100)
+            price = item_cost_helper(self._region.get_market()[item], quantity,
+                                        self._attributes['Merchant'])
+            self._region_market_adjusted_prices[item] = {'buy' : price,
+                                                         'sell' : price,
+                                                         'quantity' : quantity}
+            self._ship.update_price(item, price)
+        for item, price in self._ship.get_cargo().items():
+            if not item in self._region_market_adjusted_prices:
+                quantity = 0
+                price = item_cost_helper(random.randint(10, 50), quantity,
+                                            self._attributes['Merchant'],
+                                            buy=False)
                 self._ship.update_price(item, price)
-            for item, price in self._ship.get_cargo().items():
-                if not item in self._region_market_adjusted_prices:
-                    quantity = 0
-                    price = item_cost_helper(random.randint(10, 50), quantity,
-                                             self._attributes['Merchant'],
-                                             buy=False)
-                    self._ship.update_price(item, price)
+        #add the win the game item to the shop if the region is correct
+        if self._region.get_winning_region():
+            item = self._name + '\'s Universe'
+            self._region_market_adjusted_prices[item] = {'buy' : VICTORY_COST,
+                                                         'quantity' : 1}
+
+    #needs to be separate due to some dumb stuff involving when markets are calculated
+    def check_refuel_and_repair(self):
+        #add refuel and repair to the shop conditionally
+        if self._ship.get_current_fuel() < self._ship.get_max_fuel_capacity():
+            fuel_needed = self._ship.get_max_fuel_capacity() - self._ship.get_current_fuel()
+            self._region_market_adjusted_prices['Refuel'] = {'buy' : fuel_needed,
+                                                             'quantity' : 1}
+        if self._ship.get_current_health() < self._ship.get_max_health():
+            health_needed = self._ship.get_max_health() - self._ship.get_current_health()
+            repair_cost = repair_cost_helper(health_needed, self._attributes['Engineer'])
+            self._region_market_adjusted_prices['Repair'] = {'buy' : repair_cost,
+                                                             'quantity' : 1}
 
     #interact with the NPC encounter. returns True if the encounter is ended as a result
     #look at the encounter classes to see what happens in each encounter and what is returned when
@@ -444,6 +485,12 @@ class Ship:
         self._current_cargo = 0
         self._current_value = self._current_fuel + self._current_health
 
+    def refuel(self):
+        self._current_fuel = self.get_max_fuel_capacity()
+
+    def repair(self):
+        self._current_health = self.get_max_health()
+
     def get_type(self):
         return self._ship_type
     def get_max_cargo_space(self):
@@ -473,6 +520,7 @@ class Universe:
         self._game_regions = {} #set of Region types (not strings!!!)
         self._region_distances = None
 
+        winning_region = random.choice(PLANET_NAMES)
         for name in PLANET_NAMES:  # add regions to game_regions with random attributes
             valid_coordinates = False
             while not valid_coordinates:
@@ -488,7 +536,12 @@ class Universe:
                             valid_coordinates = True
 
             tech = random.randint(0, len(TECH_LEVELS) - 1)
-            self._game_regions[name] = Region((x_coord, y_coord), TECH_LEVELS[tech], name)
+            if name == winning_region:
+                print('winning region has been set to', name)
+                self._game_regions[name] = Region((x_coord, y_coord), TECH_LEVELS[tech], name,
+                                                  winning_region=True)
+            else:
+                self._game_regions[name] = Region((x_coord, y_coord), TECH_LEVELS[tech], name)
 
         self._region_distances = RegionDistances(self._game_regions)
 
@@ -504,13 +557,14 @@ class Universe:
         return builder
 
 class Region:
-    def __init__(self, coordinates, tech_level, name):
+    def __init__(self, coordinates, tech_level, name, winning_region=False):
         self._name = name
         self._tech_level = tech_level
         self._coordinates = coordinates
         self._market = {}
         for item in MARKET_ITEMS[tech_level]:   #fetch items available at given tech level
             self._market[item] = random.randint(5, 50)  #map each item to a price
+        self._winning_region = winning_region #if true, will add the win item to market (see player)
 
     def get_name(self):
         return self._name
@@ -520,6 +574,8 @@ class Region:
         return self._coordinates
     def get_market(self):
         return self._market
+    def get_winning_region(self):
+        return self._winning_region
 
     def __str__(self):
         builder = ''
