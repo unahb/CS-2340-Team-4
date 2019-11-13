@@ -148,11 +148,11 @@ class Game:
             amount = planet_price * int(item_amount)
             self._player.transaction(amount*-1)
             if item == 'Refuel':
-                self._player.get_ship().refuel()
+                self._player.refuel()
                 print('Ship successfully refueled for', planet_price)
                 return amount
             if item == 'Repair':
-                self._player.get_ship().repair()
+                self._player.repair()
                 print('Ship successfully repaired for', planet_price)
                 return amount
             self._player.get_ship().add_cargo(item, int(item_amount), planet_price)
@@ -401,6 +401,13 @@ class Player:
 
         return (done, message) #do nothing on unrecognized action
 
+    def refuel(self):
+        self._region_market_adjusted_prices.pop('Refuel')
+        self._ship.refuel()
+
+    def repair(self):
+        self._region_market_adjusted_prices.pop('Repair')
+        self._ship.repair()
 
     # getters
     def get_region(self):
