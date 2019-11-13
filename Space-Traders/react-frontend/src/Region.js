@@ -47,8 +47,8 @@ class Region extends React.Component {
         console.log('BUY SUCCESS')
         get((item) => {
           this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
+          console.log(this.state)
         })
-        console.log(this.state)
         document.getElementById("inp").value = 1;
       })
     } else {
@@ -56,8 +56,8 @@ class Region extends React.Component {
         console.log('SELL SUCCESS')
         get((item) => {
           this.setState({ player: item.Player, region: item.Player.region, ship: item.Ship })
+          console.log(this.state)
         })
-        console.log(this.state)
         document.getElementById("inp").value = 1;
       })
     }
@@ -113,34 +113,51 @@ class Region extends React.Component {
         invenTable.push(row)
       }
 
-      let table = []
+      let itemTable = [];
+      let extraTable = [];
       for (let [name, prices] of Object.entries(market)) {
-        const row =
-          <tr class="MarkTr">
-            <td class="MarkTd">{name}</td>
-            <td class="MarkTd">
-              <button type="button" class="buyButton" onClick={(event) => {
-                transaction.good = name;
-                transaction.quant = 1;
-                transaction.isBuy = true;
-                customConfirm("Please Confirm", "Buy 1 " + name + "(s) for " + player.region.market[transaction.good].buy * 1 + " Credits");
-              }}>{prices.buy}</button>
-            </td>
-            <td class="MarkTd">
-              <button type="button" class="sellButton" onClick={(event) => {
-                if (ship.cargo[name] == undefined) {
-                  this.customAlert("Selling Error", "Cannot sell items you do not own")
-                } else {
+        if (prices.sell) {
+          const row =
+            <tr class="MarkTr">
+              <td class="MarkTd">{name}</td>
+              <td class="MarkTd">
+                <button type="button" class="buyButton" onClick={(event) => {
                   transaction.good = name;
                   transaction.quant = 1;
-                  transaction.isBuy = false;
-                  customConfirm("Please Confirm", "Sell 1 " + name + "(s) for " + ship.cargo[name].price * 1 + " Credits");
-                }
-              }}>{prices.sell}</button>
-            </td>
-            <td class="MarkTd">{prices.quantity}</td>
-          </tr>
-        table.push(row)
+                  transaction.isBuy = true;
+                  customConfirm("Please Confirm", "Buy 1 " + name + "(s) for " + player.region.market[transaction.good].buy * 1 + " Credits");
+                }}>{prices.buy}</button>
+              </td>
+              <td class="MarkTd">
+                <button type="button" class="sellButton" onClick={(event) => {
+                  if (ship.cargo[name] == undefined) {
+                    this.customAlert("Selling Error", "Cannot sell items you do not own")
+                  } else {
+                    transaction.good = name;
+                    transaction.quant = 1;
+                    transaction.isBuy = false;
+                    customConfirm("Please Confirm", "Sell 1 " + name + "(s) for " + ship.cargo[name].price * 1 + " Credits");
+                  }
+                }}>{prices.sell}</button>
+              </td>
+              <td class="MarkTd">{prices.quantity}</td>
+            </tr>
+          itemTable.push(row)
+        } else {
+          const row =
+            <tr class="MarkTr">
+              <td class="MarkTd">{name}</td>
+              <td class="MarkTd">
+                <button type="button" class="buyButton" onClick={(event) => {
+                  transaction.good = name;
+                  transaction.quant = 1;
+                  transaction.isBuy = true;
+                  customConfirm("Please Confirm", "Buy " + name + " for " + player.region.market[transaction.good].buy + " Credits", true);
+                }}>{prices.buy}</button>
+              </td>
+            </tr>
+          extraTable.push(row)
+        }
       }
 
       let customAlert = null;
@@ -176,15 +193,21 @@ class Region extends React.Component {
             </button>
           </div>
 
-          <table id="table" align="center">
-            <tr class="MarkTr">
-              <th class="MarkTh" style={styles.blue}>Items</th>
-              <th class="MarkTh" style={styles.yellow}>Buy</th>
-              <th class="MarkTh" style={styles.yellow}>Sell</th>
-              <th class="MarkTh" style={styles.yellow}>Stock</th>
-            </tr>
-            {table}
-          </table>
+          <div style={{ display: 'flex', flex: 1, flexDirection: 'row' }}>
+            <table id="itemTable" align="center">
+              <tr class="MarkTr">
+                <th class="MarkTh" style={styles.blue}>Items</th>
+                <th class="MarkTh" style={styles.yellow}>Buy</th>
+                <th class="MarkTh" style={styles.yellow}>Sell</th>
+                <th class="MarkTh" style={styles.yellow}>Stock</th>
+              </tr>
+              {itemTable}
+            </table>
+
+            <table id="extraTable" align="center">
+              {extraTable}
+            </table>
+          </div>
 
           <br></br>
           <div id="credits" align="left">Credits: {player.credits}</div>
@@ -256,7 +279,8 @@ class Region extends React.Component {
   }
 }
 
-function customConfirm(title, message) {
+function customConfirm(title, message, hideInput) {
+  document.getElementById("inp").hidden = hideInput ? true : false;
   document.getElementById("customConfirm").hidden = false;
   document.getElementById("confirmHead").innerText = title;
   document.getElementById("confirmMes").innerText = message;
@@ -290,7 +314,7 @@ const styles = {
     'align-content': 'center',
     backgroundColor: 'white',
     borderRadius: 5,
-    opacity: 0.8,
+    zIndex: 1
   },
 }
 

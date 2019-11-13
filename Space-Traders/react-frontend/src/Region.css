@@ -13,7 +13,7 @@
 #banner {
     height: 15vh;
     background-color: grey;
-    margin-bottom: 10vh;
+    margin-bottom: 5vh;
 }
 
 #credits {
@@ -94,15 +94,23 @@
     background-color: #333333;
 }
 
-#table {
+#extraTable,
+#itemTable {
     font-family: 'Press Start 2P', cursive;
     color: white;
-    width: 50vw;
-    height: 40vh;
+    width: 65vw;
+    height: 50vh;
     justify-content: right;
     position: relative;
     border-collapse: collapse;
     border: 1px solid white;
+    margin-left: 8vw;
+}
+
+#extraTable {
+    width: 20vw;
+    height: 20vh;
+    margin-right: 5vw;
 }
 
 #itemContents {
