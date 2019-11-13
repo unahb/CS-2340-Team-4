@@ -124,7 +124,19 @@ def player():   #short status, just prints player and strips distances. not expo
     else:
         print('Error in request with status code', req.status_code)
 
-def ship(): #same as player but for ship
+def prel(): #even shorter status, has player but without market
+    url = 'http://127.0.0.1:5000/Space-Traders'
+    req = requests.get(url)
+    player_get = req.json().get('Player')
+    if 'region' in player_get:
+        player_get['region'].pop('market')
+    print(json.dumps(player_get, indent=4))
+    if req.status_code == 200:
+        print('Successful request.')
+    else:
+        print('Error in request with status code', req.status_code)
+
+def ship(): #same as player and prel but for ship
     url = 'http://127.0.0.1:5000/Space-Traders'
     req = requests.get(url)
     print(json.dumps(req.json().get('Ship'), indent=4))
@@ -163,6 +175,7 @@ def commands(command):    #super pythonic way to handle a switch statement with 
             'status' : status,
             'get' : status,
             'player' : player,
+            'prel' : prel,
             'ship' : ship,
             'cargo' : ship,
             'randnew' : randnew,
