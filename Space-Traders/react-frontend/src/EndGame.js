@@ -65,8 +65,8 @@ class EndGame extends React.Component {
       <div id="Welcome">
         <div id="stars">
           <header id="Welcome-header">
-            <h1>You Win!!</h1>
-            <h1>Would you like to continue?</h1>
+            <h1>Congratulations! You Win!!</h1>
+            <h1>You have bought the Universe...</h1>
           </header>
           <div>
             <img src={spaceship} id="spaceship" align="left"/>
