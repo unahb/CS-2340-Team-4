@@ -156,7 +156,10 @@ class Game:
                 print('Ship successfully repaired for', planet_price)
                 return amount
             self._player.get_ship().add_cargo(item, int(item_amount), planet_price)
-            self._player.calculate_market_costs(single_item=item, amount=item_amount)
+            try:
+                self._player.calculate_market_costs(single_item=item, amount=item_amount)
+            except KeyError:
+                pass
         else:
             if item in self._player.get_region_market_adjusted_prices():
                 planet_price = self._player.get_region_market_adjusted_prices()[item]['sell']

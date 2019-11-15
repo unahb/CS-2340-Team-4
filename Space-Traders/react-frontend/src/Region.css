@@ -73,6 +73,10 @@
     text-align: center;
 }
 
+#alertBut {
+    margin: 1vw;
+}
+
 #confirmSubmit,
 #confirmCancel {
     font-family: 'Press Start 2P', cursive;

@@ -1,0 +1,17 @@
+@import "./App.css";
+
+#endButton {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8vh;
+    color: #400080;
+    margin: 1vw;
+}
+
+#endDecision {
+    top: 60vh;
+    left: 30vw;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

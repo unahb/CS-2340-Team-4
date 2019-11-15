@@ -7,7 +7,7 @@ import PlayerStats from './PlayerStats';
 import TravelMap from './TravelMap';
 import Region from './Region';
 import Npc from './NPC';
-import GameOver from './GameOver';
+import EndGame from './EndGame';
 
 class App extends Component {
   render() {
@@ -21,7 +21,7 @@ class App extends Component {
               <Route path='/TravelMap' component={TravelMap} />
               <Route path='/Region' component={Region} />
               <Route path='/NPC' component={Npc} />
-              <Route path='/GameOver' component={GameOver} />
+              <Route path='/EndGame' component={EndGame} />
           </Switch>
         </div>
       </Router>
