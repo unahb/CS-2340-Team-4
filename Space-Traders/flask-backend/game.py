@@ -49,6 +49,8 @@ NPC_ENCOUNTER_RATES = {
 
 #amount of money it should cost to buy the win-the-game item
 VICTORY_COST = 50000
+if (self._karma < 0):
+    VICTORY_COST = 50000 * 2
 
 #uses the pilot attribute to determine the fuel cost for traveling between regions
 def fuel_cost_helper(distance, pilot_attribute):
@@ -197,6 +199,8 @@ class Game:
         return self._universe
     def get_difficulty(self):
         return self._difficulty
+    def get_karma(self):
+        return self._karma
 
     def __str__(self): #mostly for debugging
         builder = ''
@@ -220,6 +224,7 @@ class Player:
         #expect that fuel costs will be updated using the calculate function
         self._fuel_costs = {}
         self._encounter = None
+        self._karma = 0
 
     def transaction(self, monetary_value):
         self._credits += int(monetary_value)
@@ -358,6 +363,7 @@ class Player:
                 if success:
                     message = 'Successfully robbed the trader. Stole their goods as a reward'
                     self._ship.add_cargo(item, amount, price)
+                    self._karma = self._karma - 1;
                 else:
                     message = 'Failed to rob the trader. Ship took damage'
                     self._ship.update_health(damage_amount)
@@ -374,6 +380,7 @@ class Player:
                 message = 'Gave up the contraband and moved to destination'
                 item, amount = self._encounter.forfeit()
                 self._ship.remove_cargo(item, amount)
+                self._karma = self._karma + 1;
 
             elif action == 'flee':
                 done = True
@@ -398,6 +405,7 @@ class Player:
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
+                    self._karma = self._karma - 1;
 
         return (done, message) #do nothing on unrecognized action
 
