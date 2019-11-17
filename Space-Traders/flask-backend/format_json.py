@@ -28,7 +28,6 @@ def get_json(game):
         'difficulty' : game.get_difficulty(),
         'credits' : player.get_credits(),
         'skills' : player.get_attributes(),
-        'karma' : player.get_karma(),
     }
     if player.get_encounter() is None:
         player_item['region'] = player_region
