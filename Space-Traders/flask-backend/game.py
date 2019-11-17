@@ -50,9 +50,6 @@ NPC_ENCOUNTER_RATES = {
 #amount of money it should cost to buy the win-the-game item
 VICTORY_COST = 50000
 
-#karma
-karma = 0
-
 #uses the pilot attribute to determine the fuel cost for traveling between regions
 def fuel_cost_helper(distance, pilot_attribute):
     pilot_attribute += 2
@@ -123,7 +120,7 @@ class Game:
         #1 for bandits, 5 for police, 8 for traders
         #when set to those, you will get an encounter of that type on every travel
         encounter_roll = random.randint(1, 10)
-        #encounter_roll = 1 #uncomment to test a specific roll. remember to comment out when done
+        encounter_roll = 8 #uncomment to test a specific roll. remember to comment out when done
         encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
         print(encounter_roll, encounter)
         if encounter == 'Bandits':
@@ -142,7 +139,7 @@ class Game:
 
         #add in refuel and repair if no encounter. if there is one, it will be done later.
         else:
-            self._player.check_refuel_and_repair()
+            self._player.add_extra_items()
 
     #buy/sell when api asks to. item is added to ship and credits subtracted
     def transaction(self, region, item, item_amount, buy=True):
@@ -159,7 +156,10 @@ class Game:
                 print('Ship successfully repaired for', planet_price)
                 return amount
             self._player.get_ship().add_cargo(item, int(item_amount), planet_price)
-            self._player.calculate_market_costs(single_item=item, amount=item_amount)
+            try:
+                self._player.calculate_market_costs(single_item=item, amount=item_amount)
+            except KeyError:
+                pass
         else:
             if item in self._player.get_region_market_adjusted_prices():
                 planet_price = self._player.get_region_market_adjusted_prices()[item]['sell']
@@ -186,7 +186,7 @@ class Game:
         done, message = self._player.encounter_action(action)
         if done:
             self._player.set_encounter(None)
-            self._player.check_refuel_and_repair()
+            self._player.add_extra_items()
             player_region_name = self._player.get_region().get_name()
             distances = self._universe.get_region_distances().get_distances(player_region_name)
             self._player.calc_fuel_costs(PLANET_NAMES, distances)
@@ -214,6 +214,7 @@ class Player:
         self._attributes['Fighter'] = attributes[1]
         self._attributes['Merchant'] = attributes[2]
         self._attributes['Engineer'] = attributes[3]
+        self._karma = 0
         self._region = region
         self._credits = int(money)
         self._name = name
@@ -268,19 +269,10 @@ class Player:
                                             self._attributes['Merchant'],
                                             buy=False)
                 self._ship.update_price(item, price)
-        #add the win the game item to the shop if the region is correct
-        if self._region.get_winning_region():
-            item = self._name + '\'s Universe'
-            if (karma < 0):
-                self._region_market_adjusted_prices[item] = {'buy' : (1 - karma/10) * VICTORY_COST,
-                                                         'quantity' : 1}
-            else:
-                self._region_market_adjusted_prices[item] = {'buy' : VICTORY_COST,
-                                                         'quantity' : 1}
 
 
     #needs to be separate due to some dumb stuff involving when markets are calculated
-    def check_refuel_and_repair(self):
+    def add_extra_items(self):
         #add refuel and repair to the shop conditionally
         if self._ship.get_current_fuel() < self._ship.get_max_fuel_capacity():
             fuel_needed = self._ship.get_max_fuel_capacity() - self._ship.get_current_fuel()
@@ -291,6 +283,15 @@ class Player:
             repair_cost = repair_cost_helper(health_needed, self._attributes['Engineer'])
             self._region_market_adjusted_prices['Repair'] = {'buy' : repair_cost,
                                                              'quantity' : 1}
+        #add the win the game item to the shop if the region is correct
+        if self._region.get_winning_region():
+            item = self._name + '\'s Universe'
+            if (self._karma < 0):
+                self._region_market_adjusted_prices[item] = {'buy' : int((1 - self._karma / 10) * VICTORY_COST),
+                                                             'quantity' : 1}
+            else:
+                self._region_market_adjusted_prices[item] = {'buy' : VICTORY_COST,
+                                                         'quantity' : 1}
 
     #interact with the NPC encounter. returns True if the encounter is ended as a result
     #look at the encounter classes to see what happens in each encounter and what is returned when
@@ -366,7 +367,7 @@ class Player:
                 if success:
                     message = 'Successfully robbed the trader. Stole their goods as a reward'
                     self._ship.add_cargo(item, amount, price)
-                    karma = karma - 1;
+                    self._karma -= 1
                 else:
                     message = 'Failed to rob the trader. Ship took damage'
                     self._ship.update_health(damage_amount)
@@ -383,7 +384,7 @@ class Player:
                 message = 'Gave up the contraband and moved to destination'
                 item, amount = self._encounter.forfeit()
                 self._ship.remove_cargo(item, amount)
-                karma = karma + 1;
+                self._karma += 1
 
             elif action == 'flee':
                 done = True
@@ -408,7 +409,7 @@ class Player:
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
-                    karma = karma - 1;
+                    self._karma -= 1
 
         return (done, message) #do nothing on unrecognized action
 
@@ -437,6 +438,8 @@ class Player:
         return self._fuel_costs
     def get_encounter(self):
         return self._encounter
+    def get_karma(self):
+        return self._karma
 
     # setters
     def set_region(self, region):
