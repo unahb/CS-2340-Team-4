@@ -7,7 +7,7 @@ PLANET_NAMES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter',
 TECH_LEVELS = ['PRE-AG', 'AGRICULTURE', 'MEDIEVAL',
                'RENAISSANCE', 'INDUSTRIAL', 'MODERN', 'FUTURISTIC']
 
-CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 50000}
+CREDITS = {'easy': 2000, 'medium': 1000, 'hard': 500}
 
 SPACESHIP_TYPES = {
     'Starship': {'name': 'Starship', 'cargo_space':50, 'fuel':1000, 'health':15},
