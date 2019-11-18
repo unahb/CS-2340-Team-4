@@ -66,7 +66,7 @@ def item_cost_helper(base_cost, merchant_attribute, quantity, buy=True):
 
 #uses the engineer attribute to determine how much a repair should cost
 def repair_cost_helper(health_to_repair, engineer_attribute):
-    return int(health_to_repair / (1 + math.log(engineer_attribute + 2))) * 100 
+    return int(health_to_repair / (1 + math.log(engineer_attribute + 2))) * 100
 
 class Game:
     def __init__(self, difficulty='easy', attributes=None, name='John Doe'):
@@ -120,7 +120,7 @@ class Game:
         #1 for bandits, 5 for police, 8 for traders
         #when set to those, you will get an encounter of that type on every travel
         encounter_roll = random.randint(1, 10)
-        encounter_roll = 8 #uncomment to test a specific roll. remember to comment out when done
+        #encounter_roll = 1 #uncomment to test a specific roll. remember to comment out when done
         encounter = NPC_ENCOUNTER_RATES[self._difficulty].get(encounter_roll)
         print(encounter_roll, encounter)
         if encounter == 'Bandits':
@@ -133,8 +133,8 @@ class Game:
             print('police encountered')
             contraband_name = random.choice(list(self._player.get_ship().get_cargo().keys()))
             print('contraband:', contraband_name)
-            contraband_num = math.ceil(self._player.get_ship().get_cargo()[contraband_name]['quantity'] / 2.0)
-            contraband = {'item': contraband_name, 'amount': contraband_num}
+            cnum = math.ceil(self._player.get_ship().get_cargo()[contraband_name]['quantity'] / 2.0)
+            contraband = {'item': contraband_name, 'amount': cnum}
             self._player.set_encounter(PoliceEncounter(old_region, old_market, contraband))
 
         #add in refuel and repair if no encounter. if there is one, it will be done later.
@@ -257,7 +257,7 @@ class Player:
         for item in self._region.get_market():
             quantity = random.randint(0, 100)
             price = item_cost_helper(self._region.get_market()[item], quantity,
-                                        self._attributes['Merchant'])
+                                     self._attributes['Merchant'])
             self._region_market_adjusted_prices[item] = {'buy' : price,
                                                          'sell' : price,
                                                          'quantity' : quantity}
@@ -266,8 +266,8 @@ class Player:
             if not item in self._region_market_adjusted_prices:
                 quantity = 0
                 price = item_cost_helper(random.randint(10, 50), quantity,
-                                            self._attributes['Merchant'],
-                                            buy=False)
+                                         self._attributes['Merchant'],
+                                         buy=False)
                 self._ship.update_price(item, price)
 
 
@@ -286,12 +286,13 @@ class Player:
         #add the win the game item to the shop if the region is correct
         if self._region.get_winning_region():
             item = self._name + '\'s Universe'
-            if (self._karma < 0):
-                self._region_market_adjusted_prices[item] = {'buy' : int((1 - self._karma / 10) * VICTORY_COST),
+            if self._karma < 0:
+                cost = int((1 - self._karma / 10) * VICTORY_COST)
+                self._region_market_adjusted_prices[item] = {'buy' : cost,
                                                              'quantity' : 1}
             else:
                 self._region_market_adjusted_prices[item] = {'buy' : VICTORY_COST,
-                                                         'quantity' : 1}
+                                                             'quantity' : 1}
 
     #interact with the NPC encounter. returns True if the encounter is ended as a result
     #look at the encounter classes to see what happens in each encounter and what is returned when
@@ -337,7 +338,8 @@ class Player:
                     message = 'Fought off the bandits and stole their money'
                     self._credits += credit_change
                 else:
-                    message = 'Failed to fight off the bandits. Bandits stole credits and ship took damage'
+                    message = 'Failed to fight off the bandits.' \
+                              'Bandits stole credits and ship took damage'
                     self._credits = 0
                     self._ship.update_health(damage_amount)
 
@@ -393,7 +395,8 @@ class Player:
                 self._region_market_adjusted_prices = o_m
                 message = 'Got back to origin successfully'
                 if not success:
-                    message = 'Failed to flee. Police took contraband, ship took damage, and fined for evading'
+                    message = 'Failed to flee. Police took contraband, ' \
+                              'ship took damage, and fined for evading'
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
@@ -403,13 +406,14 @@ class Player:
                 success, item, num, des, o_m, fine = self._encounter.flee(self._attributes['Pilot'])
                 message = 'Successfully fought off the police'
                 if not success:
-                    message = 'Failed to fight off the police. Police took contraband, ship took damage, and fined for evading'
+                    message = 'Failed to fight off the police. Police took contraband, ' \
+                              'ship took damage, and fined for evading'
                     self._region = des
                     self._region_market_adjusted_prices = o_m
                     self._ship.remove_cargo(item, num)
                     self._ship.update_health(damage_amount)
                     self._credits = max(self._credits - fine, 0)
-                    self._karma -= 1
+                self._karma -= 1
 
         return (done, message) #do nothing on unrecognized action
 
