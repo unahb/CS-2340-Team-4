@@ -15,3 +15,10 @@
     flex-direction: column;
     align-items: center;
 }
+
+#endDescription {
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}

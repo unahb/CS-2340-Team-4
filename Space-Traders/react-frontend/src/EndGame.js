@@ -44,7 +44,7 @@ class EndGame extends React.Component {
         <div id="stars">
           <header id="Welcome-header">
             <h1>Game Over</h1>
-            <h1>Ship health has reached 0...</h1>
+            <h1 id="endDescription">Ship health has reached 0...</h1>
           </header>
           <div>
             <img src={spaceship} id="spaceship" align="left"/>
@@ -66,7 +66,7 @@ class EndGame extends React.Component {
         <div id="stars">
           <header id="Welcome-header">
             <h1>Congratulations! You Win!!</h1>
-            <h1>You have bought the Universe...</h1>
+            <h1 id="endDescription">You have bought the Universe!</h1>
           </header>
           <div>
             <img src={spaceship} id="spaceship" align="left"/>
