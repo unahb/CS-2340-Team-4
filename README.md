@@ -33,4 +33,3 @@ Our team for CS 2340 consisted of the following members:
 - Marc Hoeltge ([Twinov](https://github.com/Twinov))
 - Tim Tan ([timmytan18](https://github.com/timmytan18))
 - Matt Yang ([matthewyangcs](https://github.com/matthewyangcs))
-```
